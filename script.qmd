@@ -298,7 +298,6 @@ input_select_width = 10
 
 L = list(range(100, 501, 100))
 L.insert(0, 50)
-# L.append(50)
 
 ui.input_select("n", "Number of nodes in each cluster:",
                 choices=L,
@@ -366,6 +365,15 @@ def φ(R):
 
 def f(f_r):
     return lambda G_distance, u_idx, v_idx: f_r(euclidean_distance(tuple_1=G_distance.nodes[u_idx]['pos'], tuple_2=G_distance.nodes[v_idx]['pos']))
+  
+
+def indicator(condition):
+    return 1 if condition else 0
+  
+
+def make_F(f_in, f_out):
+    return lambda G, u_idx, v_idx: indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community']) * f_in(G, u_idx, v_idx) + (1 - indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community'])) * f_out(G, u_idx, v_idx)
+
 
 ```
 
@@ -398,41 +406,6 @@ def get_intra_proportion(G):
 #| label: functions to produce samples
 
  
-# def produce_gaussian_samples(n, d, mu_x2, SEED=global_SEED):
-# 
-#     n_rows = n * d
-#     samples = np.empty((n_rows, d + 1))
-#     samples[:, 0] = np.arange(len(samples))
-# 
-#     col_slice = slice(1, samples.shape[1] + 1)
-# 
-#     rng = np.random.default_rng(42)
-#     idx = 0
-#     for last_row in range(0, n_rows, n):  # step size is n
-#         mean_val = mu_x2 * idx
-#         row_slice = slice(last_row, last_row + n)
-#         samples[row_slice, col_slice] = rng.multivariate_normal(
-#             mean=np.insert(np.zeros(d - 1), 0, mean_val), cov=np.eye(d), size=n
-#         )
-#         idx += 1
-# 
-#     return samples
-# 
-# 
-# def produce_uniform_samples(n, d, SEED=global_SEED):
-# 
-#     n_nodes = n * d
-#     d_root_n = n_nodes ** (1 / d)
-# 
-#     samples        = np.empty((n_nodes, d + 1))
-#     samples[:, 0]  = np.arange(len(samples))
-#     
-#     rng = np.random.default_rng(SEED)
-#     samples[:, 1:] = d_root_n  * rng.uniform(size=(n_nodes, d))  # type(.)    : np.ndarray
-#                                                                  # np.shape(.): (N_n, d)
-#     return samples
-  
-
 def produce_samples(n, d , type_samples, mu_x2=None, SEED=global_SEED):
     
     rng = np.random.default_rng(42)
@@ -472,58 +445,47 @@ def produce_samples(n, d , type_samples, mu_x2=None, SEED=global_SEED):
 
 
 ```{python}
-#| label: functions to produce distance graphs
 
-
-def produce_G_distance(n, k, samples):
+def produce_distance_graph(samples, n, n_communities, k=None, framework='gaussian', SEED=global_SEED):
+  
+    rng = np.random.default_rng(SEED)
+  
+    G = nx.Graph()
     
-    G_distance = nx.Graph()
-
     d = {int(row[0]): (row[1], row[2]) for row in samples}
-
-    for node, coord in d.items():
-        community = 0
-            
-        if node + 1 > n:
-            community = 1
-        
-        G_distance.add_node(node, pos=coord, community=community)
-
-
-
-    col_slice = slice(1, samples.shape[1] + 1)
-
-    W = get_Gaussian_weight_matrix(samples[:, col_slice], k)
-
-    for i in range(2 * n):
-        for j in range(i + 1, 2 * n):
-            w = W[i, j]
-            if w > 0:
-                G_distance.add_edge(i, j, weight=1 / w - 1)
-
-    return G_distance
-
-
-def produce_G_distance_ABBE(n, n_communities, k, samples, F):
+    
+    G.add_nodes_from(d.keys())
+    nx.set_node_attributes(G, d, 'pos')
+    
     n_nodes = n * n_communities
-    d = {int(row[0]): (row[1], row[2]) for row in samples}
-
-    G_distance_ABBE = nx.Graph()
-    G_distance_ABBE.add_nodes_from(d.keys())
-    nx.set_node_attributes(G_distance_ABBE, d, 'pos')
-
-    community_labels = np.array(range(1, n_communities + 1))
-    rng = np.random.default_rng(42)
-    nx.set_node_attributes(G_distance_ABBE, {node: rng.choice(community_labels) for node in G_distance_ABBE.nodes}, 'community')
-
-    edges_to_add = [
-      (u_idx, v_idx) for u_idx in range(n_nodes) for v_idx in range(u_idx + 1, n_nodes) if F(G_distance_ABBE, u_idx, v_idx) == 1
-    ]
+        
+    if framework == 'gaussian':
+        nx.set_node_attributes(G, {node: 1 if node + 1 > n else 0 for node in G.nodes}, 'community')
     
-    G_distance_ABBE.add_edges_from(edges_to_add)
+        col_slice = slice(1, samples.shape[1] + 1)
+    
+        W = get_Gaussian_weight_matrix(samples[:, col_slice], k)
+    
+        for i in range(n_nodes):
+            for j in range(i + 1, n_nodes):
+                w = W[i, j]
+                if w > 0:
+                    G.add_edge(i, j, weight=1 / w - 1)
+                
+    
+    elif framework == 'ABBE':
+    
+        community_labels = np.array(range(1, n_communities + 1))
+        nx.set_node_attributes(G, {node: rng.choice(community_labels) for node in G.nodes}, 'community')
+    
+        edges_to_add = [(u_idx, v_idx) for u_idx in range(n_nodes) for v_idx in range(u_idx + 1, n_nodes) if F(G, u_idx, v_idx) == 1]
+        
+        G.add_edges_from(edges_to_add)
 
-    return G_distance_ABBE
+    return G
+    
 ```
+
 
 
 ```{python}
@@ -598,17 +560,8 @@ def normals_nNodes_dDimensions_PLOT():
     f_out_r = φ(R_2)
     f_in  = f(f_in_r)
     f_out = f(f_out_r)
-
-
-    def F(G_distance, u_idx, v_idx, f_in=f_in, f_out=f_out):
-        if G_distance.nodes[u_idx]['community'] == G_distance.nodes[v_idx]['community']:
-            return f_in(G_distance, u_idx, v_idx)
-        else:
-            return f_out(G_distance, u_idx, v_idx)
-
-
-
-
+    
+    F = make_F(f_in, f_out)
 
     λ_n = λ * n
     N_n = λ_n  # N_n = E[poisson(λ_n)], type: int
@@ -618,7 +571,7 @@ def normals_nNodes_dDimensions_PLOT():
     samples_gaussian = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
 
     # Update G_distance separately
-    G_distance = produce_G_distance(n, k, samples_gaussian)
+    G_distance = produce_distance_graph(samples_gaussian, n, d, k)
     mb_igraph = get_metric_backbone_igraph(G_distance)
 
     # Now handle plotting
@@ -631,7 +584,7 @@ def normals_nNodes_dDimensions_PLOT():
     SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
 
     samples_uniform = produce_samples(n, d, type_samples="uniform")
-    G_distance_ABBE = produce_G_distance_ABBE(n, d, k, samples_uniform, F)
+    G_distance_ABBE = produce_distance_graph(samples_uniform, n, d, framework='ABBE')
 
     col_slice = slice(1, samples_uniform.shape[1] + 1)
 
@@ -707,7 +660,7 @@ def normals_nNodes_dDimensions_PLOT():
     SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
 
     samples_uniform = produce_samples(n, d, type_samples="uniform")
-    G_distance_ABBE = produce_G_distance_ABBE(n, d, k, samples_uniform, F)
+    G_distance_ABBE = produce_distance_graph(samples_uniform, n, d, framework='ABBE')
 
     col_slice = slice(1, samples_uniform.shape[1] + 1)
 
@@ -772,17 +725,28 @@ def normals_nNodes_dDimensions_PLOT():
     axs[2, 1].set_title(f'ABBE MB {mb_igraph_ABBE.number_of_edges()} edges, inter-proportion: {get_inter_proportion(mb_igraph_ABBE) * 100:.2f}%')
     axs[3, 0].set_title(f'SC: ABBE original, ARI: {similarity_original_ABBE * 100:.2f}%')
     axs[3, 1].set_title(f'SC: ABBE MB, ARI: {similarity_mb_ABBE * 100:.2f}%')
+            
+    ## Conclusions
+    # V
+    # - Spectral clustering performs very poorly on ABBE graphs.
 ```
 
-## Conclusions
-
-- Spectral clustering performs very poorly on ABBE graphs. 
 
 
 # § graph
 
 ```{python}
 #| echo: false
+
+R_1         = 3
+R_2         = 1.5
+R_1, R_2 = max(R_1, R_2), min(R_1, R_2)
+f_in_r  = φ(R_1)
+f_out_r = φ(R_2)
+f_in  = f(f_in_r)
+f_out = f(f_out_r)
+
+F = make_F(f_in, f_out)
 
 fig, axs = plt.subplots(2, 1, figsize=(6, 12))
 
@@ -799,7 +763,7 @@ res_MB = []
 
 for mu_x2 in mu_x2_grid:
     samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
-    G = produce_G_distance(n, k, samples)
+    G = produce_distance_graph(samples, n, d, k)
     MB = get_metric_backbone_igraph(G)
     
     pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
