@@ -30,6 +30,33 @@ from shiny.express import render, ui
 
 
 def server(input: Inputs, output: Outputs, session: Session) -> None:
+    # add scores to titles to half and half graph
+
+    # find more reasonable Rs for the half and half graph
+
+    # mu fix, k increasing
+    #   moyenner graph μ fixed n_neighbors varying
+
+    # new graph
+    #   attention, graph creation step also changes!
+
+    # allow popups for this website
+
+
+    # A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+
+    # should we have class samples, class gaussianSamples(samples), class uniformSamples(samples)?
+    # get_Gaussian_weight_matrix(samples[:, col_slice], k) is computed TWICE for the original graph.
+    # once when drawing it, and another to perform the spectral clustering.
+    # W could instead be returned by produce_distance_graph() and be reused by draw().
+
+    # SC with n_neighbors == k works better or smae on MB when n is large.
+    # when n is small, SC with n_neighbors == k works better on the original graph.
+
+    # q: ask max if affinity='precomputed' is the correct option in Gaussian and ABBE cases.
+
+    # ========================================================================
+
     # format: dashboard
     # server: shiny
     # editor: 
@@ -47,8 +74,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     import graphlearning as gl
 
-    def get_Gaussian_weight_matrix(X, k):
-        Z = gl.weightmatrix.knn(X, k)  # Gaussian similarity measure
+    def get_Gaussian_weight_matrix(X, n_neighbors):
+        Z = gl.weightmatrix.knn(X, n_neighbors)  # Gaussian similarity measure
         A = (Z + Z.T) / 2
         return A
 
@@ -140,17 +167,18 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
                     width=input_select_width
     )
 
-    ui.input_select("k", "Number of nearest neighbors for graph creation:",
-                    choices=list((5, 10, 15)),
+    # for graph creation (& spectral clustering)
+    ui.input_select("n_neighbors", "Number of nearest neighbors ",
+                    choices=list(range(5, 21)),
                     selected=10,
                     width=input_select_width
     )
 
-    ui.input_select("n_neighbors", "Number of nearest neighbors for spectral clustering:",
-                    choices=list(range(3, 16)),
-                    selected=4,
-                    width=input_select_width
-    )
+    # ui.input_select("n_neighbors", "Number of nearest neighbors for spectral clustering:",
+    #                 choices=list(range(3, 16)),
+    #                 selected=4,
+    #                 width=input_select_width
+    # )
 
     ui.input_select("mu_x2", "Mean of the second Gaussian with respect to the x-axis:",
                     choices=list(range(1, 21)),
@@ -198,12 +226,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     def make_F(f_in, f_out):
         return lambda G, u_idx, v_idx: indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community']) * f_in(G, u_idx, v_idx) + (1 - indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community'])) * f_out(G, u_idx, v_idx)
 
-
-    # def F(G_distance, u_idx, v_idx, f_in, f_out):
-    #     if G_distance.nodes[u_idx]['community'] == G_distance.nodes[v_idx]['community']:
-    #         return f_in(G_distance, u_idx, v_idx)
-    #     else:
-    #         return f_out(G_distance, u_idx, v_idx)
 
     # ========================================================================
 
@@ -264,7 +286,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    def produce_distance_graph(samples, n, n_communities, k=None, framework='gaussian', SEED=global_SEED):
+    def produce_distance_graph(samples, n, n_communities, n_neighbors=None, framework='gaussian', SEED=global_SEED):
   
         rng = np.random.default_rng(SEED)
   
@@ -282,7 +304,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     
             col_slice = slice(1, samples.shape[1] + 1)
     
-            W = get_Gaussian_weight_matrix(samples[:, col_slice], k)
+            W = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
     
             for i in range(n_nodes):
                 for j in range(i + 1, n_nodes):
@@ -305,6 +327,54 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
+    # Helper functions to add legend
+    def produce_patch_gaussian(color, mu_x):
+        return plt.Line2D(
+            [0],
+            [0], 
+            marker='o', 
+            color='w', 
+            markerfacecolor=color, 
+            markersize=8, 
+            label=f'X-mean: {round(mu_x)}'
+        )
+
+
+    def produce_patch_ABBE(color, plus_or_minus_one):
+        return plt.Line2D(
+            [0],
+            [0], 
+            marker='o', 
+            color='w', 
+            markerfacecolor=color, 
+            markersize=8, 
+            label=f'Community label: {plus_or_minus_one}'
+        )
+
+    # ========================================================================
+
+    def get_predColors_similarity(samples, col_slice, n_neighbors, true_labels, b_original=True, MB=None):
+  
+        A = None
+    
+        if b_original:
+            A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+        else:
+            A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+            A = scipy.sparse.csr_matrix(A)
+        
+        pred_labels = SC.fit_predict(A)
+        pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+        similarity  = adjusted_rand_score(true_labels, pred_labels)
+    
+        if b_original:
+            print(f"Adjusted Rand Score on Original Graph: {similarity * 100}")
+        else:
+            print(f"Adjusted Rand Score on MB : {similarity * 100}")
+        
+        return pred_colors, similarity
+
+
     def draw(G, MB, samples, n_neighbors, axs, n_clusters, L_idx=[0, 1], affinity='precomputed'):
   
         pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
@@ -316,30 +386,21 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
         SC = SpectralClustering(n_clusters=n_clusters, affinity=affinity)
     
-        def get_predColors_similarity(samples, col_slice, n_neighbors, true_labels, b_original=True, MB=None):
       
-            A = None
-        
-            if b_original:
-                A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-            else:
-                A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
-                A = scipy.sparse.csr_matrix(A)
-            
-            pred_labels = SC.fit_predict(A)
-            pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            similarity  = adjusted_rand_score(true_labels, pred_labels)
-        
-            if b_original:
-                print(f"Adjusted Rand Score on Original Graph: {similarity * 100}")
-            else:
-                print(f"Adjusted Rand Score on MB : {similarity * 100}")
-            
-            return pred_colors, similarity
-      
-        pred_colors_original, similarity_original = get_predColors_similarity(samples, col_slice, n_neighbors, true_labels)
+        pred_colors_original, similarity_original = get_predColors_similarity(
+          samples,
+          col_slice,
+          n_neighbors,
+          true_labels
+        )
+    
         pred_colors_mb, similarity_mb = get_predColors_similarity(
-          samples=None, col_slice=None, n_neighbors=None, true_labels=true_labels, b_original=False, MB=MB
+          samples=None,
+          col_slice=None,
+          n_neighbors=None,
+          true_labels=true_labels,
+          b_original=False,
+          MB=MB
         )
 
 
@@ -360,9 +421,10 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         n           = int(input.n())
         d           = int(input.d())
         n_clusters  = d
-        k           = int(input.k())
+        n_neighbors           = int(input.n_neighbors())
         mu_x2       = float(input.mu_x2())
-        n_neighbors = int(input.n_neighbors())
+        #n_neighbors = int(input.n_neighbors())
+        # n_neighbors = k
         λ           = int(input.λ())
 
         R_1         = float(input.R_1())  
@@ -375,10 +437,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     
         F = make_F(f_in, f_out)
 
-
-
-
-
         λ_n = λ * n
         N_n = λ_n  # N_n = E[poisson(λ_n)], type: int
 
@@ -387,7 +445,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         samples_gaussian = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
 
         # Update G_distance separately
-        G_distance = produce_distance_graph(samples_gaussian, n, d, k)
+        G_distance = produce_distance_graph(samples_gaussian, n, d, n_neighbors)
         mb_igraph = get_metric_backbone_igraph(G_distance)
 
         # Now handle plotting
@@ -404,7 +462,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
         col_slice = slice(1, samples_uniform.shape[1] + 1)
 
-        W = get_Gaussian_weight_matrix(samples_uniform[:, col_slice], k)
+        W = get_Gaussian_weight_matrix(samples_uniform[:, col_slice], n_neighbors)
 
         edges = list(G_distance_ABBE.edges())
         weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
@@ -413,31 +471,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         mb_igraph_ABBE = get_metric_backbone_igraph(G_distance_ABBE)
 
         similarity_original_ABBE, similarity_mb_ABBE = draw(G_distance_ABBE, mb_igraph_ABBE, samples_uniform, n_neighbors, axs, n_clusters, L_idx=[2, 3])
-
-        # Helper functions to add legend
-        def produce_patch_gaussian(color, mu_x):
-            return plt.Line2D(
-                [0],
-                [0], 
-                marker='o', 
-                color='w', 
-                markerfacecolor=color, 
-                markersize=8, 
-                label=f'X-mean: {round(mu_x)}'
-            )
-
-
-        def produce_patch_ABBE(color, plus_or_minus_one):
-            return plt.Line2D(
-                [0],
-                [0], 
-                marker='o', 
-                color='w', 
-                markerfacecolor=color, 
-                markersize=8, 
-                label=f'Community label: {plus_or_minus_one}'
-            )
-
 
         for i in range(4):
             for j in range(2):
@@ -480,7 +513,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
         col_slice = slice(1, samples_uniform.shape[1] + 1)
 
-        W = get_Gaussian_weight_matrix(samples_uniform[:, col_slice], k)
+        W = get_Gaussian_weight_matrix(samples_uniform[:, col_slice], n_neighbors)
 
         edges = list(G_distance_ABBE.edges())
         weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
@@ -490,29 +523,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
         similarity_original_ABBE, similarity_mb_ABBE = draw(G_distance_ABBE, mb_igraph_ABBE, samples_uniform, n_neighbors, axs, n_clusters, L_idx=[2, 3])
 
-        # Helper functions to add legend
-        def produce_patch_gaussian(color, mu_x):
-            return plt.Line2D(
-                [0],
-                [0], 
-                marker='o', 
-                color='w', 
-                markerfacecolor=color, 
-                markersize=8, 
-                label=f'X-mean: {round(mu_x)}'
-            )
-
-
-        def produce_patch_ABBE(color, plus_or_minus_one):
-            return plt.Line2D(
-                [0],
-                [0], 
-                marker='o', 
-                color='w', 
-                markerfacecolor=color, 
-                markersize=8, 
-                label=f'Community label: {plus_or_minus_one}'
-            )
 
 
         for i in range(4):
@@ -548,6 +558,189 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
+    np.random.seed(42)
+
+    input_select_width = 10
+
+    L = list(range(100, 501, 100))
+    L.insert(0, 50)
+
+    ui.input_select("n2", "Number of nodes in each cluster:",
+                    choices=L,
+                    selected=50,
+                    width=input_select_width
+    )
+
+    ui.input_select("d2", "Number of dimensions & communities:",
+                    choices=list((2, 3, 4)),
+                    selected=2,
+                    width=input_select_width
+    )
+
+    # for graph creation (& spectral clustering)
+    ui.input_select("n_neighbors2", "Number of nearest neighbors ",
+                    choices=list(range(5, 21)),
+                    selected=10,
+                    width=input_select_width
+    )
+
+    # ui.input_select("n_neighbors", "Number of nearest neighbors for spectral clustering:",
+    #                 choices=list(range(3, 16)),
+    #                 selected=4,
+    #                 width=input_select_width
+    # )
+
+    ui.input_select("mu_x22", "Mean of the second Gaussian with respect to the x-axis:",
+                    choices=list(range(1, 21)),
+                    selected=3,
+                    width=input_select_width
+    )
+
+
+    ui.input_select("λ2", "Intensity parameter (N_n ~ Poisson(λ * n)):",
+                    choices=[1],
+                    selected=1,
+                    width=input_select_width
+    )
+
+    ui.input_select("R_12", "Big radius for intra-community edges:",
+                    choices=list(range(1, 11)),
+                    selected=2,
+                    width=input_select_width
+    )
+
+    ui.input_select("R_22", "Small radius for inter-community edges:",
+                    choices=[1, 1.5, 2, 2.5, 3],
+                    selected=[1],
+                    width=input_select_width
+    )
+
+    # ========================================================================
+
+    @render.plot
+    def graph_gaussian_clusters_ABBE_prediction_PLOT():
+    
+        n           = int(input.n2())
+        d           = int(input.d2())
+        n_clusters  = d
+        n_neighbors = int(input.n_neighbors2())
+        mu_x2       = float(input.mu_x22())
+        λ           = int(input.λ2())
+
+        R_1         = float(input.R_12())  
+        R_2         = float(input.R_22())
+        R_1, R_2 = max(R_1, R_2), min(R_1, R_2)
+        f_in_r  = φ(R_1)
+        f_out_r = φ(R_2)
+        f_in  = f(f_in_r)
+        f_out = f(f_out_r)
+    
+        F = make_F(f_in, f_out)
+
+        λ_n = λ * n
+        N_n = λ_n  # N_n = E[poisson(λ_n)], type: int
+    
+        # Generate samples separately
+        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
+    
+        # Update G_distance separately
+        G = produce_distance_graph(samples, n, d, framework='ABBE')
+
+        col_slice = slice(1, samples.shape[1] + 1)
+
+        W = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+
+        edges = list(G.edges())
+        weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
+        nx.set_edge_attributes(G, weights, 'weight')
+
+        mb_igraph = get_metric_backbone_igraph(G)
+    
+        fig, axs = plt.subplots(2, 2, figsize=(12, 12))
+    
+        similarity_original_ABBE, similarity_mb_ABBE = draw(
+          G,
+          mb_igraph,
+          samples,
+          n_neighbors,
+          axs,
+          n_clusters,
+          L_idx=[0, 1]
+        )
+
+
+    # ========================================================================
+
+    @render.plot
+    def graph_mu_fixed_n_neighbors_varying_PLOT():
+    
+        n           = int(input.n())
+        d           = int(input.d())
+        n_clusters  = d
+        mu_x2       = float(input.mu_x2())
+    
+        fig, axs = plt.subplots(2, 1, figsize=(6, 12))
+    
+        n_neighbors_LIST = list(range(3, 21))
+        ARI_LIST = []
+        ARI_LIST_MB = []
+    
+        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
+    
+        col_slice = slice(1, samples.shape[1] + 1)
+    
+    
+        for n_neighbors in n_neighbors_LIST:
+            G = produce_distance_graph(samples, n, d, n_neighbors)
+            MB = get_metric_backbone_igraph(G)
+        
+            pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
+
+            true_labels = list(nx.get_node_attributes(G, 'community').values())
+            true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
+
+            SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
+
+            A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+
+            pred_labels = SC.fit_predict(A)
+            pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+            similarity  = adjusted_rand_score(true_labels, pred_labels)
+        
+            ARI_LIST.append(similarity)
+        
+        
+            A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+            A = scipy.sparse.csr_matrix(A)
+
+            pred_labels = SC.fit_predict(A)
+            pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+            similarity  = adjusted_rand_score(true_labels, pred_labels)
+        
+            ARI_LIST_MB.append(similarity)
+        
+    
+        axs[0].plot(n_neighbors_LIST, ARI_LIST)
+        axs[0].set_title('Original Graph')
+    
+        axs[1].plot(n_neighbors_LIST, ARI_LIST_MB)
+        axs[1].set_title('Metric Backbone')
+    
+        for i in range(2):
+                ax = axs[i]
+                ax.set_xlabel('Number of nearest neighbors')
+                ax.set_ylabel('ARI')
+                ax.axis('equal')
+                ax.axis('on')
+                ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+                if i < 2:
+                    ax.legend(handles=[produce_patch_gaussian('red', 0), produce_patch_gaussian('blue', mu_x2)])
+                else:
+                    ax.legend(handles=[produce_patch_ABBE('red', 1), produce_patch_ABBE('blue', -1)])
+
+
+    # ========================================================================
+
     R_1         = 3
     R_2         = 1.5
     R_1, R_2 = max(R_1, R_2), min(R_1, R_2)
@@ -563,8 +756,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     n           = 100
     d           = 2
     n_clusters  = d
-    k           = 10
-    n_neighbors = 4
+    n_neighbors = 10
+    # n_neighbors = 4
     λ           = 1
 
     mu_x2_grid  = np.arange(1, 5.1, 0.5).tolist()
@@ -573,7 +766,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     for mu_x2 in mu_x2_grid:
         samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
-        G = produce_distance_graph(samples, n, d, k)
+        G = produce_distance_graph(samples, n, d, n_neighbors)
         MB = get_metric_backbone_igraph(G)
     
         pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
