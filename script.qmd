@@ -7,61 +7,14 @@ editor:
     wrap: 72
 ---
 
-```{python}
-#| echo: false
-#| label: 2024-09-21
 
-# add scores to titles to half and half graph
-
-# find more reasonable Rs for the half and half graph
-
-# mu fix, k increasing
-#   moyenner graph μ fixed n_neighbors varying
-
-# new graph
-#   attention, graph creation step also changes!
-
-# allow popups for this website
-
-
-# A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-
-# should we have class samples, class gaussianSamples(samples), class uniformSamples(samples)?
-# get_Gaussian_weight_matrix(samples[:, col_slice], k) is computed TWICE for the original graph.
-# once when drawing it, and another to perform the spectral clustering.
-# W could instead be returned by produce_distance_graph() and be reused by draw().
-
-# SC with n_neighbors == k works better or smae on MB when n is large.
-# when n is small, SC with n_neighbors == k works better on the original graph.
-
-# q: ask max if affinity='precomputed' is the correct option in Gaussian and ABBE cases.
-```
-
-```{python}
-#| echo: false
-
-
-# format: dashboard
-# server: shiny
-# editor: 
-#   markdown: 
-#     wrap: 72
-
-# ---
-# title: "INDY Notes & Simulations"
-# format: html
-# execute:
-#   eval: false
-# ---
-```
-
-############################################################################################################ 
 
 # Percolation Demo
 
 ```{python}
 #| context: setup
 #| echo: false
+#| label: imports
 
 
 import shiny
@@ -81,32 +34,33 @@ from sklearn.metrics import adjusted_rand_score
 
 from shiny.express import render, ui
 
+import networkx as nx       # for get_metric_backbone_igraph
 import graphlearning as gl  # for get_Gaussian_weight_matrix
 import igraph as ig         # for get_metric_backbone_igraph
-import networkx as nx       # for get_metric_backbone_igraph
 
 ```
 
-```{python}
-#| label: global variables
 
+```{python}
+#| label: global-variables
 global_SEED = 42
 
 ```
 
 
 ```{python}
-#| label: def get_Gaussian_weight_matrix
+#| label: def_get_Gaussian_weight_matrix
 
 def get_Gaussian_weight_matrix(X, n_neighbors):
     Z = gl.weightmatrix.knn(X, n_neighbors)  # Gaussian similarity measure
     A = (Z + Z.T) / 2
     return A
 
+
 ```
 
 ```{python}
-#| label: def get_metric_backbone_igraph
+#| label: def_get_metric_backbone_igraph
 
 def get_metric_backbone_igraph(D):
     """
@@ -126,6 +80,7 @@ def get_metric_backbone_igraph(D):
 ##  {.sidebar width="300px"}
 
 ```{python}
+#| label: input_selects_1
 
 ui.input_select("p", "Probability:",
                 choices=[x / 100 for x in range(1, 100)],
@@ -142,7 +97,7 @@ ui.input_select("grid_size", "Number of nodes in each dimension:",
 ## Column
 
 ```{python}
-#| label: percolation shiny plot
+#| label: percolation-shiny-plot
 
 @render.plot
 def percolation_plot():
@@ -294,12 +249,7 @@ $\{A \xleftrightarrow{} B\}$ is measurable
 $\forall A, B \subset \mathbb{Z}^d$, and the function below is
 measurable.
 
-```{=tex}
-\begin{aligned}
-F: \quad & \{0, 1\}^E & \to     & \quad N \cup \{\infty\} \\
-         & \omega     & \mapsto & \quad \text{size of the cluster containing the origin} = |C_0(\omega)|.
-\end{aligned}
-```
+
 <h2>Exercise 2</h2>
 
 The event $\{0 \xleftrightarrow{} \infty\}$ is measurable.
@@ -330,6 +280,7 @@ Based on this result, prove that $p_c < 1$.
 ##  {.sidebar width="300px"}
 
 ```{python}
+#| label: input_selects_2
 
 np.random.seed(42)
 
@@ -384,7 +335,9 @@ ui.input_select("R_2", "Small radius for inter-community edges:",
 
 ```
 
+
 ## Column
+
 
 ```{python}
 #| label: community-detection-on-Euclidean-graphs-FUNCTIONS
@@ -410,6 +363,7 @@ def make_F(f_in, f_out):
 
 
 ```
+
 
 ```{python}
 #| label: Inter- & Intra-Community Proportion Functions
@@ -520,7 +474,11 @@ def produce_distance_graph(samples, n, n_communities, n_neighbors=None, framewor
     
 ```
 
+
 ```{python}
+#| label: def_produce_patch_FUNCTIONS
+
+
 # Helper functions to add legend
 def produce_patch_gaussian(color, mu_x):
     return plt.Line2D(
@@ -545,6 +503,7 @@ def produce_patch_ABBE(color, plus_or_minus_one):
         label=f'Community label: {plus_or_minus_one}'
     )
 ```
+
 
 ```{python}
 #| label: draw function
@@ -1039,19 +998,7 @@ ax.set_ylabel('ARI')
 
 
 #  Module Dependencies
-```{python}
-#print(f"Adjusted Rand Score on origin: {similarity * 100:.2f}%")
 
-# Spectral Clustering (Original VS Metric Backbone)
-
-# -   SSL: semi-supervised learning
-# 
-#     -   time to build the metric backbone
-# 
-# -   TSC: thresholding-based subspaces clustering
-# 
-# -   helper_plots: plot_TSC_k
-```
 
 ```{mermaid}
 flowchart LR
@@ -1119,8 +1066,8 @@ $$E[N \circ X] = \int_{[0, 1]^E} N \circ X \text{ } d\mu.$$
 
 Furthermore, if we consider
 
-•⁠ ⁠$P_p: \mathcal{F} \to [0, 1]$, •⁠
-⁠$A = \{w(e_1) = u_1, \ldots, w(e_k) = u_k\} \in \mathcal{F}$
+- ⁠$P_p: \mathcal{F} \to [0, 1]$, 
+- ⁠$A = \{w(e_1) = u_1, \ldots, w(e_k) = u_k\} \in \mathcal{F}$
 
 we have:
 
@@ -1160,3 +1107,13 @@ is characterized by its output on such setss.
     -   script.qmd \> Run Document
     -   app.py \> Run App
     -   this makes it possible to see intermediary results.
+
+
+
+
+
+
+
+
+
+

@@ -9,7 +9,6 @@ from shiny import App, Inputs, Outputs, Session, ui
 import shiny
 import random
 import matplotlib.pyplot as plt
-import networkx as nx
 from matplotlib.lines import Line2D
 
 
@@ -24,65 +23,27 @@ from sklearn.metrics import adjusted_rand_score
 
 from shiny.express import render, ui
 
+import networkx as nx       # for get_metric_backbone_igraph
+import graphlearning as gl  # for get_Gaussian_weight_matrix
+import igraph as ig         # for get_metric_backbone_igraph
+
 # ========================================================================
 
 
 
 
 def server(input: Inputs, output: Outputs, session: Session) -> None:
-    # add scores to titles to half and half graph
-
-    # find more reasonable Rs for the half and half graph
-
-    # mu fix, k increasing
-    #   moyenner graph μ fixed n_neighbors varying
-
-    # new graph
-    #   attention, graph creation step also changes!
-
-    # allow popups for this website
-
-
-    # A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-
-    # should we have class samples, class gaussianSamples(samples), class uniformSamples(samples)?
-    # get_Gaussian_weight_matrix(samples[:, col_slice], k) is computed TWICE for the original graph.
-    # once when drawing it, and another to perform the spectral clustering.
-    # W could instead be returned by produce_distance_graph() and be reused by draw().
-
-    # SC with n_neighbors == k works better or smae on MB when n is large.
-    # when n is small, SC with n_neighbors == k works better on the original graph.
-
-    # q: ask max if affinity='precomputed' is the correct option in Gaussian and ABBE cases.
+    global_SEED = 42
 
     # ========================================================================
-
-    # format: dashboard
-    # server: shiny
-    # editor: 
-    #   markdown: 
-    #     wrap: 72
-
-    # ---
-    # title: "INDY Notes & Simulations"
-    # format: html
-    # execute:
-    #   eval: false
-    # ---
-
-    # ========================================================================
-
-    import graphlearning as gl
 
     def get_Gaussian_weight_matrix(X, n_neighbors):
         Z = gl.weightmatrix.knn(X, n_neighbors)  # Gaussian similarity measure
         A = (Z + Z.T) / 2
         return A
 
-    # ========================================================================
 
-    import networkx as nx
-    import igraph as ig
+    # ========================================================================
 
     def get_metric_backbone_igraph(D):
         """
@@ -90,16 +51,11 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
          :return: Networkx Metric Backbone subgraph of D
         """
         D_ig = ig.Graph.from_networkx(D)
-        #print(D_ig.distances(weights='weight'))
         distances = D_ig.distances(weights='weight')
 
-        B = nx.Graph(D)
-        B.remove_edges_from([(x, y) for x, y, w in B.edges.data('weight') if w > distances[x][y]])
-        return B
-
-    # ========================================================================
-
-    global_SEED = 42
+        G = nx.Graph(D)
+        G.remove_edges_from([(x, y) for x, y, w in G.edges.data('weight') if w > distances[x][y]])
+        return G
 
     # ========================================================================
 
@@ -116,13 +72,13 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     # ========================================================================
 
     @render.plot
-    def displot():
+    def percolation_plot():
+  
         p = float(input.p())
         grid_size = int(input.grid_size())
         G = nx.grid_2d_graph(grid_size, grid_size)
         pos = {(x, y): (x, y) for x, y in G.nodes()}
     
-        plt.figure(figsize=(6, 6))
     
         for (u, v) in G.edges():
             edge_color = 'red' if random.random() < p else 'black'
@@ -136,12 +92,21 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             Line2D([0], [0], color='black', lw=1, label='closed & w(e) = 0'),
         ]
     
+    
+        plt.figure(figsize=(6, 6))
         plt.legend(handles=legend_elements, bbox_to_anchor=(1.4, 0.96))
         plt.gca().set_aspect('equal')
         plt.axis('off')
         plt.title(f"{grid_size}x{grid_size} Grid with p = {p:.2f}", fontsize=14)
-        plt.text(0.5, -0.05, 'Figure 1: each edge is open with probability p.',
-             fontsize=12, ha='center', va='center', transform=plt.gca().transAxes)
+        plt.text(
+          0.5,
+          -0.05, 
+          'Figure 1: each edge is open with probability p.',
+          fontsize=12,
+          ha='center',
+          va='center', 
+          transform=plt.gca().transAxes
+        )
 
         # Adjust layout to ensure the caption fits within the figure area
         plt.tight_layout()
@@ -173,12 +138,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
                     selected=10,
                     width=input_select_width
     )
-
-    # ui.input_select("n_neighbors", "Number of nearest neighbors for spectral clustering:",
-    #                 choices=list(range(3, 16)),
-    #                 selected=4,
-    #                 width=input_select_width
-    # )
 
     ui.input_select("mu_x2", "Mean of the second Gaussian with respect to the x-axis:",
                     choices=list(range(1, 21)),
@@ -807,20 +766,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     ax.set_xlabel('Mean of the second Gaussian with respect to the x-axis')
     ax.set_ylabel('ARI')
 
-
-    # ========================================================================
-
-    #print(f"Adjusted Rand Score on origin: {similarity * 100:.2f}%")
-
-    # Spectral Clustering (Original VS Metric Backbone)
-
-    # -   SSL: semi-supervised learning
-    # 
-    #     -   time to build the metric backbone
-    # 
-    # -   TSC: thresholding-based subspaces clustering
-    # 
-    # -   helper_plots: plot_TSC_k
 
     # ========================================================================
 
