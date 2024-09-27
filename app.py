@@ -10,6 +10,7 @@ import shiny
 import random
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from pipe import sort
 
 
 import numpy as np
@@ -33,6 +34,99 @@ import igraph as ig         # for get_metric_backbone_igraph
 
 
 def server(input: Inputs, output: Outputs, session: Session) -> None:
+    class Pipe:
+        def __init__(self, function):
+            self.function = function
+
+        def __ror__(self, other):
+            return self.function(other)
+
+    # # EXAMPLE USAGE
+
+    # # Define custom functions to use with the pipe
+    # @Pipe
+    # def add_one(x):
+    #     return x + 1
+    # 
+    # @Pipe
+    # def square(x):
+    #     return x * x
+    # 
+    # result = 5 | add_one | square
+    # print(result)  # Output: 36
+
+    # ========================================================================
+
+    class StringIndexed3DArray:
+        def __init__(self, array, dim1_labels, dim2_labels, dim3_labels):
+            self.array = array
+            # Create dictionaries to map strings to indices for each dimension
+            self.index_map_dim1 = {label: i for i, label in enumerate(dim1_labels)}
+            self.index_map_dim2 = {label: i for i, label in enumerate(dim2_labels)}
+            self.index_map_dim3 = {label: i for i, label in enumerate(dim3_labels)}
+
+        def __getitem__(self, indices):
+            row_label, col_label, depth_label = indices
+            # Convert string labels to indices
+            row = self._convert_to_index(row_label, self.index_map_dim1)
+            col = self._convert_to_index(col_label, self.index_map_dim2)
+            depth = self._convert_to_index(depth_label, self.index_map_dim3)
+            # Access the value or slice from the array
+            return self.array[row, col, depth]
+    
+        def _convert_to_index(self, label, index_map):
+            if isinstance(label, slice):
+                # If it's a slice, return the slice itself
+                return slice(
+                    self.index_map_dim1.get(label.start, 0) if label.start else None,
+                    self.index_map_dim1.get(label.stop, None),
+                    label.step
+                )
+            elif isinstance(label, str):
+                # If it's a string, convert it to the index using the map
+                return index_map[label]
+            else:
+                return label  # Allow passing integers directly
+
+        def __setitem__(self, indices, value):
+            row_label, col_label, depth_label = indices
+            # Convert string labels to indices
+            row = self.index_map_dim1[row_label]
+            col = self.index_map_dim2[col_label]
+            depth = self.index_map_dim3[depth_label]
+            # Set the value in the array
+            self.array[row, col, depth] = value
+
+    # class StringIndexed3DArray:
+    #     def __init__(self, array, dim1_labels, dim2_labels, dim3_labels):
+    #         self.array = array
+    #         # Create dictionaries to map strings to indices for each dimension
+    #         self.index_map_dim1 = {label: i for i, label in enumerate(dim1_labels)}
+    #         self.index_map_dim2 = {label: i for i, label in enumerate(dim2_labels)}
+    #         self.index_map_dim3 = {label: i for i, label in enumerate(dim3_labels)}
+    # 
+    #     def __getitem__(self, indices):
+    #         row_label, col_label, depth_label = indices
+    #         # Convert string labels to indices
+    #         row = self.index_map_dim1[row_label]
+    #         col = self.index_map_dim2[col_label]
+    #         depth = self.index_map_dim3[depth_label]
+    #         # Access the value in the array
+    #         return self.array[row, col, depth]
+    #       
+    #       
+    #     def __setitem__(self, indices, value):
+    #         row_label, col_label, depth_label = indices
+    #         # Convert string labels to indices
+    #         row = self.index_map_dim1[row_label]
+    #         col = self.index_map_dim2[col_label]
+    #         depth = self.index_map_dim3[depth_label]
+    #         # Set the value in the array
+    #         self.array[row, col, depth] = value
+
+
+    # ========================================================================
+
     global_SEED = 42
 
     # ========================================================================
@@ -79,6 +173,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         G = nx.grid_2d_graph(grid_size, grid_size)
         pos = {(x, y): (x, y) for x, y in G.nodes()}
     
+        # needs to be this high in code
+        plt.figure(figsize=(6, 6))  
     
         for (u, v) in G.edges():
             edge_color = 'red' if random.random() < p else 'black'
@@ -93,7 +189,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         ]
     
     
-        plt.figure(figsize=(6, 6))
         plt.legend(handles=legend_elements, bbox_to_anchor=(1.4, 0.96))
         plt.gca().set_aspect('equal')
         plt.axis('off')
@@ -287,7 +382,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     # ========================================================================
 
     # Helper functions to add legend
-    def produce_patch_gaussian(color, mu_x):
+    def produce_patch(color, framework='gaussian', mu_x2=None, plus_or_minus_one=None):
+      if framework == 'gaussian':
         return plt.Line2D(
             [0],
             [0], 
@@ -295,11 +391,9 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             color='w', 
             markerfacecolor=color, 
             markersize=8, 
-            label=f'X-mean: {round(mu_x)}'
+            label=f'X-mean: {round(mu_x2)}'
         )
-
-
-    def produce_patch_ABBE(color, plus_or_minus_one):
+      elif framework == 'ABBE':
         return plt.Line2D(
             [0],
             [0], 
@@ -309,6 +403,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             markersize=8, 
             label=f'Community label: {plus_or_minus_one}'
         )
+
 
     # ========================================================================
 
@@ -396,9 +491,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     
         F = make_F(f_in, f_out)
 
-        λ_n = λ * n
-        N_n = λ_n  # N_n = E[poisson(λ_n)], type: int
-
 
         # Generate samples separately
         samples_gaussian = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
@@ -440,10 +532,9 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
                 ax.axis('on')
                 ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
                 if i < 2:
-                    ax.legend(handles=[produce_patch_gaussian('red', 0), produce_patch_gaussian('blue', mu_x2)])
+                    ax.legend(handles=[produce_patch(color='red', framework='gaussian', mu_x2=0), produce_patch(color='blue', framework='gaussian', mu_x2=mu_x2)])
                 else:
-                    ax.legend(handles=[produce_patch_ABBE('red', 1), produce_patch_ABBE('blue', -1)])
-
+                    ax.legend(handles=[produce_patch(color='red', framework='ABBE',  plus_or_minus_one=1), produce_patch(color='blue', framework='ABBE', plus_or_minus_one=-1)])
 
 
         axs[0, 0].set_title(f'Gaussian Samples with {n} nodes in each cluster, inter-proportion: {get_inter_proportion(G_distance) * 100:.2f}%')
@@ -457,63 +548,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         axs[2, 1].set_title(f'ABBE MB {mb_igraph_ABBE.number_of_edges()} edges, inter-proportion: {get_inter_proportion(mb_igraph_ABBE) * 100:.2f}%')
         axs[3, 0].set_title(f'SC: ABBE original, ARI: {similarity_original_ABBE * 100:.2f}%')
         axs[3, 1].set_title(f'SC: ABBE MB, ARI: {similarity_mb_ABBE * 100:.2f}%')
-    
-    
-        fig, axs = plt.subplots(4, 2, figsize=(24, 12))
-    
-        similarity_original, similarity_mb = draw(G_distance, mb_igraph, samples_gaussian, n_neighbors, axs, n_clusters)
 
-        ############## ABBE ################
-    
-        SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
-
-        samples_uniform = produce_samples(n, d, type_samples="uniform")
-        G_distance_ABBE = produce_distance_graph(samples_uniform, n, d, framework='ABBE')
-
-        col_slice = slice(1, samples_uniform.shape[1] + 1)
-
-        W = get_Gaussian_weight_matrix(samples_uniform[:, col_slice], n_neighbors)
-
-        edges = list(G_distance_ABBE.edges())
-        weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
-        nx.set_edge_attributes(G_distance_ABBE, weights, 'weight')
-
-        mb_igraph_ABBE = get_metric_backbone_igraph(G_distance_ABBE)
-
-        similarity_original_ABBE, similarity_mb_ABBE = draw(G_distance_ABBE, mb_igraph_ABBE, samples_uniform, n_neighbors, axs, n_clusters, L_idx=[2, 3])
-
-
-
-        for i in range(4):
-            for j in range(2):
-                ax = axs[i, j]
-                ax.set_xlabel('X-axis')
-                ax.set_ylabel('Y-axis')
-                ax.axis('equal')
-                ax.axis('on')
-                ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
-                if i < 2:
-                    ax.legend(handles=[produce_patch_gaussian('red', 0), produce_patch_gaussian('blue', mu_x2)])
-                else:
-                    ax.legend(handles=[produce_patch_ABBE('red', 1), produce_patch_ABBE('blue', -1)])
-
-
-
-        axs[0, 0].set_title(f'Gaussian Samples with {n} nodes in each cluster, inter-proportion: {get_inter_proportion(G_distance) * 100:.2f}%')
-        axs[0, 1].set_title(f'Metric Backbone, inter-proportion: {get_inter_proportion(mb_igraph) * 100:.2f}%')
-    
-        axs[1, 0].set_title(f'SC: Gaussian Samples with {n} nodes in each cluster, ARI: {similarity_original * 100:.2f}%')
-        axs[1, 1].set_title(f'SC: Metric Backbone, ARI: {similarity_mb * 100:.2f}%')
-    
-    
-        axs[2, 0].set_title(f'ABBE original {G_distance_ABBE.number_of_edges()} edges, inter-proportion: {get_inter_proportion(G_distance_ABBE) * 100:.2f}%')
-        axs[2, 1].set_title(f'ABBE MB {mb_igraph_ABBE.number_of_edges()} edges, inter-proportion: {get_inter_proportion(mb_igraph_ABBE) * 100:.2f}%')
-        axs[3, 0].set_title(f'SC: ABBE original, ARI: {similarity_original_ABBE * 100:.2f}%')
-        axs[3, 1].set_title(f'SC: ABBE MB, ARI: {similarity_mb_ABBE * 100:.2f}%')
-            
-        ## Conclusions
-        # V
-        # - Spectral clustering performs very poorly on ABBE graphs.
 
     # ========================================================================
 
@@ -595,9 +630,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         f_out = f(f_out_r)
     
         F = make_F(f_in, f_out)
-
-        λ_n = λ * n
-        N_n = λ_n  # N_n = E[poisson(λ_n)], type: int
     
         # Generate samples separately
         samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
@@ -630,72 +662,113 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
+    np.random.seed(42)
+
+    input_select_width = 10
+
+    L = list(range(100, 501, 100))
+    L.insert(0, 50)
+
+    ui.input_select('n_simulations3', 'Number of simulations:',
+                    choices=[1] + list(range(10, 101, 10)),
+                    selected=1,
+                    width=input_select_width
+    )
+
+    ui.input_select("n3", "Number of nodes in each cluster:",
+                    choices=L,
+                    selected=50,
+                    width=input_select_width
+    )
+
+    ui.input_select("d3", "Number of dimensions & communities:",
+                    choices=list((2, 3, 4)),
+                    selected=2,
+                    width=input_select_width
+    )
+
+
+    ui.input_select("mu_x23", "Mean of the second Gaussian with respect to the x-axis:",
+                    choices=list(range(1, 21)),
+                    selected=3,
+                    width=input_select_width
+    )
+
+
+    # ========================================================================
+
     @render.plot
     def graph_mu_fixed_n_neighbors_varying_PLOT():
+  
+        n_simulations = int(input.n_simulations3())
     
         n           = int(input.n())
         d           = int(input.d())
         n_clusters  = d
         mu_x2       = float(input.mu_x2())
     
+        n_neighbors_LIST = list(range(3, 21))
+
         fig, axs = plt.subplots(2, 1, figsize=(6, 12))
     
-        n_neighbors_LIST = list(range(3, 21))
-        ARI_LIST = []
-        ARI_LIST_MB = []
+        dim3_labels = [f'similarity_{i}' for i in range(n_simulations)]
     
-        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
+        array_3d = StringIndexed3DArray(array=np.zeros((len(n_neighbors_LIST), 2, n_simulations)), dim1_labels=n_neighbors_LIST, dim2_labels=['ARI_original', 'ARI_MB'], dim3_labels=dim3_labels)
     
-        col_slice = slice(1, samples.shape[1] + 1)
+        for i in range(n_simulations):
+            samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2, SEED=i)
+            col_slice = slice(1, samples.shape[1] + 1)
+        
+            for j, n_neighbors in enumerate(n_neighbors_LIST):
+                G = produce_distance_graph(samples, n, d, n_neighbors)
+                MB = get_metric_backbone_igraph(G)
+            
+                true_labels = list(nx.get_node_attributes(G, 'community').values())
+                true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
+
+                SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
+
+                A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+
+                pred_labels = SC.fit_predict(A)
+                pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+            
+                array_3d[n_neighbors, 'ARI_original', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
+            
+            
+                A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+                A = scipy.sparse.csr_matrix(A)
+
+                pred_labels = SC.fit_predict(A)
+                pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+            
+                array_3d[n_neighbors, 'ARI_MB', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
+            
+        def AVG_ARI_LIST(array_3d, n_neighbors_LIST, framework_str):
+            return [array_3d[n_neighbors - 3, framework_str, slice(None)].mean() for n_neighbors in n_neighbors_LIST]
     
     
-        for n_neighbors in n_neighbors_LIST:
-            G = produce_distance_graph(samples, n, d, n_neighbors)
-            MB = get_metric_backbone_igraph(G)
-        
-            pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
-
-            true_labels = list(nx.get_node_attributes(G, 'community').values())
-            true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
-
-            SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
-
-            A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-
-            pred_labels = SC.fit_predict(A)
-            pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            similarity  = adjusted_rand_score(true_labels, pred_labels)
-        
-            ARI_LIST.append(similarity)
-        
-        
-            A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
-            A = scipy.sparse.csr_matrix(A)
-
-            pred_labels = SC.fit_predict(A)
-            pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            similarity  = adjusted_rand_score(true_labels, pred_labels)
-        
-            ARI_LIST_MB.append(similarity)
-        
+        # ARI_LIST = [array_3d[n_neighbors - 3, 'ARI_original', slice(None)].mean() for n_neighbors in n_neighbors_LIST]
+        # ARI_LIST_MB = [array_3d[n_neighbors - 3, 'ARI_MB', slice(None)].mean() for n_neighbors in n_neighbors_LIST]
+            
     
-        axs[0].plot(n_neighbors_LIST, ARI_LIST)
+        axs[0].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'))
         axs[0].set_title('Original Graph')
     
-        axs[1].plot(n_neighbors_LIST, ARI_LIST_MB)
+        axs[1].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
         axs[1].set_title('Metric Backbone')
     
         for i in range(2):
-                ax = axs[i]
-                ax.set_xlabel('Number of nearest neighbors')
-                ax.set_ylabel('ARI')
-                ax.axis('equal')
-                ax.axis('on')
-                ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
-                if i < 2:
-                    ax.legend(handles=[produce_patch_gaussian('red', 0), produce_patch_gaussian('blue', mu_x2)])
-                else:
-                    ax.legend(handles=[produce_patch_ABBE('red', 1), produce_patch_ABBE('blue', -1)])
+            ax = axs[i]
+            ax.set_xlabel('Number of nearest neighbors')
+            ax.set_ylabel('ARI')
+            ax.axis('equal')
+            ax.axis('on')
+            ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+            if i < 2:
+                ax.legend(handles=[produce_patch(color='red', framework='gaussian', mu_x2=0), produce_patch(color='blue', framework='gaussian', mu_x2=mu_x2)])
+            else:
+                ax.legend(handles=[produce_patch(color='red', framework='ABBE',  plus_or_minus_one=1), produce_patch(color='blue', framework='ABBE', plus_or_minus_one=-1)])
 
 
     # ========================================================================
@@ -766,6 +839,9 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     ax.set_xlabel('Mean of the second Gaussian with respect to the x-axis')
     ax.set_ylabel('ARI')
 
+    # ========================================================================
+
+    # rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 --secret EAtsm+UuJrsMEwDkmLppzkl0Q8fMZi9fnR3y4p+C
 
     # ========================================================================
 
