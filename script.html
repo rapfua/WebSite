@@ -1562,7 +1562,7 @@ Clearly,
 <ul>
 <li><p>When preview yields the desired result in VsCode, compress the directory that contains “script.qmd” &amp; “app.py” and upload to RStudio in posit.cloud</p></li>
 <li><p>In posit.cloud’s RStudio, do: script.qmd &gt; Run Document (you will not get a good result, don’t worry)</p></li>
-<li><p>rsconnect add –account rfua –name rfua –token 81C1E677FB6E5544A763A83C69AF49E9 –secret EAtsm+UuJrsMEwDkmLppzkl0Q8fMZi9fnR3y4p+C</p></li>
+<li><p>rsconnect add –account rfua –name rfua –token 81C1E677FB6E5544A763A83C69AF49E9 –secret</p></li>
 <li><p>rsconnect deploy shiny -n rfua . (This can take up to three minutes)</p></li>
 <li><p>Possible to develop directly from posit.cloud’s RStudio by doing:</p>
 <ul>
@@ -2077,8 +2077,7 @@ A_w^{root=s}(t) = \int_\s \left( A_w^{root=u}(t - E_i) \bf 1_{E_i &lt; t} + \bf 
 <div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
 <div class="card-header dashboard-card-no-title bslib-navs-card-title">
 
-<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-17"><li class="nav-item" role="presentation"><a href="#card-tabset-17-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Coupling" aria-selected="true" class="nav-link active">Coupling</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Max" aria-selected="false" class="nav-link">Max</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="thinning" aria-selected="false" class="nav-link">thinning</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-4" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Tab 4" aria-selected="false" class="nav-link">Tab 4</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-5" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Tab 5" aria-selected="false" class="nav-link">Tab 5</a></li></ul></div>
-
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-17"><li class="nav-item" role="presentation"><a href="#card-tabset-17-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Coupling" aria-selected="true" class="nav-link active">Coupling</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Max" aria-selected="false" class="nav-link">Max</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="thinning" aria-selected="false" class="nav-link">thinning</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-4" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Tab 4" aria-selected="false" class="nav-link">Tab 4</a></li></ul></div>
 
 
 
@@ -2172,10 +2171,6 @@ P(\exists j \leq m, D_j^{\text{bin}} \neq D_j^{\text{Poi}}) &amp;\leq \sum_{s=1}
 <p>Equivalent w.r.t. distribution to the <strong>splitting time</strong> of that same individual’s parent, i.e., the moment his parent died and he was born.</p>
 </div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-17-4"><div class="card-body html-fill-item html-fill-container">
 <p>====================================</p>
-</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-17-5"><div class="card-body html-fill-item html-fill-container">
-<div class="cell-output cell-output-stdout html-fill-item html-fill-container">
-<pre><code>hello</code></pre>
-</div>
 </div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
     <template>Expand</template>
     <span class="bslib-full-screen-enter badge rounded-pill">
@@ -2207,7 +2202,7 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 </div>
 </div></div><aside id="bslib-sidebar-5" class="sidebar html-fill-container html-fill-item"><div class="html-fill-item html-fill-container">
-<div id="input_selects_3-1" class="cell-output cell-output-display no-overflow-x" data-execution_count="23">
+<div id="input_selects_3-1" class="cell-output cell-output-display no-overflow-x" data-execution_count="22">
 <div class="form-group shiny-input-container" style="width:10;">
   <label class="control-label" id="n_simulations3-label" for="n_simulations3">Number of simulations:</label>
   <div>
@@ -2225,7 +2220,7 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_3-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="23">
+<div id="input_selects_3-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="22">
 <div class="form-group shiny-input-container" style="width:10;">
   <label class="control-label" id="n3-label" for="n3">Number of nodes in each cluster:</label>
   <div>
@@ -2238,7 +2233,7 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_3-3" class="cell-output cell-output-display no-overflow-x" data-execution_count="23">
+<div id="input_selects_3-3" class="cell-output cell-output-display no-overflow-x" data-execution_count="22">
 <div class="form-group shiny-input-container" style="width:10;">
   <label class="control-label" id="d3-label" for="d3">Number of dimensions &amp; communities:</label>
   <div>
@@ -2248,7 +2243,7 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_3-4" class="cell-output cell-output-display no-overflow-x" data-execution_count="23">
+<div id="input_selects_3-4" class="cell-output cell-output-display no-overflow-x" data-execution_count="22">
 <div class="form-group shiny-input-container" style="width:10;">
   <label class="control-label" id="mu_x23-label" for="mu_x23">Mean of the second Gaussian with respect to the x-axis:</label>
   <div>

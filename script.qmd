@@ -1192,7 +1192,6 @@ is characterized by its output on such setss.
     not get a good result, don't worry)
 
 -   rsconnect add --account rfua --name rfua --token
-    81C1E677FB6E5544A763A83C69AF49E9 --secret
 
 
 -   rsconnect deploy shiny -n rfua . (This can take up to three minutes)
@@ -1205,9 +1204,7 @@ is characterized by its output on such setss.
 
 ```{python}
 
-# rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 --secret 
-
-# 
+# rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 
 ```
 
 # 10 {.tabset}

@@ -122,6 +122,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     # ========================================================================
 
     global_SEED = 42
+    SC = SpectralClustering(n_clusters=2, affinity='precomputed')
 
     # ========================================================================
 
@@ -203,8 +204,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         plt.tight_layout()
 
     # ========================================================================
-
-    np.random.seed(42)
 
     input_select_width = 10
 
@@ -301,7 +300,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     def produce_samples(n, d , type_samples, mu_x2=None, SEED=global_SEED):
     
-        rng = np.random.default_rng(42)
+        rng = np.random.default_rng(SEED)
   
         n_rows = n * d  # one row per node
         samples = np.empty((n_rows, d + 1))
@@ -558,10 +557,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    SC = SpectralClustering(n_clusters=2, affinity='precomputed')
-
-    np.random.seed(42)
-
     input_select_width = 10
 
     L = list(range(100, 501, 100))
@@ -683,8 +678,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
 
     # ========================================================================
-
-    np.random.seed(42)
 
     input_select_width = 10
 
@@ -836,72 +829,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    print('hello')
-
-    # def get_predColors_similarity(samples, col_slice, n_neighbors, true_labels, b_original=True, MB=None):
-    #   
-    #     A = None
-    #     
-    #     if b_original:
-    #         A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-    #     else:
-    #         A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
-    #         A = scipy.sparse.csr_matrix(A)
-    #         
-    #     pred_labels = SC.fit_predict(A)
-    #     pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-    #     similarity  = adjusted_rand_score(true_labels, pred_labels)
-    #     
-    #     # if b_original:
-    #     #     print(f"Adjusted Rand Score on Original Graph: {similarity * 100}")
-    #     # else:
-    #     #     print(f"Adjusted Rand Score on MB : {similarity * 100}")
-    #         
-    #     return pred_colors, similarity
-    # 
-    # 
-    # def draw(G, MB, samples, n_neighbors, axs, n_clusters, L_idx=[0, 1], affinity='precomputed'):
-    #   
-    #     pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
-    #     
-    #     true_labels = list(nx.get_node_attributes(G, 'community').values())
-    #     true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
-    # 
-    #     col_slice = slice(1, samples.shape[1] + 1)
-    # 
-    #     SC = SpectralClustering(n_clusters=n_clusters, affinity=affinity)
-    #     
-    #       
-    #     pred_colors_original, similarity_original = get_predColors_similarity(
-    #       samples,
-    #       col_slice,
-    #       n_neighbors,
-    #       true_labels
-    #     )
-    #     
-    #     pred_colors_mb, similarity_mb = get_predColors_similarity(
-    #       samples=None,
-    #       col_slice=None,
-    #       n_neighbors=None,
-    #       true_labels=true_labels,
-    #       b_original=False,
-    #       MB=MB
-    #     )
-    # 
-    # 
-    # 
-    #     nx.draw(G, pos, node_color=true_colors, node_size=5, ax=axs[L_idx[0], 0], edge_color='lightgray')
-    #     nx.draw(MB, pos, node_color=true_colors, node_size=5, ax=axs[L_idx[0], 1], edge_color='lightgray')
-    #     
-    #     nx.draw(G, pos, node_color=pred_colors_original, node_size=5, ax=axs[L_idx[1], 0], edge_color='lightgray')
-    #     nx.draw(MB, pos, node_color=pred_colors_mb, node_size=5, ax=axs[L_idx[1], 1], edge_color='lightgray')
-    #     
-    #     return similarity_original, similarity_mb
-
-    # ========================================================================
-
-    np.random.seed(42)
-
     input_select_width = 10
 
     L = list(range(100, 501, 100))
@@ -1018,7 +945,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     return None
 
 
-_static_assets = ["script_files","images/durrett.jpeg","script_files/libs/quarto-html/tippy.css","script_files/libs/quarto-html/quarto-syntax-highlighting.css","script_files/libs/bootstrap/bootstrap-icons.css","script_files/libs/bootstrap/bootstrap.min.css","script_files/libs/quarto-dashboard/datatables.min.css","script_files/libs/quarto-diagram/mermaid.css","script_files/libs/clipboard/clipboard.min.js","script_files/libs/quarto-html/quarto.js","script_files/libs/quarto-html/popper.min.js","script_files/libs/quarto-html/tippy.umd.min.js","script_files/libs/quarto-html/anchor.min.js","script_files/libs/bootstrap/bootstrap.min.js","script_files/libs/quarto-dashboard/quarto-dashboard.js","script_files/libs/quarto-dashboard/stickythead.js","script_files/libs/quarto-dashboard/datatables.min.js","script_files/libs/quarto-dashboard/pdfmake.min.js","script_files/libs/quarto-dashboard/vfs_fonts.js","script_files/libs/quarto-dashboard/web-components.js","script_files/libs/quarto-dashboard/components.js","script_files/libs/quarto-diagram/mermaid.min.js","script_files/libs/quarto-diagram/mermaid-init.js"]
+_static_assets = ["script_files","images/durrett.jpeg"]
 _static_assets = {"/" + sa: Path(__file__).parent / sa for sa in _static_assets}
 
 app = App(
