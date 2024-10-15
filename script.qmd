@@ -750,7 +750,7 @@ def normals_nNodes_dDimensions_PLOT():
     SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
 
     samples_uniform = produce_samples(n, d, type_samples="uniform")
-    G_distance_ABBE = produce_distance_graph(samples_uniform, n, d, framework='ABBE')
+    G_distance_ABBE = produce_distance_graph(samples_uniform, n, d, framework='ABBE', F=F)
 
     col_slice = slice(1, samples_uniform.shape[1] + 1)
 

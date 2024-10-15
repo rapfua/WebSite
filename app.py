@@ -514,7 +514,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
 
         samples_uniform = produce_samples(n, d, type_samples="uniform")
-        G_distance_ABBE = produce_distance_graph(samples_uniform, n, d, framework='ABBE')
+        G_distance_ABBE = produce_distance_graph(samples_uniform, n, d, framework='ABBE', F=F)
 
         col_slice = slice(1, samples_uniform.shape[1] + 1)
 
@@ -824,8 +824,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    # rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 --secret 
-
+    # rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 
 
     # ========================================================================
 
@@ -945,7 +944,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     return None
 
 
-_static_assets = ["script_files","images/durrett.jpeg"]
+_static_assets = ["script_files","images/durrett.jpeg","script_files/libs/quarto-html/tippy.css","script_files/libs/quarto-html/quarto-syntax-highlighting.css","script_files/libs/bootstrap/bootstrap-icons.css","script_files/libs/bootstrap/bootstrap.min.css","script_files/libs/quarto-dashboard/datatables.min.css","script_files/libs/quarto-diagram/mermaid.css","script_files/libs/clipboard/clipboard.min.js","script_files/libs/quarto-html/quarto.js","script_files/libs/quarto-html/popper.min.js","script_files/libs/quarto-html/tippy.umd.min.js","script_files/libs/quarto-html/anchor.min.js","script_files/libs/bootstrap/bootstrap.min.js","script_files/libs/quarto-dashboard/quarto-dashboard.js","script_files/libs/quarto-dashboard/stickythead.js","script_files/libs/quarto-dashboard/datatables.min.js","script_files/libs/quarto-dashboard/pdfmake.min.js","script_files/libs/quarto-dashboard/vfs_fonts.js","script_files/libs/quarto-dashboard/web-components.js","script_files/libs/quarto-dashboard/components.js","script_files/libs/quarto-diagram/mermaid.min.js","script_files/libs/quarto-diagram/mermaid-init.js"]
 _static_assets = {"/" + sa: Path(__file__).parent / sa for sa in _static_assets}
 
 app = App(
