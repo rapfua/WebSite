@@ -64,6 +64,9 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             self.index_map_dim1 = {label: i for i, label in enumerate(dim1_labels)}
             self.index_map_dim2 = {label: i for i, label in enumerate(dim2_labels)}
             self.index_map_dim3 = {label: i for i, label in enumerate(dim3_labels)}
+            self.dim1_labels = dim1_labels
+            self.dim2_labels = dim2_labels
+            self.dim3_labels = dim3_labels
 
         def __getitem__(self, indices):
             row_label, col_label, depth_label = indices
@@ -96,33 +99,24 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             depth = self.index_map_dim3[depth_label]
             # Set the value in the array
             self.array[row, col, depth] = value
+        
+        
+        def __str__(self):
+            result = []
+            for i, dim1_label in enumerate(self.dim1_labels):
+                result.append(f"\nDim1 ({dim1_label}):\n")
+                for j, dim2_label in enumerate(self.dim2_labels):
+                    row = f"Dim2 ({dim2_label}): "
+                    row += " ".join(f"{self.array[i, j, k]:.2f}" for k in range(len(self.dim3_labels)))
+                    result.append(row)
+            return "\n".join(result)
 
-    # class StringIndexed3DArray:
-    #     def __init__(self, array, dim1_labels, dim2_labels, dim3_labels):
-    #         self.array = array
-    #         # Create dictionaries to map strings to indices for each dimension
-    #         self.index_map_dim1 = {label: i for i, label in enumerate(dim1_labels)}
-    #         self.index_map_dim2 = {label: i for i, label in enumerate(dim2_labels)}
-    #         self.index_map_dim3 = {label: i for i, label in enumerate(dim3_labels)}
-    # 
-    #     def __getitem__(self, indices):
-    #         row_label, col_label, depth_label = indices
-    #         # Convert string labels to indices
-    #         row = self.index_map_dim1[row_label]
-    #         col = self.index_map_dim2[col_label]
-    #         depth = self.index_map_dim3[depth_label]
-    #         # Access the value in the array
-    #         return self.array[row, col, depth]
-    #       
-    #       
-    #     def __setitem__(self, indices, value):
-    #         row_label, col_label, depth_label = indices
-    #         # Convert string labels to indices
-    #         row = self.index_map_dim1[row_label]
-    #         col = self.index_map_dim2[col_label]
-    #         depth = self.index_map_dim3[depth_label]
-    #         # Set the value in the array
-    #         self.array[row, col, depth] = value
+
+    def AVG_ARI_LIST(array_3d, n_neighbors_LIST, framework_str):
+        return [array_3d[n_neighbors - 3, framework_str, slice(None)].mean() for n_neighbors in n_neighbors_LIST]
+  
+    def STD_ARI_LIST(array_3d, n_neighbors_LIST, framework_str):
+        return [array_3d[n_neighbors - 3, framework_str, slice(None)].std() for n_neighbors in n_neighbors_LIST]
 
 
     # ========================================================================
@@ -152,6 +146,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         return G
 
     # ========================================================================
+
+    ui.markdown("## Percolation Demo")
 
     ui.input_select("p", "Probability:",
                     choices=[x / 100 for x in range(1, 100)],
@@ -340,7 +336,7 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    def produce_distance_graph(samples, n, n_communities, n_neighbors=None, framework='gaussian', SEED=global_SEED):
+    def produce_distance_graph(samples, n, n_communities, n_neighbors=None, framework='gaussian', SEED=global_SEED, F=None, R1=None, R2=None):
   
         rng = np.random.default_rng(SEED)
   
@@ -371,7 +367,17 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     
             community_labels = np.array(range(1, n_communities + 1))
             nx.set_node_attributes(G, {node: rng.choice(community_labels) for node in G.nodes}, 'community')
-    
+        
+        
+            edges_to_add = [(u_idx, v_idx) for u_idx in range(n_nodes) for v_idx in range(u_idx + 1, n_nodes) if F(G, u_idx, v_idx) == 1]
+        
+            G.add_edges_from(edges_to_add)
+        
+        elif framework == 'hybrid':
+            nx.set_node_attributes(G, {node: 1 if node + 1 > n else 0 for node in G.nodes}, 'community')
+        
+        
+ 
             edges_to_add = [(u_idx, v_idx) for u_idx in range(n_nodes) for v_idx in range(u_idx + 1, n_nodes) if F(G, u_idx, v_idx) == 1]
         
             G.add_edges_from(edges_to_add)
@@ -552,6 +558,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
+    SC = SpectralClustering(n_clusters=2, affinity='precomputed')
+
     np.random.seed(42)
 
     input_select_width = 10
@@ -559,20 +567,20 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     L = list(range(100, 501, 100))
     L.insert(0, 50)
 
-    ui.input_select("n2", "Number of nodes in each cluster:",
+    ui.input_select("n100", "Number of nodes in each cluster:",
                     choices=L,
                     selected=50,
                     width=input_select_width
     )
 
-    ui.input_select("d2", "Number of dimensions & communities:",
+    ui.input_select("d100", "Number of dimensions & communities:",
                     choices=list((2, 3, 4)),
                     selected=2,
                     width=input_select_width
     )
 
     # for graph creation (& spectral clustering)
-    ui.input_select("n_neighbors2", "Number of nearest neighbors ",
+    ui.input_select("n_neighbors100", "Number of nearest neighbors ",
                     choices=list(range(5, 21)),
                     selected=10,
                     width=input_select_width
@@ -584,28 +592,28 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     #                 width=input_select_width
     # )
 
-    ui.input_select("mu_x22", "Mean of the second Gaussian with respect to the x-axis:",
+    ui.input_select("mu_x2100", "Mean of the second Gaussian with respect to the x-axis:",
                     choices=list(range(1, 21)),
                     selected=3,
                     width=input_select_width
     )
 
 
-    ui.input_select("λ2", "Intensity parameter (N_n ~ Poisson(λ * n)):",
+    ui.input_select("λ100", "Intensity parameter (N_n ~ Poisson(λ * n)):",
                     choices=[1],
                     selected=1,
                     width=input_select_width
     )
 
-    ui.input_select("R_12", "Big radius for intra-community edges:",
-                    choices=list(range(1, 11)),
-                    selected=2,
+    ui.input_select("R_1100", "Big radius for intra-community edges:",
+                    choices=[round(i * 0.01, 2) for i in range(1, 201)],
+                    selected= 1,
                     width=input_select_width
     )
 
-    ui.input_select("R_22", "Small radius for inter-community edges:",
-                    choices=[1, 1.5, 2, 2.5, 3],
-                    selected=[1],
+    ui.input_select("R_2100", "Small radius for inter-community edges:",
+                    choices=[round(i * 0.01, 2) for i in range(1, 101)],
+                    selected=0.5,
                     width=input_select_width
     )
 
@@ -613,29 +621,22 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     @render.plot
     def graph_gaussian_clusters_ABBE_prediction_PLOT():
+  
     
-        n           = int(input.n2())
-        d           = int(input.d2())
+        n           = int(input.n100())
+        d           = int(input.d100())
         n_clusters  = d
-        n_neighbors = int(input.n_neighbors2())
-        mu_x2       = float(input.mu_x22())
-        λ           = int(input.λ2())
+        n_neighbors = int(input.n_neighbors100())
+        mu_x100       = float(input.mu_x2100())
+        λ           = int(input.λ100())
 
-        R_1         = float(input.R_12())  
-        R_2         = float(input.R_22())
-        R_1, R_2 = max(R_1, R_2), min(R_1, R_2)
-        f_in_r  = φ(R_1)
-        f_out_r = φ(R_2)
-        f_in  = f(f_in_r)
-        f_out = f(f_out_r)
-    
-        F = make_F(f_in, f_out)
+        F = make_F(f(φ(float(input.R_1100()))), f(φ(float(input.R_2100()))))
     
         # Generate samples separately
-        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
+        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x100)
     
         # Update G_distance separately
-        G = produce_distance_graph(samples, n, d, framework='ABBE')
+        G = produce_distance_graph(samples, n, d, framework='hybrid', F=F)
 
         col_slice = slice(1, samples.shape[1] + 1)
 
@@ -644,12 +645,12 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         edges = list(G.edges())
         weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
         nx.set_edge_attributes(G, weights, 'weight')
-
+    
         mb_igraph = get_metric_backbone_igraph(G)
     
         fig, axs = plt.subplots(2, 2, figsize=(12, 12))
     
-        similarity_original_ABBE, similarity_mb_ABBE = draw(
+        similarity_original, similarity_mb = draw(
           G,
           mb_igraph,
           samples,
@@ -659,6 +660,243 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
           L_idx=[0, 1]
         )
 
+
+        for i in range(2):
+            for j in range(2):
+                ax = axs[i, j]
+                ax.set_xlabel('X-axis')
+                ax.set_ylabel('Y-axis')
+                ax.axis('equal')
+                ax.axis('on')
+                ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+                ax.legend(
+                  handles=[produce_patch(color='red', framework='gaussian', mu_x2=0),
+                           produce_patch(color='blue', framework='gaussian', mu_x2=mu_x100)]
+                 )
+
+
+        axs[0, 0].set_title(f'Gaussian Samples with {n} nodes in each cluster, inter-proportion: {get_inter_proportion(G) * 100:.2f}%')
+        axs[0, 1].set_title(f'Metric Backbone, inter-proportion: {get_inter_proportion(mb_igraph) * 100:.2f}%')
+    
+        axs[1, 0].set_title(f'SC: Gaussian Samples with {n} nodes in each cluster, ARI: {similarity_original * 100:.2f}%')
+        axs[1, 1].set_title(f'SC: Metric Backbone, ARI: {similarity_mb * 100:.2f}%')
+
+
+    # ========================================================================
+
+    np.random.seed(42)
+
+    input_select_width = 10
+
+    L = list(range(100, 501, 100))
+    L.insert(0, 50)
+
+    ui.input_select('n_simulations4', 'Number of simulations:',
+                    choices=[1] + list(range(10, 101, 10)),
+                    selected=10,
+                    width=input_select_width
+    )
+
+    ui.input_select("n4", "Number of nodes in each cluster:",
+                    choices=L,
+                    selected=100,
+                    width=input_select_width
+    )
+
+    ui.input_select("d4", "Number of dimensions & communities:",
+                    choices=list((2, 3, 4)),
+                    selected=2,
+                    width=input_select_width
+    )
+
+
+    ui.input_select("mu_x24", "Mean of the second Gaussian with respect to the x-axis:",
+                    choices=list(range(1, 21)),
+                    selected=3,
+                    width=input_select_width
+    )
+
+
+
+
+
+    ui.input_select("R_14", "Big radius for intra-community edges:",
+                    choices=[round(i * 0.01, 2) for i in range(1, 201)],
+                    selected= 1,
+                    width=input_select_width
+    )
+
+    ui.input_select("R_24", "Small radius for inter-community edges:",
+                    choices=[round(i * 0.01, 2) for i in range(1, 101)],
+                    selected=0.5,
+                    width=input_select_width
+    )
+
+
+    # ========================================================================
+
+    @render.plot
+    def graph_mu_fixed_n_neighbors_varying_PLOT_HYBRID():
+  
+        λ           = 1
+
+        F = make_F(f(φ(float(input.R_14()))), f(φ(float(input.R_24()))))
+    
+  
+        n_simulations = int(input.n_simulations4())
+    
+        n           = int(input.n4())
+        d           = int(input.d4())
+        n_clusters  = d
+        mu_x2       = float(input.mu_x24())
+    
+        n_neighbors_LIST = list(range(3, 51))
+
+        fig, axs = plt.subplots(2, 1, figsize=(6, 12))
+    
+        dim3_labels = [f'similarity_{i}' for i in range(n_simulations)]
+    
+        array_3d = StringIndexed3DArray(array=np.zeros((len(n_neighbors_LIST), 2, n_simulations)), dim1_labels=n_neighbors_LIST, dim2_labels=['ARI_original', 'ARI_MB'], dim3_labels=dim3_labels)
+    
+        for i in range(n_simulations):
+            print()
+            print('Simulation:', i + 1, 'out of', n_simulations, 'started')
+            print()
+        
+            samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2, SEED=i)
+            col_slice = slice(1, samples.shape[1] + 1)
+        
+        
+        
+            for j, n_neighbors in enumerate(n_neighbors_LIST):
+                # Update G_distance separately
+                G = produce_distance_graph(samples, n, d, framework='hybrid', F=F)
+        
+                W = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+        
+                edges = list(G.edges())
+                weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
+                nx.set_edge_attributes(G, weights, 'weight')
+            
+                MB = get_metric_backbone_igraph(G)
+            
+            
+                true_labels = list(nx.get_node_attributes(G, 'community').values())
+                true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
+
+                SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
+
+                A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+
+                pred_labels = SC.fit_predict(A)
+                pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+            
+                array_3d[n_neighbors, 'ARI_original', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
+            
+            
+                A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+                A = scipy.sparse.csr_matrix(A)
+
+                pred_labels = SC.fit_predict(A)
+                pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+            
+                array_3d[n_neighbors, 'ARI_MB', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
+            
+    
+    
+        axs[0].set_ylim(bottom=0, top=1)
+        axs[0].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'))
+        axs[0].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), fmt='o', label="Mean with Std Dev", alpha=0.5)
+        axs[0].set_title('Original Graph')
+    
+        print(STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
+        print(array_3d)
+    
+        axs[1].set_ylim(0, 1)
+        axs[1].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
+        axs[1].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), fmt='o', label="Mean with Std Dev", alpha=0.5)
+        axs[1].set_title('Metric Backbone')
+    
+        for i in range(2):
+            ax = axs[i]
+            ax.set_xlabel('Number of nearest neighbors')
+            ax.set_ylabel('ARI')
+            ax.axis('on')
+            ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+            if i < 2:
+                ax.legend(handles=[produce_patch(color='red', framework='gaussian', mu_x2=0), produce_patch(color='blue', framework='gaussian', mu_x2=mu_x2)])
+            else:
+                ax.legend(handles=[produce_patch(color='red', framework='ABBE',  plus_or_minus_one=1), produce_patch(color='blue', framework='ABBE', plus_or_minus_one=-1)])
+
+
+    # ========================================================================
+
+    # rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 --secret 
+
+
+    # ========================================================================
+
+    print('hello')
+
+    # def get_predColors_similarity(samples, col_slice, n_neighbors, true_labels, b_original=True, MB=None):
+    #   
+    #     A = None
+    #     
+    #     if b_original:
+    #         A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+    #     else:
+    #         A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+    #         A = scipy.sparse.csr_matrix(A)
+    #         
+    #     pred_labels = SC.fit_predict(A)
+    #     pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+    #     similarity  = adjusted_rand_score(true_labels, pred_labels)
+    #     
+    #     # if b_original:
+    #     #     print(f"Adjusted Rand Score on Original Graph: {similarity * 100}")
+    #     # else:
+    #     #     print(f"Adjusted Rand Score on MB : {similarity * 100}")
+    #         
+    #     return pred_colors, similarity
+    # 
+    # 
+    # def draw(G, MB, samples, n_neighbors, axs, n_clusters, L_idx=[0, 1], affinity='precomputed'):
+    #   
+    #     pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
+    #     
+    #     true_labels = list(nx.get_node_attributes(G, 'community').values())
+    #     true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
+    # 
+    #     col_slice = slice(1, samples.shape[1] + 1)
+    # 
+    #     SC = SpectralClustering(n_clusters=n_clusters, affinity=affinity)
+    #     
+    #       
+    #     pred_colors_original, similarity_original = get_predColors_similarity(
+    #       samples,
+    #       col_slice,
+    #       n_neighbors,
+    #       true_labels
+    #     )
+    #     
+    #     pred_colors_mb, similarity_mb = get_predColors_similarity(
+    #       samples=None,
+    #       col_slice=None,
+    #       n_neighbors=None,
+    #       true_labels=true_labels,
+    #       b_original=False,
+    #       MB=MB
+    #     )
+    # 
+    # 
+    # 
+    #     nx.draw(G, pos, node_color=true_colors, node_size=5, ax=axs[L_idx[0], 0], edge_color='lightgray')
+    #     nx.draw(MB, pos, node_color=true_colors, node_size=5, ax=axs[L_idx[0], 1], edge_color='lightgray')
+    #     
+    #     nx.draw(G, pos, node_color=pred_colors_original, node_size=5, ax=axs[L_idx[1], 0], edge_color='lightgray')
+    #     nx.draw(MB, pos, node_color=pred_colors_mb, node_size=5, ax=axs[L_idx[1], 1], edge_color='lightgray')
+    #     
+    #     return similarity_original, similarity_mb
 
     # ========================================================================
 
@@ -671,13 +909,13 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     ui.input_select('n_simulations3', 'Number of simulations:',
                     choices=[1] + list(range(10, 101, 10)),
-                    selected=1,
+                    selected=10,
                     width=input_select_width
     )
 
     ui.input_select("n3", "Number of nodes in each cluster:",
                     choices=L,
-                    selected=50,
+                    selected=100,
                     width=input_select_width
     )
 
@@ -702,12 +940,12 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
   
         n_simulations = int(input.n_simulations3())
     
-        n           = int(input.n())
-        d           = int(input.d())
+        n           = int(input.n3())
+        d           = int(input.d3())
         n_clusters  = d
-        mu_x2       = float(input.mu_x2())
+        mu_x2       = float(input.mu_x23())
     
-        n_neighbors_LIST = list(range(3, 21))
+        n_neighbors_LIST = list(range(3, 51))
 
         fig, axs = plt.subplots(2, 1, figsize=(6, 12))
     
@@ -716,6 +954,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         array_3d = StringIndexed3DArray(array=np.zeros((len(n_neighbors_LIST), 2, n_simulations)), dim1_labels=n_neighbors_LIST, dim2_labels=['ARI_original', 'ARI_MB'], dim3_labels=dim3_labels)
     
         for i in range(n_simulations):
+            print('Simulation:', i + 1, 'out of', n_simulations, 'started')
+        
             samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2, SEED=i)
             col_slice = slice(1, samples.shape[1] + 1)
         
@@ -744,25 +984,25 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
             
                 array_3d[n_neighbors, 'ARI_MB', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
             
-        def AVG_ARI_LIST(array_3d, n_neighbors_LIST, framework_str):
-            return [array_3d[n_neighbors - 3, framework_str, slice(None)].mean() for n_neighbors in n_neighbors_LIST]
     
-    
-        # ARI_LIST = [array_3d[n_neighbors - 3, 'ARI_original', slice(None)].mean() for n_neighbors in n_neighbors_LIST]
-        # ARI_LIST_MB = [array_3d[n_neighbors - 3, 'ARI_MB', slice(None)].mean() for n_neighbors in n_neighbors_LIST]
-            
     
         axs[0].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'))
+        axs[0].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), fmt='o', label="Mean with Std Dev", alpha=0.5)
         axs[0].set_title('Original Graph')
+        axs[0].set_ylim(bottom=0, top=1)
+    
+        print(STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
+        print(array_3d)
     
         axs[1].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
+        axs[1].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), fmt='o', label="Mean with Std Dev", alpha=0.5)
         axs[1].set_title('Metric Backbone')
+        axs[1].set_ylim(0, 1)
     
         for i in range(2):
             ax = axs[i]
             ax.set_xlabel('Number of nearest neighbors')
             ax.set_ylabel('ARI')
-            ax.axis('equal')
             ax.axis('on')
             ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
             if i < 2:
@@ -773,84 +1013,12 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    R_1         = 3
-    R_2         = 1.5
-    R_1, R_2 = max(R_1, R_2), min(R_1, R_2)
-    f_in_r  = φ(R_1)
-    f_out_r = φ(R_2)
-    f_in  = f(f_in_r)
-    f_out = f(f_out_r)
-
-    F = make_F(f_in, f_out)
-
-    fig, axs = plt.subplots(2, 1, figsize=(6, 12))
-
-    n           = 100
-    d           = 2
-    n_clusters  = d
-    n_neighbors = 10
-    # n_neighbors = 4
-    λ           = 1
-
-    mu_x2_grid  = np.arange(1, 5.1, 0.5).tolist()
-    res_G = []
-    res_MB = []
-
-    for mu_x2 in mu_x2_grid:
-        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
-        G = produce_distance_graph(samples, n, d, n_neighbors)
-        MB = get_metric_backbone_igraph(G)
-    
-        pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
-    
-        true_labels = list(nx.get_node_attributes(G, 'community').values())
-        true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
-    
-        col_slice = slice(1, samples.shape[1] + 1)
-    
-        SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
-    
-        A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-        
-        pred_labels = SC.fit_predict(A)
-        pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-        similarity  = adjusted_rand_score(true_labels, pred_labels)
-    
-        res_G.append(similarity)
-    
-        A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
-        A = scipy.sparse.csr_matrix(A)
-    
-        pred_labels = SC.fit_predict(A)
-        pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-        similarity  = adjusted_rand_score(true_labels, pred_labels)
-    
-        res_MB.append(similarity)
-    
-    ax = axs[0]    
-    ax.plot(mu_x2_grid, res_G)
-    ax.set_title('Original Graph')
-    ax.set_xlabel('Mean of the second Gaussian with respect to the x-axis')
-    ax.set_ylabel('ARI')
-
-    ax = axs[1]
-    ax.plot(mu_x2_grid, res_MB)
-    ax.set_title('Metric Backbone')
-    ax.set_xlabel('Mean of the second Gaussian with respect to the x-axis')
-    ax.set_ylabel('ARI')
-
-    # ========================================================================
-
-    # rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 --secret EAtsm+UuJrsMEwDkmLppzkl0Q8fMZi9fnR3y4p+C
-
-    # ========================================================================
-
 
 
     return None
 
 
-_static_assets = ["script_files"]
+_static_assets = ["script_files","images/durrett.jpeg","script_files/libs/quarto-html/tippy.css","script_files/libs/quarto-html/quarto-syntax-highlighting.css","script_files/libs/bootstrap/bootstrap-icons.css","script_files/libs/bootstrap/bootstrap.min.css","script_files/libs/quarto-dashboard/datatables.min.css","script_files/libs/quarto-diagram/mermaid.css","script_files/libs/clipboard/clipboard.min.js","script_files/libs/quarto-html/quarto.js","script_files/libs/quarto-html/popper.min.js","script_files/libs/quarto-html/tippy.umd.min.js","script_files/libs/quarto-html/anchor.min.js","script_files/libs/bootstrap/bootstrap.min.js","script_files/libs/quarto-dashboard/quarto-dashboard.js","script_files/libs/quarto-dashboard/stickythead.js","script_files/libs/quarto-dashboard/datatables.min.js","script_files/libs/quarto-dashboard/pdfmake.min.js","script_files/libs/quarto-dashboard/vfs_fonts.js","script_files/libs/quarto-dashboard/web-components.js","script_files/libs/quarto-dashboard/components.js","script_files/libs/quarto-diagram/mermaid.min.js","script_files/libs/quarto-diagram/mermaid-init.js"]
 _static_assets = {"/" + sa: Path(__file__).parent / sa for sa in _static_assets}
 
 app = App(

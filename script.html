@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="script_files/libs/clipboard/clipboard.min.js"></script>
@@ -72,13 +92,38 @@ ul.task-list li input[type="checkbox"] {
         
       </div>
     </div>
-<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-percolation-demo" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#percolation-demo" data-scrolling="false" href="#percolation-demo" aria-controls="percolation-demo" aria-selected="true"><span class="nav-link-text">Percolation Demo</span></a></li><li class="nav-item" role="presentation"><a id="tab-introduction" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#introduction" data-scrolling="false" href="#introduction" aria-controls="introduction" aria-selected="false"><span class="nav-link-text">Introduction</span></a></li><li class="nav-item" role="presentation"><a id="tab-sheet-1" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#sheet-1" data-scrolling="false" href="#sheet-1" aria-controls="sheet-1" aria-selected="false"><span class="nav-link-text">Sheet 1</span></a></li><li class="nav-item" role="presentation"><a id="tab-metric-backbone-spectral-clustering-simulations" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#metric-backbone-spectral-clustering-simulations" data-scrolling="false" href="#metric-backbone-spectral-clustering-simulations" aria-controls="metric-backbone-spectral-clustering-simulations" aria-selected="false"><span class="nav-link-text">Metric Backbone &amp; Spectral Clustering Simulations</span></a></li><li class="nav-item" role="presentation"><a id="tab-graph-gaussian-clusters-abbe-prediction" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#graph-gaussian-clusters-abbe-prediction" data-scrolling="false" href="#graph-gaussian-clusters-abbe-prediction" aria-controls="graph-gaussian-clusters-abbe-prediction" aria-selected="false"><span class="nav-link-text">graph gaussian clusters, ABBE prediction</span></a></li><li class="nav-item" role="presentation"><a id="tab-graph-μ-fixed-n_neighbors-varying" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#graph-μ-fixed-n_neighbors-varying" data-scrolling="false" href="#graph-μ-fixed-n_neighbors-varying" aria-controls="graph-μ-fixed-n_neighbors-varying" aria-selected="false"><span class="nav-link-text">graph μ fixed n_neighbors varying</span></a></li><li class="nav-item" role="presentation"><a id="tab-graph" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#graph" data-scrolling="false" href="#graph" aria-controls="graph" aria-selected="false"><span class="nav-link-text">graph</span></a></li><li class="nav-item" role="presentation"><a id="tab-module-dependencies" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#module-dependencies" data-scrolling="false" href="#module-dependencies" aria-controls="module-dependencies" aria-selected="false"><span class="nav-link-text">Module Dependencies</span></a></li><li class="nav-item" role="presentation"><a id="tab-proof-of-thm-2.1" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#proof-of-thm-2.1" data-scrolling="false" href="#proof-of-thm-2.1" aria-controls="proof-of-thm-2.1" aria-selected="false"><span class="nav-link-text">Proof of THM 2.1</span></a></li><li class="nav-item" role="presentation"><a id="tab-instructions-to-deploy-website" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#instructions-to-deploy-website" data-scrolling="false" href="#instructions-to-deploy-website" aria-controls="instructions-to-deploy-website" aria-selected="false"><span class="nav-link-text">Instructions to deploy website</span></a></li></ul></div></div>
+<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-page-navigation" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#page-navigation" data-scrolling="false" href="#page-navigation" aria-controls="page-navigation" aria-selected="true"><span class="nav-link-text">Page Navigation</span></a></li><li class="nav-item" role="presentation"><a id="tab-section" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section" data-scrolling="false" href="#section" aria-controls="section" aria-selected="false"><span class="nav-link-text">1</span></a></li><li class="nav-item" role="presentation"><a id="tab-section-2" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section-2" data-scrolling="false" href="#section-2" aria-controls="section-2" aria-selected="false"><span class="nav-link-text">2</span></a></li><li class="nav-item" role="presentation"><a id="tab-section-3" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section-3" data-scrolling="false" href="#section-3" aria-controls="section-3" aria-selected="false"><span class="nav-link-text">3</span></a></li><li class="nav-item" role="presentation"><a id="tab-section-5" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section-5" data-scrolling="false" href="#section-5" aria-controls="section-5" aria-selected="false"><span class="nav-link-text">4</span></a></li><li class="nav-item" role="presentation"><a id="tab-section-7" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section-7" data-scrolling="false" href="#section-7" aria-controls="section-7" aria-selected="false"><span class="nav-link-text">6</span></a></li><li class="nav-item" role="presentation"><a id="tab-section-9" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section-9" data-scrolling="false" href="#section-9" aria-controls="section-9" aria-selected="false"><span class="nav-link-text">7</span></a></li><li class="nav-item" role="presentation"><a id="tab-section-10" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section-10" data-scrolling="false" href="#section-10" aria-controls="section-10" aria-selected="false"><span class="nav-link-text">8</span></a></li><li class="nav-item" role="presentation"><a id="tab-section-11" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section-11" data-scrolling="false" href="#section-11" aria-controls="section-11" aria-selected="false"><span class="nav-link-text">9</span></a></li><li class="nav-item" role="presentation"><a id="tab-section-12" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#section-12" data-scrolling="false" href="#section-12" aria-controls="section-12" aria-selected="false"><span class="nav-link-text">10</span></a></li><li class="nav-item" role="presentation"><a id="tab-graph-μ-fixed-n_neighbors-varying" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#graph-μ-fixed-n_neighbors-varying" data-scrolling="false" href="#graph-μ-fixed-n_neighbors-varying" aria-controls="graph-μ-fixed-n_neighbors-varying" aria-selected="false"><span class="nav-link-text">graph μ fixed n_neighbors varying</span></a></li></ul></div></div>
 </nav>
 </header>
 <div class="page-layout-custom quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill quarto-dashboard-pages">  
 
 <div class="bslib-grid-item html-fill-item tab-content bslib-grid" data-layout="fill" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
-<div id="percolation-demo" class="dashboard-page tab-pane show active html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-percolation-demo">
+<div id="page-navigation" class="dashboard-page tab-pane show active html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-page-navigation">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<ol type="1">
+<li><p>Percolation demo</p></li>
+<li><p>Vincent Tassion</p></li>
+<li><p>Metric Backbone &amp; Spectral Clustering Simulations 6 hybrid graph μ fixed n_neighbors varying</p></li>
+<li><p>Module dependencies</p></li>
+<li><p>Proof of THM 2.1</p></li>
+<li><p>Instructions to deploy website</p></li>
+<li><p>First Passage Percolation On Inhomogeneous Random Graphs</p></li>
+<li><p>Graph with Gaussian clusters &amp; ABBE prediction</p></li>
+<li><p>Plot with μ fixed &amp; n_neighbors varying</p></li>
+<li>graph</li>
+</ol>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+<div id="section" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-section">
 <div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" style=" --bslib-sidebar-width: 300px" data-bslib-sidebar-border="false" data-bslib-sidebar-border-radius="false"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
@@ -98,7 +143,10 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 </div>
 </div></div><aside id="bslib-sidebar-1" class="sidebar html-fill-container html-fill-item"><div class="html-fill-item html-fill-container">
-<div id="input_selects_1-1" class="cell-output cell-output-display no-overflow-x" data-execution_count="7">
+<div id="input_selects_1-1" class="cell-output cell-output-display" data-execution_count="7">
+<h2>Percolation Demo</h2>
+</div>
+<div id="input_selects_1-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="7">
 <div class="form-group shiny-input-container" style="width:10;">
   <label class="control-label" id="p-label" for="p">Probability:</label>
   <div>
@@ -204,7 +252,7 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_1-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="7">
+<div id="input_selects_1-3" class="cell-output cell-output-display no-overflow-x" data-execution_count="7">
 <div class="form-group shiny-input-container">
   <label class="control-label" id="grid_size-label" for="grid_size">Number of nodes in each dimension:</label>
   <div>
@@ -321,9 +369,11 @@ bslib.Sidebar.initCollapsibleAll()
 </script>
 </div>
 </div>
-<div id="introduction" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-introduction">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div id="section-2" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-section-2">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr) minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<!-- # Introduction -->
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Introduction" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title">Introduction</div></div>
 <div class="card-body html-fill-item html-fill-container">
 <h2>
 Bernoulli Bond Percolation on <span class="math inline">\(\mathbb{Z}^d\)</span>
@@ -339,8 +389,9 @@ Setup:
 Probabilistic framework <span class="math inline">\((\Omega, \mathcal{F}, \mathbb{P_p})\)</span>
 </h3>
 <ul>
+<li><span class="math inline">\(\mathbb{P}_p(\omega) = p^{\sum_{e \in E} \omega(e)} (1 - p)^{\sum_{e \in E} (1 - \omega(e))}\)</span></li>
 <li><span class="math inline">\(\Omega = \{0, 1\}^E\)</span></li>
-<li><span class="math inline">\(\mathcal{F}=\)</span> product <span class="math inline">\(\sigma\)</span>-algebra</li>
+<li><p><span class="math inline">\(\mathcal{F}=\)</span> product <span class="math inline">\(\sigma\)</span>-algebra</p></li>
 <li><span class="math inline">\(\mathbb{P}_p = \text{Bernoulli}(p)^{\bigotimes E}\)</span></li>
 </ul>
 <h3>
@@ -393,11 +444,8 @@ Properties:
         <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
     </span>
 </bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
-</div>
-</div>
-<div id="sheet-1" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-sheet-1">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
-<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Sheet 1" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title">Sheet 1</div></div>
 <div class="card-body html-fill-item html-fill-container">
 <h2>
 Exercise 1
@@ -430,7 +478,7 @@ Exercise 4
 </bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
 </div>
 </div>
-<div id="metric-backbone-spectral-clustering-simulations" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-metric-backbone-spectral-clustering-simulations">
+<div id="section-3" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-section-3">
 <div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" style=" --bslib-sidebar-width: 300px"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
@@ -571,7 +619,7 @@ bslib.Sidebar.initCollapsibleAll()
 </script>
 </div>
 </div>
-<div id="graph-gaussian-clusters-abbe-prediction" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-graph-gaussian-clusters-abbe-prediction">
+<div id="section-5" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-section-5">
 <div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" style=" --bslib-sidebar-width: 300px"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
@@ -591,11 +639,11 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 </div>
 </div></div><aside id="bslib-sidebar-3" class="sidebar html-fill-container html-fill-item"><div class="html-fill-item html-fill-container">
-<div id="input_selects_3-1" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
+<div id="input_selects_100-1" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="n2-label" for="n2">Number of nodes in each cluster:</label>
+  <label class="control-label" id="n100-label" for="n100">Number of nodes in each cluster:</label>
   <div>
-    <select class="shiny-input-select form-select" id="n2">      <option value="50" selected="">50</option>
+    <select class="shiny-input-select form-select" id="n100">      <option value="50" selected="">50</option>
       <option value="100">100</option>
       <option value="200">200</option>
       <option value="300">300</option>
@@ -604,21 +652,21 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_3-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
+<div id="input_selects_100-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="d2-label" for="d2">Number of dimensions &amp; communities:</label>
+  <label class="control-label" id="d100-label" for="d100">Number of dimensions &amp; communities:</label>
   <div>
-    <select class="shiny-input-select form-select" id="d2">      <option value="2" selected="">2</option>
+    <select class="shiny-input-select form-select" id="d100">      <option value="2" selected="">2</option>
       <option value="3">3</option>
       <option value="4">4</option></select>
   </div>
 </div>
 </div>
-<div id="input_selects_3-3" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
+<div id="input_selects_100-3" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="n_neighbors2-label" for="n_neighbors2">Number of nearest neighbors </label>
+  <label class="control-label" id="n_neighbors100-label" for="n_neighbors100">Number of nearest neighbors </label>
   <div>
-    <select class="shiny-input-select form-select" id="n_neighbors2">      <option value="5">5</option>
+    <select class="shiny-input-select form-select" id="n_neighbors100">      <option value="5">5</option>
       <option value="6">6</option>
       <option value="7">7</option>
       <option value="8">8</option>
@@ -637,11 +685,11 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_3-4" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
+<div id="input_selects_100-4" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="mu_x22-label" for="mu_x22">Mean of the second Gaussian with respect to the x-axis:</label>
+  <label class="control-label" id="mu_x2100-label" for="mu_x2100">Mean of the second Gaussian with respect to the x-axis:</label>
   <div>
-    <select class="shiny-input-select form-select" id="mu_x22">      <option value="1">1</option>
+    <select class="shiny-input-select form-select" id="mu_x2100">      <option value="1">1</option>
       <option value="2">2</option>
       <option value="3" selected="">3</option>
       <option value="4">4</option>
@@ -664,40 +712,325 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_3-5" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
+<div id="input_selects_100-5" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="λ2-label" for="λ2">Intensity parameter (N_n ~ Poisson(λ * n)):</label>
+  <label class="control-label" id="λ100-label" for="λ100">Intensity parameter (N_n ~ Poisson(λ * n)):</label>
   <div>
-    <select class="shiny-input-select form-select" id="λ2">      <option value="1" selected="">1</option></select>
+    <select class="shiny-input-select form-select" id="λ100">      <option value="1" selected="">1</option></select>
   </div>
 </div>
 </div>
-<div id="input_selects_3-6" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
+<div id="input_selects_100-6" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="R_12-label" for="R_12">Big radius for intra-community edges:</label>
+  <label class="control-label" id="R_1100-label" for="R_1100">Big radius for intra-community edges:</label>
   <div>
-    <select class="shiny-input-select form-select" id="R_12">      <option value="1">1</option>
-      <option value="2" selected="">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option></select>
-  </div>
-</div>
-</div>
-<div id="input_selects_3-7" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
-<div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="R_22-label" for="R_22">Small radius for inter-community edges:</label>
-  <div>
-    <select class="shiny-input-select form-select" id="R_22">      <option value="1" selected="">1</option>
+    <select class="shiny-input-select form-select" id="R_1100">      <option value="0.01">0.01</option>
+      <option value="0.02">0.02</option>
+      <option value="0.03">0.03</option>
+      <option value="0.04">0.04</option>
+      <option value="0.05">0.05</option>
+      <option value="0.06">0.06</option>
+      <option value="0.07">0.07</option>
+      <option value="0.08">0.08</option>
+      <option value="0.09">0.09</option>
+      <option value="0.1">0.1</option>
+      <option value="0.11">0.11</option>
+      <option value="0.12">0.12</option>
+      <option value="0.13">0.13</option>
+      <option value="0.14">0.14</option>
+      <option value="0.15">0.15</option>
+      <option value="0.16">0.16</option>
+      <option value="0.17">0.17</option>
+      <option value="0.18">0.18</option>
+      <option value="0.19">0.19</option>
+      <option value="0.2">0.2</option>
+      <option value="0.21">0.21</option>
+      <option value="0.22">0.22</option>
+      <option value="0.23">0.23</option>
+      <option value="0.24">0.24</option>
+      <option value="0.25">0.25</option>
+      <option value="0.26">0.26</option>
+      <option value="0.27">0.27</option>
+      <option value="0.28">0.28</option>
+      <option value="0.29">0.29</option>
+      <option value="0.3">0.3</option>
+      <option value="0.31">0.31</option>
+      <option value="0.32">0.32</option>
+      <option value="0.33">0.33</option>
+      <option value="0.34">0.34</option>
+      <option value="0.35">0.35</option>
+      <option value="0.36">0.36</option>
+      <option value="0.37">0.37</option>
+      <option value="0.38">0.38</option>
+      <option value="0.39">0.39</option>
+      <option value="0.4">0.4</option>
+      <option value="0.41">0.41</option>
+      <option value="0.42">0.42</option>
+      <option value="0.43">0.43</option>
+      <option value="0.44">0.44</option>
+      <option value="0.45">0.45</option>
+      <option value="0.46">0.46</option>
+      <option value="0.47">0.47</option>
+      <option value="0.48">0.48</option>
+      <option value="0.49">0.49</option>
+      <option value="0.5">0.5</option>
+      <option value="0.51">0.51</option>
+      <option value="0.52">0.52</option>
+      <option value="0.53">0.53</option>
+      <option value="0.54">0.54</option>
+      <option value="0.55">0.55</option>
+      <option value="0.56">0.56</option>
+      <option value="0.57">0.57</option>
+      <option value="0.58">0.58</option>
+      <option value="0.59">0.59</option>
+      <option value="0.6">0.6</option>
+      <option value="0.61">0.61</option>
+      <option value="0.62">0.62</option>
+      <option value="0.63">0.63</option>
+      <option value="0.64">0.64</option>
+      <option value="0.65">0.65</option>
+      <option value="0.66">0.66</option>
+      <option value="0.67">0.67</option>
+      <option value="0.68">0.68</option>
+      <option value="0.69">0.69</option>
+      <option value="0.7">0.7</option>
+      <option value="0.71">0.71</option>
+      <option value="0.72">0.72</option>
+      <option value="0.73">0.73</option>
+      <option value="0.74">0.74</option>
+      <option value="0.75">0.75</option>
+      <option value="0.76">0.76</option>
+      <option value="0.77">0.77</option>
+      <option value="0.78">0.78</option>
+      <option value="0.79">0.79</option>
+      <option value="0.8">0.8</option>
+      <option value="0.81">0.81</option>
+      <option value="0.82">0.82</option>
+      <option value="0.83">0.83</option>
+      <option value="0.84">0.84</option>
+      <option value="0.85">0.85</option>
+      <option value="0.86">0.86</option>
+      <option value="0.87">0.87</option>
+      <option value="0.88">0.88</option>
+      <option value="0.89">0.89</option>
+      <option value="0.9">0.9</option>
+      <option value="0.91">0.91</option>
+      <option value="0.92">0.92</option>
+      <option value="0.93">0.93</option>
+      <option value="0.94">0.94</option>
+      <option value="0.95">0.95</option>
+      <option value="0.96">0.96</option>
+      <option value="0.97">0.97</option>
+      <option value="0.98">0.98</option>
+      <option value="0.99">0.99</option>
+      <option value="1.0" selected="">1.0</option>
+      <option value="1.01">1.01</option>
+      <option value="1.02">1.02</option>
+      <option value="1.03">1.03</option>
+      <option value="1.04">1.04</option>
+      <option value="1.05">1.05</option>
+      <option value="1.06">1.06</option>
+      <option value="1.07">1.07</option>
+      <option value="1.08">1.08</option>
+      <option value="1.09">1.09</option>
+      <option value="1.1">1.1</option>
+      <option value="1.11">1.11</option>
+      <option value="1.12">1.12</option>
+      <option value="1.13">1.13</option>
+      <option value="1.14">1.14</option>
+      <option value="1.15">1.15</option>
+      <option value="1.16">1.16</option>
+      <option value="1.17">1.17</option>
+      <option value="1.18">1.18</option>
+      <option value="1.19">1.19</option>
+      <option value="1.2">1.2</option>
+      <option value="1.21">1.21</option>
+      <option value="1.22">1.22</option>
+      <option value="1.23">1.23</option>
+      <option value="1.24">1.24</option>
+      <option value="1.25">1.25</option>
+      <option value="1.26">1.26</option>
+      <option value="1.27">1.27</option>
+      <option value="1.28">1.28</option>
+      <option value="1.29">1.29</option>
+      <option value="1.3">1.3</option>
+      <option value="1.31">1.31</option>
+      <option value="1.32">1.32</option>
+      <option value="1.33">1.33</option>
+      <option value="1.34">1.34</option>
+      <option value="1.35">1.35</option>
+      <option value="1.36">1.36</option>
+      <option value="1.37">1.37</option>
+      <option value="1.38">1.38</option>
+      <option value="1.39">1.39</option>
+      <option value="1.4">1.4</option>
+      <option value="1.41">1.41</option>
+      <option value="1.42">1.42</option>
+      <option value="1.43">1.43</option>
+      <option value="1.44">1.44</option>
+      <option value="1.45">1.45</option>
+      <option value="1.46">1.46</option>
+      <option value="1.47">1.47</option>
+      <option value="1.48">1.48</option>
+      <option value="1.49">1.49</option>
       <option value="1.5">1.5</option>
-      <option value="2">2</option>
-      <option value="2.5">2.5</option>
-      <option value="3">3</option></select>
+      <option value="1.51">1.51</option>
+      <option value="1.52">1.52</option>
+      <option value="1.53">1.53</option>
+      <option value="1.54">1.54</option>
+      <option value="1.55">1.55</option>
+      <option value="1.56">1.56</option>
+      <option value="1.57">1.57</option>
+      <option value="1.58">1.58</option>
+      <option value="1.59">1.59</option>
+      <option value="1.6">1.6</option>
+      <option value="1.61">1.61</option>
+      <option value="1.62">1.62</option>
+      <option value="1.63">1.63</option>
+      <option value="1.64">1.64</option>
+      <option value="1.65">1.65</option>
+      <option value="1.66">1.66</option>
+      <option value="1.67">1.67</option>
+      <option value="1.68">1.68</option>
+      <option value="1.69">1.69</option>
+      <option value="1.7">1.7</option>
+      <option value="1.71">1.71</option>
+      <option value="1.72">1.72</option>
+      <option value="1.73">1.73</option>
+      <option value="1.74">1.74</option>
+      <option value="1.75">1.75</option>
+      <option value="1.76">1.76</option>
+      <option value="1.77">1.77</option>
+      <option value="1.78">1.78</option>
+      <option value="1.79">1.79</option>
+      <option value="1.8">1.8</option>
+      <option value="1.81">1.81</option>
+      <option value="1.82">1.82</option>
+      <option value="1.83">1.83</option>
+      <option value="1.84">1.84</option>
+      <option value="1.85">1.85</option>
+      <option value="1.86">1.86</option>
+      <option value="1.87">1.87</option>
+      <option value="1.88">1.88</option>
+      <option value="1.89">1.89</option>
+      <option value="1.9">1.9</option>
+      <option value="1.91">1.91</option>
+      <option value="1.92">1.92</option>
+      <option value="1.93">1.93</option>
+      <option value="1.94">1.94</option>
+      <option value="1.95">1.95</option>
+      <option value="1.96">1.96</option>
+      <option value="1.97">1.97</option>
+      <option value="1.98">1.98</option>
+      <option value="1.99">1.99</option>
+      <option value="2.0">2.0</option></select>
+  </div>
+</div>
+</div>
+<div id="input_selects_100-7" class="cell-output cell-output-display no-overflow-x" data-execution_count="17">
+<div class="form-group shiny-input-container" style="width:10;">
+  <label class="control-label" id="R_2100-label" for="R_2100">Small radius for inter-community edges:</label>
+  <div>
+    <select class="shiny-input-select form-select" id="R_2100">      <option value="0.01">0.01</option>
+      <option value="0.02">0.02</option>
+      <option value="0.03">0.03</option>
+      <option value="0.04">0.04</option>
+      <option value="0.05">0.05</option>
+      <option value="0.06">0.06</option>
+      <option value="0.07">0.07</option>
+      <option value="0.08">0.08</option>
+      <option value="0.09">0.09</option>
+      <option value="0.1">0.1</option>
+      <option value="0.11">0.11</option>
+      <option value="0.12">0.12</option>
+      <option value="0.13">0.13</option>
+      <option value="0.14">0.14</option>
+      <option value="0.15">0.15</option>
+      <option value="0.16">0.16</option>
+      <option value="0.17">0.17</option>
+      <option value="0.18">0.18</option>
+      <option value="0.19">0.19</option>
+      <option value="0.2">0.2</option>
+      <option value="0.21">0.21</option>
+      <option value="0.22">0.22</option>
+      <option value="0.23">0.23</option>
+      <option value="0.24">0.24</option>
+      <option value="0.25">0.25</option>
+      <option value="0.26">0.26</option>
+      <option value="0.27">0.27</option>
+      <option value="0.28">0.28</option>
+      <option value="0.29">0.29</option>
+      <option value="0.3">0.3</option>
+      <option value="0.31">0.31</option>
+      <option value="0.32">0.32</option>
+      <option value="0.33">0.33</option>
+      <option value="0.34">0.34</option>
+      <option value="0.35">0.35</option>
+      <option value="0.36">0.36</option>
+      <option value="0.37">0.37</option>
+      <option value="0.38">0.38</option>
+      <option value="0.39">0.39</option>
+      <option value="0.4">0.4</option>
+      <option value="0.41">0.41</option>
+      <option value="0.42">0.42</option>
+      <option value="0.43">0.43</option>
+      <option value="0.44">0.44</option>
+      <option value="0.45">0.45</option>
+      <option value="0.46">0.46</option>
+      <option value="0.47">0.47</option>
+      <option value="0.48">0.48</option>
+      <option value="0.49">0.49</option>
+      <option value="0.5" selected="">0.5</option>
+      <option value="0.51">0.51</option>
+      <option value="0.52">0.52</option>
+      <option value="0.53">0.53</option>
+      <option value="0.54">0.54</option>
+      <option value="0.55">0.55</option>
+      <option value="0.56">0.56</option>
+      <option value="0.57">0.57</option>
+      <option value="0.58">0.58</option>
+      <option value="0.59">0.59</option>
+      <option value="0.6">0.6</option>
+      <option value="0.61">0.61</option>
+      <option value="0.62">0.62</option>
+      <option value="0.63">0.63</option>
+      <option value="0.64">0.64</option>
+      <option value="0.65">0.65</option>
+      <option value="0.66">0.66</option>
+      <option value="0.67">0.67</option>
+      <option value="0.68">0.68</option>
+      <option value="0.69">0.69</option>
+      <option value="0.7">0.7</option>
+      <option value="0.71">0.71</option>
+      <option value="0.72">0.72</option>
+      <option value="0.73">0.73</option>
+      <option value="0.74">0.74</option>
+      <option value="0.75">0.75</option>
+      <option value="0.76">0.76</option>
+      <option value="0.77">0.77</option>
+      <option value="0.78">0.78</option>
+      <option value="0.79">0.79</option>
+      <option value="0.8">0.8</option>
+      <option value="0.81">0.81</option>
+      <option value="0.82">0.82</option>
+      <option value="0.83">0.83</option>
+      <option value="0.84">0.84</option>
+      <option value="0.85">0.85</option>
+      <option value="0.86">0.86</option>
+      <option value="0.87">0.87</option>
+      <option value="0.88">0.88</option>
+      <option value="0.89">0.89</option>
+      <option value="0.9">0.9</option>
+      <option value="0.91">0.91</option>
+      <option value="0.92">0.92</option>
+      <option value="0.93">0.93</option>
+      <option value="0.94">0.94</option>
+      <option value="0.95">0.95</option>
+      <option value="0.96">0.96</option>
+      <option value="0.97">0.97</option>
+      <option value="0.98">0.98</option>
+      <option value="0.99">0.99</option>
+      <option value="1.0">1.0</option></select>
   </div>
 </div>
 </div>
@@ -712,15 +1045,15 @@ bslib.Sidebar.initCollapsibleAll()
 </script>
 </div>
 </div>
-<div id="graph-μ-fixed-n_neighbors-varying" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-graph-μ-fixed-n_neighbors-varying">
+<div id="section-7" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-section-7">
 <div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" style=" --bslib-sidebar-width: 300px"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
 <div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
 <div class="card-body html-fill-item html-fill-container">
-<div id="shiny_mu_fixed_n_neighbors_varying_simulation" class="cell-output cell-output-display html-fill-item html-fill-container">
-<div id="graph_mu_fixed_n_neighbors_varying_PLOT" class="shiny-image-output html-fill-item shiny-plot-output html-fill-container" style="width:100%;height:400px;"></div><script type="application/json" data-html-dependency="">{"name": "htmltools-fill", "version": "0.5.8.9000", "source": {"package": "shiny", "subdir": "www/shared/htmltools/fill"}, "script": [], "stylesheet": [{"href": "fill.css", "rel": "stylesheet"}], "meta": [], "all_files": false, "head": null}</script>
+<div id="shiny_mu_fixed_n_neighbors_varying_simulation_hybrid" class="cell-output cell-output-display html-fill-item html-fill-container">
+<div id="graph_mu_fixed_n_neighbors_varying_PLOT_HYBRID" class="shiny-image-output html-fill-item shiny-plot-output html-fill-container" style="width:100%;height:400px;"></div><script type="application/json" data-html-dependency="">{"name": "htmltools-fill", "version": "0.5.8.9000", "source": {"package": "shiny", "subdir": "www/shared/htmltools/fill"}, "script": [], "stylesheet": [{"href": "fill.css", "rel": "stylesheet"}], "meta": [], "all_files": false, "head": null}</script>
 </div>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
@@ -732,12 +1065,12 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 </div>
 </div></div><aside id="bslib-sidebar-4" class="sidebar html-fill-container html-fill-item"><div class="html-fill-item html-fill-container">
-<div id="input_selects_4-1" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
+<div id="input_selects_5-1" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="n_simulations3-label" for="n_simulations3">Number of simulations:</label>
+  <label class="control-label" id="n_simulations4-label" for="n_simulations4">Number of simulations:</label>
   <div>
-    <select class="shiny-input-select form-select" id="n_simulations3">      <option value="1" selected="">1</option>
-      <option value="10">10</option>
+    <select class="shiny-input-select form-select" id="n_simulations4">      <option value="1">1</option>
+      <option value="10" selected="">10</option>
       <option value="20">20</option>
       <option value="30">30</option>
       <option value="40">40</option>
@@ -750,12 +1083,12 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_4-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
+<div id="input_selects_5-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="n3-label" for="n3">Number of nodes in each cluster:</label>
+  <label class="control-label" id="n4-label" for="n4">Number of nodes in each cluster:</label>
   <div>
-    <select class="shiny-input-select form-select" id="n3">      <option value="50" selected="">50</option>
-      <option value="100">100</option>
+    <select class="shiny-input-select form-select" id="n4">      <option value="50">50</option>
+      <option value="100" selected="">100</option>
       <option value="200">200</option>
       <option value="300">300</option>
       <option value="400">400</option>
@@ -763,21 +1096,21 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
-<div id="input_selects_4-3" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
+<div id="input_selects_5-3" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="d3-label" for="d3">Number of dimensions &amp; communities:</label>
+  <label class="control-label" id="d4-label" for="d4">Number of dimensions &amp; communities:</label>
   <div>
-    <select class="shiny-input-select form-select" id="d3">      <option value="2" selected="">2</option>
+    <select class="shiny-input-select form-select" id="d4">      <option value="2" selected="">2</option>
       <option value="3">3</option>
       <option value="4">4</option></select>
   </div>
 </div>
 </div>
-<div id="input_selects_4-4" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
+<div id="input_selects_5-4" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
 <div class="form-group shiny-input-container" style="width:10;">
-  <label class="control-label" id="mu_x23-label" for="mu_x23">Mean of the second Gaussian with respect to the x-axis:</label>
+  <label class="control-label" id="mu_x24-label" for="mu_x24">Mean of the second Gaussian with respect to the x-axis:</label>
   <div>
-    <select class="shiny-input-select form-select" id="mu_x23">      <option value="1">1</option>
+    <select class="shiny-input-select form-select" id="mu_x24">      <option value="1">1</option>
       <option value="2">2</option>
       <option value="3" selected="">3</option>
       <option value="4">4</option>
@@ -800,6 +1133,320 @@ grid-auto-rows: minmax(0, 1fr);">
   </div>
 </div>
 </div>
+<div id="input_selects_5-5" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
+<div class="form-group shiny-input-container" style="width:10;">
+  <label class="control-label" id="R_14-label" for="R_14">Big radius for intra-community edges:</label>
+  <div>
+    <select class="shiny-input-select form-select" id="R_14">      <option value="0.01">0.01</option>
+      <option value="0.02">0.02</option>
+      <option value="0.03">0.03</option>
+      <option value="0.04">0.04</option>
+      <option value="0.05">0.05</option>
+      <option value="0.06">0.06</option>
+      <option value="0.07">0.07</option>
+      <option value="0.08">0.08</option>
+      <option value="0.09">0.09</option>
+      <option value="0.1">0.1</option>
+      <option value="0.11">0.11</option>
+      <option value="0.12">0.12</option>
+      <option value="0.13">0.13</option>
+      <option value="0.14">0.14</option>
+      <option value="0.15">0.15</option>
+      <option value="0.16">0.16</option>
+      <option value="0.17">0.17</option>
+      <option value="0.18">0.18</option>
+      <option value="0.19">0.19</option>
+      <option value="0.2">0.2</option>
+      <option value="0.21">0.21</option>
+      <option value="0.22">0.22</option>
+      <option value="0.23">0.23</option>
+      <option value="0.24">0.24</option>
+      <option value="0.25">0.25</option>
+      <option value="0.26">0.26</option>
+      <option value="0.27">0.27</option>
+      <option value="0.28">0.28</option>
+      <option value="0.29">0.29</option>
+      <option value="0.3">0.3</option>
+      <option value="0.31">0.31</option>
+      <option value="0.32">0.32</option>
+      <option value="0.33">0.33</option>
+      <option value="0.34">0.34</option>
+      <option value="0.35">0.35</option>
+      <option value="0.36">0.36</option>
+      <option value="0.37">0.37</option>
+      <option value="0.38">0.38</option>
+      <option value="0.39">0.39</option>
+      <option value="0.4">0.4</option>
+      <option value="0.41">0.41</option>
+      <option value="0.42">0.42</option>
+      <option value="0.43">0.43</option>
+      <option value="0.44">0.44</option>
+      <option value="0.45">0.45</option>
+      <option value="0.46">0.46</option>
+      <option value="0.47">0.47</option>
+      <option value="0.48">0.48</option>
+      <option value="0.49">0.49</option>
+      <option value="0.5">0.5</option>
+      <option value="0.51">0.51</option>
+      <option value="0.52">0.52</option>
+      <option value="0.53">0.53</option>
+      <option value="0.54">0.54</option>
+      <option value="0.55">0.55</option>
+      <option value="0.56">0.56</option>
+      <option value="0.57">0.57</option>
+      <option value="0.58">0.58</option>
+      <option value="0.59">0.59</option>
+      <option value="0.6">0.6</option>
+      <option value="0.61">0.61</option>
+      <option value="0.62">0.62</option>
+      <option value="0.63">0.63</option>
+      <option value="0.64">0.64</option>
+      <option value="0.65">0.65</option>
+      <option value="0.66">0.66</option>
+      <option value="0.67">0.67</option>
+      <option value="0.68">0.68</option>
+      <option value="0.69">0.69</option>
+      <option value="0.7">0.7</option>
+      <option value="0.71">0.71</option>
+      <option value="0.72">0.72</option>
+      <option value="0.73">0.73</option>
+      <option value="0.74">0.74</option>
+      <option value="0.75">0.75</option>
+      <option value="0.76">0.76</option>
+      <option value="0.77">0.77</option>
+      <option value="0.78">0.78</option>
+      <option value="0.79">0.79</option>
+      <option value="0.8">0.8</option>
+      <option value="0.81">0.81</option>
+      <option value="0.82">0.82</option>
+      <option value="0.83">0.83</option>
+      <option value="0.84">0.84</option>
+      <option value="0.85">0.85</option>
+      <option value="0.86">0.86</option>
+      <option value="0.87">0.87</option>
+      <option value="0.88">0.88</option>
+      <option value="0.89">0.89</option>
+      <option value="0.9">0.9</option>
+      <option value="0.91">0.91</option>
+      <option value="0.92">0.92</option>
+      <option value="0.93">0.93</option>
+      <option value="0.94">0.94</option>
+      <option value="0.95">0.95</option>
+      <option value="0.96">0.96</option>
+      <option value="0.97">0.97</option>
+      <option value="0.98">0.98</option>
+      <option value="0.99">0.99</option>
+      <option value="1.0" selected="">1.0</option>
+      <option value="1.01">1.01</option>
+      <option value="1.02">1.02</option>
+      <option value="1.03">1.03</option>
+      <option value="1.04">1.04</option>
+      <option value="1.05">1.05</option>
+      <option value="1.06">1.06</option>
+      <option value="1.07">1.07</option>
+      <option value="1.08">1.08</option>
+      <option value="1.09">1.09</option>
+      <option value="1.1">1.1</option>
+      <option value="1.11">1.11</option>
+      <option value="1.12">1.12</option>
+      <option value="1.13">1.13</option>
+      <option value="1.14">1.14</option>
+      <option value="1.15">1.15</option>
+      <option value="1.16">1.16</option>
+      <option value="1.17">1.17</option>
+      <option value="1.18">1.18</option>
+      <option value="1.19">1.19</option>
+      <option value="1.2">1.2</option>
+      <option value="1.21">1.21</option>
+      <option value="1.22">1.22</option>
+      <option value="1.23">1.23</option>
+      <option value="1.24">1.24</option>
+      <option value="1.25">1.25</option>
+      <option value="1.26">1.26</option>
+      <option value="1.27">1.27</option>
+      <option value="1.28">1.28</option>
+      <option value="1.29">1.29</option>
+      <option value="1.3">1.3</option>
+      <option value="1.31">1.31</option>
+      <option value="1.32">1.32</option>
+      <option value="1.33">1.33</option>
+      <option value="1.34">1.34</option>
+      <option value="1.35">1.35</option>
+      <option value="1.36">1.36</option>
+      <option value="1.37">1.37</option>
+      <option value="1.38">1.38</option>
+      <option value="1.39">1.39</option>
+      <option value="1.4">1.4</option>
+      <option value="1.41">1.41</option>
+      <option value="1.42">1.42</option>
+      <option value="1.43">1.43</option>
+      <option value="1.44">1.44</option>
+      <option value="1.45">1.45</option>
+      <option value="1.46">1.46</option>
+      <option value="1.47">1.47</option>
+      <option value="1.48">1.48</option>
+      <option value="1.49">1.49</option>
+      <option value="1.5">1.5</option>
+      <option value="1.51">1.51</option>
+      <option value="1.52">1.52</option>
+      <option value="1.53">1.53</option>
+      <option value="1.54">1.54</option>
+      <option value="1.55">1.55</option>
+      <option value="1.56">1.56</option>
+      <option value="1.57">1.57</option>
+      <option value="1.58">1.58</option>
+      <option value="1.59">1.59</option>
+      <option value="1.6">1.6</option>
+      <option value="1.61">1.61</option>
+      <option value="1.62">1.62</option>
+      <option value="1.63">1.63</option>
+      <option value="1.64">1.64</option>
+      <option value="1.65">1.65</option>
+      <option value="1.66">1.66</option>
+      <option value="1.67">1.67</option>
+      <option value="1.68">1.68</option>
+      <option value="1.69">1.69</option>
+      <option value="1.7">1.7</option>
+      <option value="1.71">1.71</option>
+      <option value="1.72">1.72</option>
+      <option value="1.73">1.73</option>
+      <option value="1.74">1.74</option>
+      <option value="1.75">1.75</option>
+      <option value="1.76">1.76</option>
+      <option value="1.77">1.77</option>
+      <option value="1.78">1.78</option>
+      <option value="1.79">1.79</option>
+      <option value="1.8">1.8</option>
+      <option value="1.81">1.81</option>
+      <option value="1.82">1.82</option>
+      <option value="1.83">1.83</option>
+      <option value="1.84">1.84</option>
+      <option value="1.85">1.85</option>
+      <option value="1.86">1.86</option>
+      <option value="1.87">1.87</option>
+      <option value="1.88">1.88</option>
+      <option value="1.89">1.89</option>
+      <option value="1.9">1.9</option>
+      <option value="1.91">1.91</option>
+      <option value="1.92">1.92</option>
+      <option value="1.93">1.93</option>
+      <option value="1.94">1.94</option>
+      <option value="1.95">1.95</option>
+      <option value="1.96">1.96</option>
+      <option value="1.97">1.97</option>
+      <option value="1.98">1.98</option>
+      <option value="1.99">1.99</option>
+      <option value="2.0">2.0</option></select>
+  </div>
+</div>
+</div>
+<div id="input_selects_5-6" class="cell-output cell-output-display no-overflow-x" data-execution_count="19">
+<div class="form-group shiny-input-container" style="width:10;">
+  <label class="control-label" id="R_24-label" for="R_24">Small radius for inter-community edges:</label>
+  <div>
+    <select class="shiny-input-select form-select" id="R_24">      <option value="0.01">0.01</option>
+      <option value="0.02">0.02</option>
+      <option value="0.03">0.03</option>
+      <option value="0.04">0.04</option>
+      <option value="0.05">0.05</option>
+      <option value="0.06">0.06</option>
+      <option value="0.07">0.07</option>
+      <option value="0.08">0.08</option>
+      <option value="0.09">0.09</option>
+      <option value="0.1">0.1</option>
+      <option value="0.11">0.11</option>
+      <option value="0.12">0.12</option>
+      <option value="0.13">0.13</option>
+      <option value="0.14">0.14</option>
+      <option value="0.15">0.15</option>
+      <option value="0.16">0.16</option>
+      <option value="0.17">0.17</option>
+      <option value="0.18">0.18</option>
+      <option value="0.19">0.19</option>
+      <option value="0.2">0.2</option>
+      <option value="0.21">0.21</option>
+      <option value="0.22">0.22</option>
+      <option value="0.23">0.23</option>
+      <option value="0.24">0.24</option>
+      <option value="0.25">0.25</option>
+      <option value="0.26">0.26</option>
+      <option value="0.27">0.27</option>
+      <option value="0.28">0.28</option>
+      <option value="0.29">0.29</option>
+      <option value="0.3">0.3</option>
+      <option value="0.31">0.31</option>
+      <option value="0.32">0.32</option>
+      <option value="0.33">0.33</option>
+      <option value="0.34">0.34</option>
+      <option value="0.35">0.35</option>
+      <option value="0.36">0.36</option>
+      <option value="0.37">0.37</option>
+      <option value="0.38">0.38</option>
+      <option value="0.39">0.39</option>
+      <option value="0.4">0.4</option>
+      <option value="0.41">0.41</option>
+      <option value="0.42">0.42</option>
+      <option value="0.43">0.43</option>
+      <option value="0.44">0.44</option>
+      <option value="0.45">0.45</option>
+      <option value="0.46">0.46</option>
+      <option value="0.47">0.47</option>
+      <option value="0.48">0.48</option>
+      <option value="0.49">0.49</option>
+      <option value="0.5" selected="">0.5</option>
+      <option value="0.51">0.51</option>
+      <option value="0.52">0.52</option>
+      <option value="0.53">0.53</option>
+      <option value="0.54">0.54</option>
+      <option value="0.55">0.55</option>
+      <option value="0.56">0.56</option>
+      <option value="0.57">0.57</option>
+      <option value="0.58">0.58</option>
+      <option value="0.59">0.59</option>
+      <option value="0.6">0.6</option>
+      <option value="0.61">0.61</option>
+      <option value="0.62">0.62</option>
+      <option value="0.63">0.63</option>
+      <option value="0.64">0.64</option>
+      <option value="0.65">0.65</option>
+      <option value="0.66">0.66</option>
+      <option value="0.67">0.67</option>
+      <option value="0.68">0.68</option>
+      <option value="0.69">0.69</option>
+      <option value="0.7">0.7</option>
+      <option value="0.71">0.71</option>
+      <option value="0.72">0.72</option>
+      <option value="0.73">0.73</option>
+      <option value="0.74">0.74</option>
+      <option value="0.75">0.75</option>
+      <option value="0.76">0.76</option>
+      <option value="0.77">0.77</option>
+      <option value="0.78">0.78</option>
+      <option value="0.79">0.79</option>
+      <option value="0.8">0.8</option>
+      <option value="0.81">0.81</option>
+      <option value="0.82">0.82</option>
+      <option value="0.83">0.83</option>
+      <option value="0.84">0.84</option>
+      <option value="0.85">0.85</option>
+      <option value="0.86">0.86</option>
+      <option value="0.87">0.87</option>
+      <option value="0.88">0.88</option>
+      <option value="0.89">0.89</option>
+      <option value="0.9">0.9</option>
+      <option value="0.91">0.91</option>
+      <option value="0.92">0.92</option>
+      <option value="0.93">0.93</option>
+      <option value="0.94">0.94</option>
+      <option value="0.95">0.95</option>
+      <option value="0.96">0.96</option>
+      <option value="0.97">0.97</option>
+      <option value="0.98">0.98</option>
+      <option value="0.99">0.99</option>
+      <option value="1.0">1.0</option></select>
+  </div>
+</div>
+</div>
 </div></aside>
 <button class="collapse-toggle" type="button" title="Toggle sidebar" aria-expanded="true" aria-controls="bslib-sidebar-4">
     <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" class="bi bi-chevron-left collapse-icon" style="fill:currentColor;" aria-hidden="true" role="img">
@@ -811,41 +1458,7 @@ bslib.Sidebar.initCollapsibleAll()
 </script>
 </div>
 </div>
-<div id="graph" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-graph">
-<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
-<div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
-<div class="card-body html-fill-item html-fill-container">
-<div id="varying_µ_fixed_n_neighbors_graph-1" class="cell-output cell-output-display html-fill-item html-fill-container" data-execution_count="21">
-<pre><code>Text(0.5, 1.0, 'Original Graph')</code></pre>
-</div>
-<div id="varying_µ_fixed_n_neighbors_graph-2" class="cell-output cell-output-display html-fill-item html-fill-container" data-execution_count="21">
-<pre><code>Text(0.5, 0, 'Mean of the second Gaussian with respect to the x-axis')</code></pre>
-</div>
-<div id="varying_µ_fixed_n_neighbors_graph-3" class="cell-output cell-output-display html-fill-item html-fill-container" data-execution_count="21">
-<pre><code>Text(0, 0.5, 'ARI')</code></pre>
-</div>
-<div id="varying_µ_fixed_n_neighbors_graph-4" class="cell-output cell-output-display html-fill-item html-fill-container" data-execution_count="21">
-<pre><code>Text(0.5, 1.0, 'Metric Backbone')</code></pre>
-</div>
-<div id="varying_µ_fixed_n_neighbors_graph-5" class="cell-output cell-output-display html-fill-item html-fill-container" data-execution_count="21">
-<pre><code>Text(0.5, 0, 'Mean of the second Gaussian with respect to the x-axis')</code></pre>
-</div>
-<div id="varying_µ_fixed_n_neighbors_graph-6" class="cell-output cell-output-display html-fill-item html-fill-container" data-execution_count="21">
-<pre><code>Text(0, 0.5, 'ARI')</code></pre>
-</div>
-<div class="cell-output cell-output-display html-fill-item html-fill-container">
-<img src="script_files/figure-html/varying__fixed_n_neighbors_graph-output-7.png" id="varying_µ_fixed_n_neighbors_graph-7" class="quarto-dashboard-img-contain">
-</div>
-</div>
-<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
-    <template>Expand</template>
-    <span class="bslib-full-screen-enter badge rounded-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
-    </span>
-</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
-</div>
-</div>
-<div id="module-dependencies" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-module-dependencies">
+<div id="section-9" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-section-9">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
 <div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
 <div class="card-body html-fill-item html-fill-container">
@@ -888,7 +1501,7 @@ bslib.Sidebar.initCollapsibleAll()
 </bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
 </div>
 </div>
-<div id="proof-of-thm-2.1" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-proof-of-thm-2.1">
+<div id="section-10" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-section-10">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content) minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
 grid-auto-rows: minmax(0, 1fr);">
@@ -942,7 +1555,7 @@ Clearly,
 </div>
 </div>
 </div>
-<div id="instructions-to-deploy-website" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-instructions-to-deploy-website">
+<div id="section-11" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-section-11">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
 <div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
 <div class="card-body html-fill-item html-fill-container">
@@ -965,12 +1578,716 @@ Clearly,
         <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
     </span>
 </bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+<div id="section-12" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-section-12">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<!-- ### Abstract & Introduction -->
+<!-- #### First Passage Percolation Intuition -->
+<div class="card html-fill-item html-fill-container bslib-card" data-title="Abstract" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title">Abstract</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<ul>
+<li><p>Edge weights represent the time it takes to pass through the edge.</p></li>
+<li><p>For each vertex v, we want to find the path with the minimum time to get from the source to v.</p></li>
+<li><p><strong>First</strong> emphasizes the earliest possible arrival of the fluid with respect to the other available paths from the source.</p></li>
+</ul>
+<!-- #### The Model -->
+<ul>
+<li><p>Each vertex has a type from a type space. In our case, the type is given by the node’s community.</p></li>
+<li><p><strong>Edge probabilities</strong> are independent of each other.</p>
+<ul>
+<li>Each of their probability distributions is given by an exponential whose parameter is a function of the two end vertices’ community memberships.</li>
+</ul></li>
+<li><p>Average # of neighbors: <span class="math inline">\(\tilde\lambda_n\)</span>.</p></li>
+<li><p>Flooding time from a vertex v: <span class="math inline">\(F(v):=\max_w d(v, w)\)</span></p></li>
+<li><p>Diameter <span class="math inline">\(:= \max_v F(v)\)</span></p></li>
+<li><p><strong>Edge weights</strong> <span class="math inline">\(\overset{iid}{\sim} Exp(1)\)</span></p>
+<ul>
+<li><p>These should be interpreted as the <strong>cost</strong> of transport over each edge.</p></li>
+<li><p>After all, transport does require <strong>time AND money</strong>.</p></li>
+</ul></li>
+</ul>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div class="card html-fill-item html-fill-container bslib-card" data-title="convergence" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title">convergence</div></div>
+<div class="card-body html-fill-item html-fill-container">
+<ul>
+<li><p><span class="math inline">\((X_n) \xrightarrow{a.s.} X \iff\)</span> for almost all <span class="math inline">\(\omega \in \Omega, X_n(w) \rightarrow X(\omega)\)</span>.</p></li>
+<li><span class="math inline">\((X_n) \xrightarrow{p} X \iff \forall \varepsilon &gt; 0, \lim_{n \to \infty} P(|X_n - X| &gt; \varepsilon) = 0.\)</span></li>
+<li><p>For <span class="math inline">\(p &gt; 0, (X_n) \xrightarrow{L_p} X \iff \lim_{n \to \infty} E(|X_n - X|^p) = 0.\)</span></p></li>
+<li><p><span class="math inline">\((X_n) \xrightarrow{d} X \iff \forall x\)</span> for which <span class="math inline">\(F_X\)</span> is continuous, we have <span class="math inline">\(\lim_{n \to \infty} F_{X_n}(x) = F_X(x).\)</span></p></li>
+<li><span class="math inline">\(L_p \implies p \implies d.\)</span></li>
+<li><span class="math inline">\(a.s. \implies p.\)</span></li>
+<li><p><span class="math inline">\(p \implies \exists \varphi: \mathbf{N} \to \mathbf{N}\)</span> strictly increasing <span class="math inline">\(\: s.t. (X_{\varphi(n)}) \xrightarrow{a.s.} X.\)</span></p></li>
+<li><p><span class="math inline">\(c\)</span> constant <span class="math inline">\(+\)</span> <span class="math inline">\(X_n \xrightarrow{d} c \implies X_n \xrightarrow{p} X.\)</span></p></li>
+<li><p><strong>Weak Law of Large Numbers:</strong> <span class="math inline">\(\overline{X}_n \xrightarrow{p} E(X_i)\)</span> if the <span class="math inline">\(X_i\)</span>s are i.i.d. &amp; <span class="math inline">\(E(X_i) &lt; \infty\)</span>.</p></li>
+<li><p><strong>Continuous mapping theorem:</strong> <span class="math inline">\(\forall g\)</span> continuous, <span class="math inline">\(X_n \xrightarrow{p} X \implies g(X_n) \xrightarrow{p} g(X).\)</span></p></li>
+</ul>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-14"><li class="nav-item" role="presentation"><a href="#card-tabset-14-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="definitions" aria-selected="true" class="nav-link active">definitions</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="description" aria-selected="false" class="nav-link">description</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="graphical" aria-selected="false" class="nav-link">graphical</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-4" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="1.3 motivation" aria-selected="false" class="nav-link">1.3 motivation</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-5" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Regular" aria-selected="false" class="nav-link">Regular</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-6" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="λ_st" aria-selected="false" class="nav-link">λ_st</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-7" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="eigenfunction" aria-selected="false" class="nav-link">eigenfunction</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-8" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Λ matrix" aria-selected="false" class="nav-link">Λ matrix</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-9" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="stationary" aria-selected="false" class="nav-link">stationary</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-10" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Why $\k = \mu$" aria-selected="false" class="nav-link">Why $\k = \mu$</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-11" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="homogeneous kernel" aria-selected="false" class="nav-link">homogeneous kernel</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-12" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Miscellaneous" aria-selected="false" class="nav-link">Miscellaneous</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-14-13" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Questions" aria-selected="false" class="nav-link">Questions</a></li></ul></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-14"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-1"><div class="card-body html-fill-item html-fill-container" data-title="definitions">
+<ul>
+<li><p>A <strong>spanning tree</strong> is a sub-graph that contains all original nodes and is a tree.</p></li>
+<li><p><span class="math inline">\(X\)</span> <strong>Separable metric space</strong> <span class="math inline">\(\iff \exists D \subset X\)</span> dense s.t. <span class="math inline">\(\forall x \in X, \forall \varepsilon &gt; 0, \exists d \in D\)</span> for which <span class="math inline">\(d(x, d) &lt; \varepsilon.\)</span></p>
+<ul>
+<li><p>E.g. <span class="math inline">\(\mathbf{Q}\)</span> is dense in <span class="math inline">\(\mathbf{R}.\)</span></p></li>
+<li><p>At the heart of the proof is the archimedean property of <span class="math inline">\(\mathbf{R}\)</span>, by which one can always empty a bathtub using a glass.</p></li>
+</ul></li>
+<li><p><span class="math inline">\(\mathcal{B} (X)\)</span>, the <strong>Borel σ-algebra</strong> on a topological space <span class="math inline">\(X\)</span> is the smallest σ-algebra that contains all the open sets of <span class="math inline">\(X\)</span>.</p></li>
+<li><p>Let <span class="math inline">\(\mu\)</span> be a measure on a Borel σ-algebra. For each Borel set <span class="math inline">\(B\)</span>:</p>
+<ul>
+<li>B is a <span class="math inline">\(\mu\)</span><strong>-continuity set</strong> <span class="math inline">\(\iff \mu(\partial B) = 0.\)</span></li>
+</ul></li>
+<li><p><span class="math inline">\(\s\)</span> separable metric space &amp; equipped with a Borel probability measure <span class="math inline">\(\mu \implies (\s, \mu)\)</span> is called a <strong>ground space</strong>.</p></li>
+<li><p>The natural of the symmetric measurable <strong>kernel</strong> <span class="math inline">\(\k: \s \times \s \to \mathbf{R}_{\geq 0}\)</span> measures the density of edges.</p>
+<ul>
+<li>In this case, “symmetric” simply means that <span class="math inline">\(\forall u, v \in \s: \k(u, v) = \k(v, u).\)</span></li>
+</ul></li>
+<li><p>A kernel <span class="math inline">\(\k\)</span> on a ground space <span class="math inline">\((\s, \mu)\)</span> is <strong>irreducible</strong> if:</p>
+<ul>
+<li><span class="math inline">\(A \subset \s\)</span> &amp; <span class="math inline">\(\k \equiv 0\)</span> a.e on <span class="math inline">\(A \times (\s \setminus A) \implies \mu(A) = 0\)</span> or <span class="math inline">\(\mu(\s \setminus A) = 0.\)</span></li>
+</ul></li>
+<li><p>A kernel <span class="math inline">\(\k\)</span> on a ground space <span class="math inline">\((\s, \mu)\)</span> is <strong>quasi-irreducible</strong> if:</p>
+<ul>
+<li><p><span class="math inline">\(\exists\)</span> a <span class="math inline">\(\mu\)</span>-continuity set <span class="math inline">\(\s' \subset \s\)</span> s.t.</p>
+<ul>
+<li><span class="math inline">\(\mu(\s') &gt; 0,\)</span></li>
+<li><p><span class="math inline">\(\k|_{\s' \times \s'}\)</span> is irreducible,</p></li>
+<li><span class="math inline">\(\k|_{\overline{\s' \times \s'}} \equiv 0.\)</span></li>
+</ul></li>
+</ul></li>
+<li><p>Irreducibility of kernels insures that <span class="math inline">\(\exists\)</span> a <strong>unique</strong> giant cluster in the supercritical regime.</p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-2"><div class="card-body html-fill-item html-fill-container" data-title="description">
+<ul>
+<li><p>type of each vertex <span class="math inline">\(\in \s\)</span> separable metric space equipped with a Borel probability measure <span class="math inline">\(\mu.\)</span></p></li>
+<li><span class="math inline">\(\nu_n(S) := \frac{\#\{i: \: x_i \in \s\}}{n} \xrightarrow{p} \mu(\s), \forall \: \mu\text{-continuity } S \subset \s.\)</span></li>
+<li><p>When all conditions are met, we get the <strong>vertex space</strong> <span class="math inline">\(\nu := (\s, \mu, (x_n)).\)</span></p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-3"><div class="card-body html-fill-item html-fill-container" data-title="graphical">
+<ul>
+<li><p>A sequence of kernels <span class="math inline">\((\k_n)\)</span> on a vertex space <span class="math inline">\((\s, \mu, (x_n))\)</span> is <strong>graphical</strong> <strong>with limit</strong> <span class="math inline">\(\boldsymbol{\k}\)</span> s.t.</p>
+<ul>
+<li><span class="math inline">\(\k \in L^1(\s \times \s, \mu \times \mu),\)</span></li>
+<li><p><span class="math inline">\(\k\)</span> is continuous a.e.,</p></li>
+</ul></li>
+<li>if:
+<ul>
+<li><p>For a.e. <span class="math inline">\((y, z) \in \s^2\)</span>: <span class="math inline">\(y_n \to y\)</span> &amp; <span class="math inline">\(z_n \to z \implies \k(y_n, z_n) \to \k(y, z),\)</span></p></li>
+<li><span class="math inline">\(\frac{1}{n} E_{\mu}[e(G(n, \k))] \to \int_{\s^2} \k(x, y) \text{ } d \mu(x) \text{ } d \mu(y).\)</span></li>
+</ul></li>
+<li><p>Note: if <span class="math inline">\(\k_n \equiv \k,\)</span> we simply say that <span class="math inline">\(\k\)</span> is graphical.</p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-4"><div class="card-body html-fill-item html-fill-container" data-title="1.3 motivation">
+<span class="math inline">\(\begin{align}
+E[e(G(n, \k))|v_1, \cdots v_n]
+&amp;= \frac{1}{2} \sum_{i=1}^n E[\deg(v_i)|v_1, \cdots, v_n] \\
+&amp;= \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \frac{\k(v_i, v_j)}{n} \\
+&amp;= \frac{1}{2n} \sum_{(i,j) \in [n]^2} \k(v_i, v_j)
+\end{align}\)</span>
+<span class="math inline">\(\begin{align}
+\frac{1}{n} E[e(G(n, \k))]
+&amp;= \frac{1}{n} E[E[e(G(n, \k))|v_1, \cdots v_n]] \\
+&amp;= \frac{1}{2n^2} \sum_{(i,j) \in [n]^2} \int_{\s^2} \k(u, v) \text{ } d\mu(u) \text{ } d\mu(v) \\
+&amp;= \frac{1}{2} \int_{\s^2} \k(u, v) \text{ } d\mu(u) \text{ } d\mu(v)
+\end{align}\)</span>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-5"><div class="card-body html-fill-item html-fill-container" data-title="Regular">
+<ul>
+<li><p>We call a kernel <strong>regular finitary</strong> if <span class="math inline">\(\exists\)</span> a finite <span class="math inline">\(\mu\)</span>-continuity set partition <span class="math inline">\(\s_1, \cdots, \s_n\)</span> of <span class="math inline">\(\s\)</span> for which:</p>
+<ul>
+<li><span class="math inline">\(\forall i, j \in [n]:\k|_{\s_i \times \s_j}\)</span> is constant.</li>
+</ul></li>
+<li><p>It is easy to make the link between regular finitary kernels and finite-type kernels.</p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-6"><div class="card-body html-fill-item html-fill-container" data-title="λ_st">
+<ul>
+<li><span class="math inline">\(\forall s, t \in \s^2, \lambda_{\boxed{s} \: t} := k(s, t) \mu_t.\)</span></li>
+<li><p>Recall that <span class="math inline">\(\frac{n_t}{n} \xrightarrow{p} \mu_t\)</span>.</p></li>
+<li><p>Number of type t neighbors of a type s vertex <span class="math inline">\(\sim B(\tilde{n} = n_t - \mathbf{1}_{\{s = t\}}, \: \tilde{p} = \k(s, t) /n) \implies E[X] = \tilde{n} \tilde{p} = \k(s, t) (n_t - \mathbf{1}_{\{s = t\}}) / n \xrightarrow{p} \k(s, t) \mu_t = \lambda_{\boxed{s} t}.\)</span></p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-7"><div class="card-body html-fill-item html-fill-container" data-title="eigenfunction">
+<ul>
+<li><p>Let <span class="math inline">\(v := \begin{pmatrix} \pi(s) \\ \vdots \\ \pi(s) \end{pmatrix}\)</span>,</p></li>
+<li><p>let <span class="math inline">\(\Lambda := \begin{pmatrix} \lambda_{\boxed{s} \: t} \end{pmatrix}_{s, t \in \s}\)</span>,</p></li>
+<li><p>let <span class="math inline">\(a^T := v^T \Lambda = a^T \Lambda\)</span>,</p></li>
+<li><p>let <span class="math inline">\(b^T := (1 + \tilde{\lambda}) v^T\)</span>.</p></li>
+<li><p>Clearly, <span class="math inline">\(a(t) = \sum_{s \in \s} \pi(s) \lambda_{\boxed{s} t} = \sum_{s \in \s} \pi(s) \k(s, t) \mu_t = \int_{\s} \k(s, t) \mu_t \text{ } d\pi(s)\)</span>.</p></li>
+<li><p>Since <span class="math inline">\(a = b\)</span>, this explains the second to last equation of page</p>
+<ol start="591" type="1">
+<li></li>
+</ol></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-8"><div class="card-body html-fill-item html-fill-container" data-title="Λ matrix">
+<ul>
+<li><p><span class="math inline">\((T_{\k} f)(s_i) = \int_{\s} \k(s_i, t) f(t) \text{ } d\mu(t) = \sum_{t \in \s} \k(s_i, t) \mu(t) f(t) = \sum_{t \in \s} \lambda_{\boxed{s_i} \: t} f(t)\)</span>.</p></li>
+<li><p>In other words, <span class="math inline">\(\begin{pmatrix} (T_{\k} f)(s_1) \\ \vdots \\ (T_{\k} f)(s_n) \end{pmatrix} = \Lambda \begin{pmatrix} f(t_1) \\ \vdots \\ f(t_n) \end{pmatrix}\)</span></p></li>
+<li><p>Equivalently, <span class="math inline">\(\vec{T_{\k}f} = \Lambda \vec{f}\)</span>.</p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-9"><div class="card-body html-fill-item html-fill-container" data-title="stationary">
+<p>We suppose:</p>
+<ul>
+<li><span class="math inline">\(f \geq 0,\)</span></li>
+<li><p><span class="math inline">\(\k\)</span> quasi-irreducible.</p></li>
+</ul>
+<p>Then <span class="math inline">\(\exists! \pi\)</span> nontrivial left eigenfunction s.t.:</p>
+<ul>
+<li><p><span class="math inline">\(\int \pi(dt) = 1\)</span>, which in turn implies:</p>
+<ul>
+<li><span class="math inline">\(\int_{\s} \pi(ds) \k(s, t) \mu_t = (1 + \tilde{\lambda}) \pi(t)\)</span></li>
+</ul></li>
+</ul>
+<p>We call <span class="math inline">\(\pi\)</span> the <strong>stationary type-distribution</strong>.</p>
+<p>In addition, we will suppose that <span class="math inline">\(\int_{\s} \frac{\pi}{\mu} d\mu &lt; \infty\)</span></p>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-10"><div class="card-body html-fill-item html-fill-container" data-title="Why $\k = \mu$">
+<ul>
+<li><span class="math inline">\((\tilde{\lambda} + 1) \pi_t = \int_{\s} \k(s, t) \mu_t \text{ } d\pi(s) = \mu_t \int_{\s} \k(s, t) \text{ } d\pi(s) \stackrel{\k \text{sym}}{=} \mu_t \int_{\s} \k(t, s) \text{ } d\pi(s) = \mu_t \int_{\s} \k(s, t) \text{ } d\pi(s) = \mu_t (\tilde{\lambda} + 1)\)</span>.</li>
+</ul>
+<span class="math inline">\(\begin{align}
+\mu_s (1 + \tilde{\lambda})
+&amp;\stackrel{\text{1.6}}{=} \mu_s \int_{\s} \k(s, t) \text{ } d\mu(t) \\
+&amp;= \sum_{t \in \s} \k(s, t) \mu_t \mu_s\\
+&amp;\stackrel{\k \text{ sym}}{=} \sum_{t \in \s} \k(t, s) \mu_t \mu_s\\
+&amp;= \int_{\s} \k(t, s) \mu_s \text{ } d\mu(t)\\
+&amp;= (\vec{\mu}^T \Lambda)_s.
+\end{align}\)</span>
+<p>This shows that <span class="math inline">\(\vec{\mu}\)</span> is a none trivial eigenvector. By uniqueness we thus have <span class="math inline">\(\vec{\mu} = \vec{\pi}\)</span>.</p>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-11"><div class="card-body html-fill-item html-fill-container" data-title="homogeneous kernel">
+<ul>
+<li><p><span class="math inline">\(\k\)</span> is <strong>homogeneous</strong> if <span class="math inline">\(\int_{\s} k(s, t) d\mu(t) = 1 + \tilde{\lambda}\)</span> for a.e. <span class="math inline">\(s \in \s\)</span>.</p></li>
+<li><p>Intuitively, this means that asymptotically, the average degree of vertices does not depend on the type of the vertices.</p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-12"><div class="card-body html-fill-item html-fill-container" data-title="Miscellaneous">
+<ul>
+<li><strong>Markov property</strong>: next state depends only on the current state, not on how the process arrived there.</li>
+<li>stochastic domination</li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-14-13"><div class="card-body html-fill-item html-fill-container" data-title="Questions">
+<ul>
+<li><p>Why is separability of <span class="math inline">\(\s\)</span> important?</p></li>
+<li><p>What is the <strong>main</strong> eigenvalue?</p></li>
+<li><p>What is the intuition of something that is <strong>stationary</strong>?</p></li>
+<li><p>What is meant by the <strong>Poissonian property</strong> in remark 2.2. and on Wikipedia’s poisson point process page?</p></li>
+</ul>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-15"><li class="nav-item" role="presentation"><a href="#card-tabset-15-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Theorem 1.1" aria-selected="true" class="nav-link active">Theorem 1.1</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-15-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Theorem 1.2" aria-selected="false" class="nav-link">Theorem 1.2</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-15-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="2. Multitype branching process" aria-selected="false" class="nav-link">2. Multitype branching process</a></li></ul></div>
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-15"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-15-1"><div class="card-body html-fill-item html-fill-container" data-title="Theorem 1.1">
+<p><strong>Reminders:</strong> - The function <span class="math inline">\(f: X \to Y\)</span> is said to be uniformly continuous if:</p>
+<ul>
+<li><p><span class="math inline">\(\forall \e &gt; 0, \exists \delta &gt; 0\)</span> s.t. <span class="math inline">\(\forall x_1, x_2 \in X\)</span>:</p>
+<ul>
+<li><span class="math inline">\(d_X(x_1, x_2) &lt; \delta \implies d_Y(f(x_1), f(x_2)) &lt; \e.\)</span></li>
+</ul></li>
+</ul>
+<p><strong>Statement:</strong> - Let <span class="math inline">\((\s, \mu)\)</span> be a ground space,</p>
+<ul>
+<li><p>let <span class="math inline">\((\k_n)\)</span> be a sequence of uniformly continuous graphical kernels with <span class="math inline">\(\sup_{n \in \mathbf{N}, \: x, y \in \s} \k_n(x, y) &lt; \infty,\)</span></p></li>
+<li><p><span class="math inline">\(\tilde{\l}_n \to \tilde{\l} &lt; \infty\)</span> (d’où “sparse”),</p></li>
+<li><p>assumption 1.1. satisfied:</p>
+<ul>
+<li><p><span class="math inline">\(\k\)</span> quasi-irreducible,</p></li>
+<li><span class="math inline">\(1 + \tilde{\l} &gt; 1,\)</span></li>
+<li><span class="math inline">\(\int_{\s} \frac{\pi}{\mu} d\mu = 1.\)</span></li>
+</ul></li>
+<li><p><span class="math inline">\(u, v \in V\)</span> chosen uniformly at random,</p></li>
+<li><p>conditional on the <span class="math inline">\(u\)</span> being connected to <span class="math inline">\(v\)</span>:</p></li>
+</ul>
+<span class="math display">\[
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\l}) \log n}{\tilde{\l}}}{\sqrt{\frac{(1 + \tilde{\l}) \log n}{\tilde{\l}}}}, \mathcal{P}_n(u, v) - \frac{\log n}{\tilde{\l}}  \right) \xrightarrow{d} (Z, L),
+\]</span>
+where
+<ul>
+<li><span class="math inline">\(Z \sim \mathcal{N}(0, 1),\)</span></li>
+<li><p><span class="math inline">\(L\)</span> is a non-degenerate real random variable whose distribution can be computed using ideas from branching process theory during the exploration phase of the components of <span class="math inline">\(G(n, \k).\)</span></p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-15-2"><div class="card-body html-fill-item html-fill-container" data-title="Theorem 1.2">
+If:
+<ul>
+<li><p>Theorem 1.1 (sparse setting) hypotheses,</p></li>
+<li><p><span class="math inline">\(\k_n\)</span>s and <span class="math inline">\(\k\)</span> are homogeneous kernels,</p></li>
+<li><span class="math inline">\(\tilde{\l}_n \to +\infty\)</span></li>
+</ul>
+OR
+<ul>
+<li><p><span class="math inline">\(\k\)</span> satisfies theorem 1.1 hypotheses,</p></li>
+<li><span class="math inline">\(\forall n \in \mathbf{N}, \k_n = (1 + \tilde{\l}_n) \k,\)</span></li>
+<li><span class="math inline">\(\tilde{\l}_n \to +\infty\)</span></li>
+</ul>
+Then:
+<span class="math display">\[
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\l}_n) \log n}{\tilde{\l}_n}}{\sqrt{\log n}}, \tilde{\l}_n \mathcal{P}_n(u, v) - \log n\right) \xrightarrow{d} (Z, \tilde{L})
+\]</span>
+where
+<ul>
+<li><span class="math inline">\(Z \sim \mathcal{N}(0, 1),\)</span></li>
+<li><p><span class="math inline">\(\tilde{L} \stackrel{d}{=} \Lambda_1 + \Lambda_2 - \Lambda_3 - c\)</span> with <span class="math inline">\(\Lambda_i \stackrel{\textit{i.i.d.}}{\sim} \text{Gumbel}\)</span>.</p>
+<ul>
+<li><span class="math inline">\(c\)</span> known and different for each of the two possible sets of hypotheses.</li>
+</ul></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-15-3"><div class="card-body html-fill-item html-fill-container" data-title="2. Multitype branching process">
+<ul>
+<li><p><span class="math inline">\(|\{\)</span>children of <span class="math inline">\(x\)</span> in <span class="math inline">\(S \subset \s\}| \sim \text{Poisson}(\l = \text{mean} = \int_{\s} k(x, y) d\mu(y)).\)</span></p></li>
+<li><p>Time each offspring lives <span class="math inline">\(\stackrel{\textit{i.i.d.}}{\sim} \text{Exp}(\lambda = \frac{1}{\text{mean}} = 1).\)</span></p></li>
+</ul>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-16"><li class="nav-item" role="presentation"><a href="#card-tabset-16-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Hypotheses" aria-selected="true" class="nav-link active">Hypotheses</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-16-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Statement" aria-selected="false" class="nav-link">Statement</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-16-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Remark 2.2." aria-selected="false" class="nav-link">Remark 2.2.</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-16-4" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="tableau" aria-selected="false" class="nav-link">tableau</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-16-5" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Conclusion" aria-selected="false" class="nav-link">Conclusion</a></li></ul></div>
+
+
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-16"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-16-1"><div class="card-body html-fill-item html-fill-container" data-title="Hypotheses">
+<ul>
+<li><p>finite-type continuous-time BP</p></li>
+<li><p>on the nonextinction sets</p></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-16-2"><div class="card-body html-fill-item html-fill-container" data-title="Statement">
+<ul>
+<li><span class="math inline">\(\frac{(S_m^1, \dots, S_m^r)}{\tilde{\l} m} \xrightarrow{a.s.} \pi\)</span></li>
+<li><span class="math inline">\(\frac{(N_m^1, \dots, N_m^r)}{m} \xrightarrow{a.s.} \pi\)</span></li>
+<li><span class="math inline">\(\frac{S_m}{m} \xrightarrow{a.s.} \tilde{\l}\)</span></li>
+<li><span class="math inline">\(\frac{S_m^i}{S_m} \xrightarrow{a.s.} \pi_s\)</span></li>
+</ul>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-16-3"><div class="card-body html-fill-item html-fill-container" data-title="Remark 2.2.">
+<p>!<a href="images/durrett.jpeg">Durrett</a></p>
+<p>Let us make the link between the image above from <span class="citation" data-cites="durrett2019probability">(<a href="#ref-durrett2019probability" role="doc-biblioref">Durrett 2019</a>)</span> p147 and this remark from the paper.</p>
+<strong>Def:</strong>
+<span class="math display">\[
+\begin{align*}
+\tilde{\mu}\colon \mathcal B(\s) &amp;\rightarrow \bf R\\
+S&amp;\mapsto \int_S \k(s, u) \dif \mu(u).
+\end{align*}
+\]</span>
+<p><strong>Note:</strong> in particular <span class="math inline">\(\tilde{\mu}(\{u_i\}) =\k(s, u_i) \mu(u_i), \forall i \in [n].\)</span></p>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-16-4"><div class="card-body html-fill-item html-fill-container" data-title="tableau">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 47%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Probability: theory and examples</th>
+<th style="text-align: center;">FPP on IHRGs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Measure space <span class="math inline">\((S, \s, \mu)\)</span></td>
+<td style="text-align: center;"><p>$(,</p>
+<p>(), )$</p></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(A_i\)</span> disjoint</td>
+<td style="text-align: center;"><span class="math inline">\(\{u_i\}\)</span> disjoint</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><p><span class="math inline">\(m: \s \to \bf N\)</span>, or:</p>
+<span class="math inline">\(m: \Omega \
+t
+i
+mes \mathcal B(\s) \to \bf N\)</span></td>
+<td style="text-align: center;"><p><span class="math inline">\(\x
+i
+^
+s: \mathcal B(\s) \to \bf N\)</span>, or:</p>
+<span class="math inline">\(\xi^s: \Omega \
+t
+i
+mes \mathcal B(\s) \to \bf N\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><p><span class="math inline">\(\mu\)</span> mean-measure of the process, <em>i.e.</em>, <span class="math inline">\(m
+(
+A
+_i) \stackrel{\mathrel{\unico
+d
+e
+{x2AEB}}}{\sim} P(\mu(A_i)).\)</span></p>
+<p>Here <span class="math inline">\(A_i\)</span> is fixed so <span class="math inline">\(m(A_i)\)</span> is a random variable.</p>
+<p>We refer to this as the <strong>Poissonian property</strong>.</p></td>
+<td style="text-align: center;"><p><span class="math inline">\(\tilde{\mu}\)</span> mean-measure of the process, <em>i.e.</em>,<span class="math inline">\(\xi^s(
+\{
+u
+_
+i\}) \stackrel{\mathrel{\unic
+o
+d
+e{x2AEB}}}{\sim} P(\tilde{\mu
+}
+(
+\
+{u_i\} =\k(s, u_i) \mu(u_i))\)</span></p>
+<p>Here <span class="math inline">\(u_i\)</span> is fixed so <span class="math inline">\(\xi^s(
+\{u_i\})\)</span> is a random variable.</p></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(\mu(A_i) &lt; \infty \implies\)</span></td>
+<td style="text-align: center;">$ ({u_i}) =s, u _ i ) (u_i) &lt; $</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><p><span class="math inline">\(\forall \omega \in \Omega\)</span> , the map below is a measure on <span class="math inline">\(\s\)</span>.</p>
+<span class="math display">\[
+\begin{align*}
+m_{\omega
+}
+\
+colon \s &amp;\rightarrow \bf N\\
+S&amp;\mapsto m(\omega, S).
+\end{align*}
+\]</span>
+<p>Here <span class="math inline">\(\omega\)</span> is fixed, so <span class="math inline">\(m_{\omega}\)</span> is a measure.</p></td>
+<td style="text-align: center;"><p><span class="math inline">\(\forall \omega \in \Omega\)</span> , the map below is a measure on <span class="math inline">\(\s\)</span>.</p>
+<span class="math display">\[
+\begin{align*}
+\xi_\omega^s\colon \mat
+h
+c
+al B(\s) &amp;\rightarrow \bf N\\
+S&amp;\mapsto \xi_(\omega, s).
+\end{align*}
+\]</span>
+<p>Here <span class="math inline">\(\omega\)</span> is fixed, so <span class="math inline">\(\xi_\omega^s\)</span> is a measure.</p></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><p>Let us now describe how one can construct such a map <span class="math inline">\(m\)</span>.</p>
+<p>Since <span class="math inline">\(\mu(S) &lt; \infty,\)</span> we can define the following probability measure <span class="math inline">\(\nu := \frac{\mu}{\mu(S)}.\)</span></p>
+<p>We sample <span class="math inline">\(N \sim P(\mu(S))\)</span> independently of everything else.</p>
+<p>We then sample <span class="math inline">\(X_1, X_2, \do
+t
+s
+\stackrel{i.i.d}{\sim} \nu\)</span>.</p>
+<p>All this allows us to finally define <span class="math inline">\(m\)</span> via</p>
+<p>$$ <span class="math display">\[\begin{align*}
+m\colon \Omega
+
+\
+times \s &amp;\rightarrow \bf N\\
+(
+\
+omega, A)&amp;\mapsto |\{j \leq N
+(
+\
+omega): X_j(\omega) \in A\}|.
+\end{align*}\]</span><br>
+omega): X_j() A}|. \end{align*}<br>
+omega): X_j() A}|. \end{align*}<br>
+omega): X_j() A}|. \end{align*}<br>
+omega): X_j() A}|. \end{align*}<br>
+omega): X_j() A}|. \end{align*} $$</p></td>
+<td style="text-align: center;"><p>Let us now describe how one can construct such a map <span class="math inline">\(\xi\)</span>.</p>
+<p>Since $mu}mu}mu}mu}mu}mu}(S) = _{i=1}^n</p>
+<p>s, u_i) (u_i) &lt; $, we can define the following probability measure <span class="math inline">\(\nu := \f
+r
+a
+c{\tilde\mu}{\tilde\mu(\s)}.\)</span></p>
+<p>We also sample <span class="math inline">\(N \sim P(\tilde\mu(\s))\)</span> independently of everything else.</p>
+<p>We then sample <span class="math inline">\(X_1, X_2, \do
+t
+s
+\stackrel{i.i.d}{\sim} \nu.\)</span></p>
+<p>All this allows us to finally define <span class="math inline">\(\xi\)</span> via</p>
+<span class="math display">\[
+\begin{align*}
+\xi\colon \Omega \times \mat
+h
+c
+al B(\s) &amp;\rightarrow \bf N\\
+(
+\
+omega, S)&amp;\mapsto |\{j \leq N
+(
+\
+omega): X_j(\omega) \in S\}|.
+\end{align*}
+\]</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><p>All this now allows us to make sense of the stochastic equation from Remark 2.2.:</p>
+<p>$$ A_w^{root=s}(t) = _<br>
+l eft( A_w^{root=u}(t - E_i) </p>
+<p>) _^s(u) = $$</p></td>
+</tr>
+</tbody>
+</table>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-16-5"><div class="card-body html-fill-item html-fill-container" data-title="Conclusion">
+<p>All{.card title=“Coupling”} this now allows us to make sense of the stochastic equation from Remark 2.2.:</p>
+<span class="math display">\[
+A_w^{root=s}(t) = \int_\s \left( A_w^{root=u}(t - E_i) \bf 1_{E_i &lt; t} + \bf 1_{E_i &gt; t} \right) \dif \xi_\omega^s(u) = \sum_{u \in \s} \left( A_w^{root=u}(t - E_i) \bf 1_{E_i &lt; t} + \bf 1_{E_i &gt; t} \right) \xi_\omega^s(\{u\}).
+\]</span>
+<span class="math inline">\(\begin{align*}                                                     W^s(t) &amp;= e^{-\tilde{\lambda} t} A^s(t) \\                            &amp;= \int_\s e^{-\tilde{\lambda} t} e^{\tilde{\lambda} E_i}e^{-\tilde{\lambda} E_i}[A^u(t - E_i) \mathbf{1}_{\{E_i &lt; t\}} + \mathbf{ 1}_{\{E_i&gt;t\}}] \dif \xi_s(u) \\                                             &amp;= \int_\s e^{-\tilde{\lambda} E_i} e^{-\tilde{\lambda} (t - E_i)}[A^u(t - E_i) \mathbf{1}_{\{E_i &lt; t\}} + \mathbf{1}_{\{E_i&gt;t\}}] \dif \xi_s(u) \\ &amp;= \int_\s e^{-\tilde{\lambda} E_i} [W^u(t - E_i) \mathbf{1}_{\{E_i &lt; t\}} + e^{-\tilde{\lambda} (t - E_i)} \mathbf{1}_{\{E_i&gt;t\}}] \dif \xi_s(u)\end{align*}\)</span>
+<ul>
+<li>Campbell’s THM <span class="math inline">\(\implies\)</span> result for Laplace functional applied to a Poisson point process.</li>
+</ul>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div class="card tabset html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header dashboard-card-no-title bslib-navs-card-title">
+
+<ul class="nav nav-tabs card-header-tabs" role="tablist" data-tabsetid="card-tabset-17"><li class="nav-item" role="presentation"><a href="#card-tabset-17-1" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Coupling" aria-selected="true" class="nav-link active">Coupling</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-2" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Max" aria-selected="false" class="nav-link">Max</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-3" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="thinning" aria-selected="false" class="nav-link">thinning</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-4" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Tab 4" aria-selected="false" class="nav-link">Tab 4</a></li><li class="nav-item" role="presentation"><a href="#card-tabset-17-5" role="tab" data-toggle="tab" data-bs-toggle="tab" data-value="Tab 5" aria-selected="false" class="nav-link">Tab 5</a></li></ul></div>
+
+
+
+
+
+<div class="tab-content html-fill-item html-fill-container" data-tabset-id="card-tabset-17"><div class="tab-pane active show html-fill-item html-fill-container" role="tabpanel" id="card-tabset-17-1"><div class="card-body html-fill-item html-fill-container" data-title="Coupling">
+<span class="math display">\[\text{exploration process of the neighborhood of a vertex} \stackrel{\text{relate}}{\iff} \text{branching process}\]</span>
+<p><strong>Goal of section:</strong> <strong>Definition of</strong> <span class="math inline">\(\Psi_k^{\text{binomial}}(t)\)</span><strong>:</strong></p>
+<p><strong>Definition of the offspring distribution</strong> <span class="math inline">\(D^{\text{binomial}}\)</span><strong>:</strong></p>
+<p><span class="math inline">\(D^{\text{bin}|\text{type}(v)=s} \mathrel{\vcenter{:}}= \sum_{j \in [r]} \eta_{sj}, \quad \eta_{sj} \stackrel{\unicode{x2AEB}}{\sim} B(n_j - \mathbf{1}_{s=j}, \k(s, j) / n)\)</span>.</p>
+<span class="math display">\[
+\eta_{st}^n \sim \text{Bin}(n_t, \k(s, t) / n) \implies \eta_{st}^n = \sum_{i=1}^{n_t} b_{st}^i, \text{ where } \forall i: b_{st}^i \stackrel{iid}{\sim} \text{Bern}(\k(s, t) / n)
+\]</span>
+<p>Let <span class="math inline">\(\xi_{st}^n \sim \text{Poi}(\frac{n_t}{n} \k(s, t))\)</span> be the poisson random variable coupled to <span class="math inline">\(\eta_{st}^n\)</span> (<span class="math inline">\(= Y_m'\)</span> in <span class="citation" data-cites="den2012probability">(<a href="#ref-den2012probability" role="doc-biblioref">Den Hollander 2012</a>)</span>).</p>
+<p>Using the result from p.9. of <span class="citation" data-cites="den2012probability">(<a href="#ref-den2012probability" role="doc-biblioref">Den Hollander 2012</a>)</span>, we get:</p>
+<span class="math display">\[
+P(\eta_{st}^n \neq \xi_{st}^n) \leq \sum_{i=1}^{n_t} \frac{\k(s,t)^2}{n^2}= \frac{n_t \, \k(s,t)^2}{n^2} = \frac{n_t}{n} \frac{\k(s,t)^2}{n}.
+\]</span>
+<p>Let <span class="math inline">\(\varepsilon &gt; 0\)</span>,</p>
+<span class="math display">\[
+\begin{align*}
+P\left( \left|\frac{n_t}{n} \frac{\k(s,t)^2}{n} - \lambda_{st} \frac{\k(s,t)}{n}\right| &gt; \varepsilon \right) &amp;= P\left( \left|\frac{n_t}{n} \frac{\k(s,t)^2}{n} - \mu_{t} \frac{\k(s,t)^2}{n}\right| &gt; \varepsilon \right) \\
+&amp;= P\left( \left|\frac{n_t}{n} - \mu_{t}\right| &gt; \frac{\varepsilon n}{\k(s,t)^2} \right) \\
+&amp;\leq P\left( \left|\frac{n_t}{n} - \mu_{t}\right| &gt; \frac{\varepsilon}{\k(s,t)^2} \right)
+\end{align*}
+\]</span>
+<p>This last expression goes to <span class="math inline">\(0\)</span> as <span class="math inline">\(n \to \infty\)</span> since we know that</p>
+<span class="math display">\[
+\frac{n_t}{n} \xrightarrow{p} \mu_{t}, \, \text{as } n \to \infty.
+\]</span>
+<p>In other words:</p>
+<span class="math display">\[
+\frac{n_t \, \k(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\k(s,t)}{n}
+\]</span>
+<span class="math display">\[
+\frac{n_t \, \k(s,t)^2}{n^2}  - \lambda_{st} \frac{\k(s,t)}{n} = o_p(1)
+\]</span>
+<span class="math display">\[
+\frac{n_t \, \k(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\k(s,t)}{n} (1 + o_p(1)).
+\]</span>
+<span class="math display">\[
+\begin{align*}
+P\left( \left|\frac{n_t}{n} \frac{\k(s,t)^2}{n} - \lambda_{st} \frac{\k(s,t)}{n} (1 + o(1))\right| &gt; \varepsilon \right) &amp;= P\left( \left|\frac{n_t}{n} \frac{\k(s,t)^2}{n} - \mu_{t} \frac{\k(s,t)^2}{n} (1 + o(1)) \right| &gt; \varepsilon \right) \\
+&amp;= P\left( \left|\frac{n_t}{n} - \mu_{t} (1 + o(1))\right| &gt; \frac{\varepsilon n}{\k(s,t)^2} \right) \\
+&amp;\stackrel{\mu_t \leq1}{\leq} P\left( \left|\frac{n_t}{n} - \mu_{t} \right| + |o(1)| &gt; \frac{\varepsilon n}{\k(s,t)^2} \right) \\
+&amp;\leq P\left( \left|\frac{n_t}{n} - \mu_{t}\right| + |o(1)| &gt; \frac{\varepsilon}{\k(s,t)^2} \right)
+\end{align*}
+\]</span>
+<span class="math display">\[
+\implies\frac{n_t \, \k(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\k(s,t)}{n} (1 + o(1)).
+\]</span>
+<span class="math display">\[
+\begin{align*}
+\sum_{s\in[r]} N_m^s \sum_{t\in[r]} \frac{\l_{st}\k(s,t)}{n}
+\end{align*}
+\]</span>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-17-2"><div class="card-body html-fill-item html-fill-container" data-title="Max">
+<p>Cher Maximilien,</p>
+<p>They first write:</p>
+<p><span class="math inline">\(\eta_{st} \sim \text{Binomial}(n_t, \k(s,t) /n)\)</span>,</p>
+<p><span class="math inline">\(\xi_{st} \sim \text{Poisson}(\lambda_{st} = \mu_t\k(s,t))\)</span>.</p>
+<p>They then state:</p>
+<p>We couple <span class="math inline">\(\eta_{st}\)</span> to <span class="math inline">\(\xi_{st}\)</span> with error probability <span class="math inline">\(n_t (\k(s,t)^2 / n^2) = \lambda_{st} \k(s,t) / n(1+o(1))\)</span>.</p>
+<p>Yesterday, you explained to me that they probably meant <span class="math inline">\(o_p(1).\)</span></p>
+<p>However, I do not understand how they get more than:</p>
+<span class="math display">\[
+n_t (\k(s,t)^2 / n^2) =\lambda_{st} \k(s,t) / n + o_p(1)
+\]</span>
+<span class="math inline">\(\frac{n_t}{n} \xrightarrow{p} \mu_t &lt; \infty \implies \frac{n_t}{n} - \mu_t = o_p(1) \implies \frac{n_t}{n} - \mu_t \stackrel{\mu_t \text{ constant}}{=} \mu_t o_p(1) \implies \frac{n_t}{n} = \mu_t(1 +  o_p(1)).\)</span>
+<p>This leads to:</p>
+<span class="math inline">\(n_t \frac{\k(s,t)^2}{n^2} = \frac{n_t}{n}\frac{\k(s,t)^2}{n} = \mu_t(1 +  o_p(1))\frac{\k(s,t)^2}{n}= \mu_t \k(s,t) \frac{\k(s,t)}{n}(1+o_p(1)) = \frac{\l_{st}\k(s,t)}{n}(1+o_p(1)),\)</span>
+<p>as claimed in the article.</p>
+<p>Let us bound the coupling error. For <span class="math inline">\(t\)</span> fixed, we have:</p>
+<span class="math display">\[
+\begin{align*}
+P(\exists j \leq m, D_j^{\text{bin}} \neq D_j^{\text{Poi}}) &amp;\leq \sum_{s=1}^{n_t} P(\text{one of the splits at a vertex of type }s\text{ did not yield the same result for } D^{\text{bin}} \text{ &amp; } D^{\text{Poi}})\\
+&amp;\leq\sum_{s=1}^{n_t} \sum_{v\in\text{set of vertices of type }s\text{ at which a split occured}}P(\text{split at }v\text{ did not yield the same result for } D^{\text{bin}} \text{ &amp; } D^{\text{Poi}}) \\
+&amp;=\sum_{s=1}^{n_t} N_m^s \:P(\text{split at }v\text{ did not yield the same result for } D^{\text{bin}} \text{ &amp; } D^{\text{Poi}}) \\
+&amp;\leq\sum_{s=1}^{n_t} N_m^s \: \sum_{t=1}^{n_t} P(\eta_{st} \neq\xi_{st}) \\
+&amp;\leq\sum_{s=1}^{n_t} N_m^s \: \sum_{t=1}^{n_t} \frac{\l_{st}\k(s,t)}{n}(1+o_p(1)) \\
+&amp;=\frac{m}{n}\sum_{s,t} \frac{N_m^s}{m}\l_{st}\k(s,t)(1+o_p(1)) \\
+&amp;\leq\frac{m}{n} \max \k\sum_{s,t} \frac{N_m^s}{m}\l_{st}(1+o_p(1)) \\
+&amp;=\frac{m}{n} \max \k\sum_{s,t} \pi_s\l_{st}(1+o_p(1))^2 \\
+&amp;\stackrel{\text{Slutsky}}{=}\frac{m}{n} \max \k\sum_{s,t} \pi_s\l_{st}(1+o_p(1)) \\
+\end{align*}
+\]</span>
+<p>since we know if <span class="math inline">\(E_u &gt; t \:\:(\iff \text{node }u\text{ is still alive})\)</span> for <span class="math inline">\(t\)</span> fixed.</p>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-17-3"><div class="card-body html-fill-item html-fill-container" data-title="thinning">
+<p>In <span class="math inline">\(G(m, \k)\)</span>: <span class="math inline">\(\mathcal H_n(i_0, j)\)</span>.</p>
+<p>Equivalent w.r.t. distribution to the <strong>generation</strong> of the first <strong>individual</strong> in <span class="math inline">\(th(\Psi_k^{i_0})\)</span> to have label <span class="math inline">\(j.\)</span></p>
+<p>In <span class="math inline">\(G(m, \k)\)</span>: <span class="math inline">\(\mathcal P_n(i_0, j)\)</span>.</p>
+<p>Equivalent w.r.t. distribution to the <strong>splitting time</strong> of that same individual’s parent, i.e., the moment his parent died and he was born.</p>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-17-4"><div class="card-body html-fill-item html-fill-container">
+<p>====================================</p>
+</div></div><div class="tab-pane html-fill-item html-fill-container" role="tabpanel" id="card-tabset-17-5"><div class="card-body html-fill-item html-fill-container">
+<div class="cell-output cell-output-stdout html-fill-item html-fill-container">
+<pre><code>hello</code></pre>
+</div>
+</div></div></div><bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+<div id="graph-μ-fixed-n_neighbors-varying" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container dashboard-sidebar-container" data-orientation="rows" aria-labelledby="tab-graph-μ-fixed-n_neighbors-varying">
+<div class="bslib-sidebar-layout html-fill-item html-fill-container" data-bslib-sidebar-open="desktop" data-bslib-sidebar-init="true" style=" --bslib-sidebar-width: 300px"><div class="main html-fill-container html-fill-item"><div class="sidebar-content html-fill-item html-fill-container">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div id="shiny_mu_fixed_n_neighbors_varying_simulation" class="cell-output cell-output-display html-fill-item html-fill-container">
+<div id="graph_mu_fixed_n_neighbors_varying_PLOT" class="shiny-image-output html-fill-item shiny-plot-output html-fill-container" style="width:100%;height:400px;"></div><script type="application/json" data-html-dependency="">{"name": "htmltools-fill", "version": "0.5.8.9000", "source": {"package": "shiny", "subdir": "www/shared/htmltools/fill"}, "script": [], "stylesheet": [{"href": "fill.css", "rel": "stylesheet"}], "meta": [], "all_files": false, "head": null}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
 <div id="3ade8a4a-fb1d-4a6c-8409-ac45482d5fc9" class="hidden html-fill-item html-fill-container">
 
 </div>
 </div>
 </div>
+</div></div><aside id="bslib-sidebar-5" class="sidebar html-fill-container html-fill-item"><div class="html-fill-item html-fill-container">
+<div id="input_selects_3-1" class="cell-output cell-output-display no-overflow-x" data-execution_count="23">
+<div class="form-group shiny-input-container" style="width:10;">
+  <label class="control-label" id="n_simulations3-label" for="n_simulations3">Number of simulations:</label>
+  <div>
+    <select class="shiny-input-select form-select" id="n_simulations3">      <option value="1">1</option>
+      <option value="10" selected="">10</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+      <option value="40">40</option>
+      <option value="50">50</option>
+      <option value="60">60</option>
+      <option value="70">70</option>
+      <option value="80">80</option>
+      <option value="90">90</option>
+      <option value="100">100</option></select>
+  </div>
 </div>
+</div>
+<div id="input_selects_3-2" class="cell-output cell-output-display no-overflow-x" data-execution_count="23">
+<div class="form-group shiny-input-container" style="width:10;">
+  <label class="control-label" id="n3-label" for="n3">Number of nodes in each cluster:</label>
+  <div>
+    <select class="shiny-input-select form-select" id="n3">      <option value="50">50</option>
+      <option value="100" selected="">100</option>
+      <option value="200">200</option>
+      <option value="300">300</option>
+      <option value="400">400</option>
+      <option value="500">500</option></select>
+  </div>
+</div>
+</div>
+<div id="input_selects_3-3" class="cell-output cell-output-display no-overflow-x" data-execution_count="23">
+<div class="form-group shiny-input-container" style="width:10;">
+  <label class="control-label" id="d3-label" for="d3">Number of dimensions &amp; communities:</label>
+  <div>
+    <select class="shiny-input-select form-select" id="d3">      <option value="2" selected="">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option></select>
+  </div>
+</div>
+</div>
+<div id="input_selects_3-4" class="cell-output cell-output-display no-overflow-x" data-execution_count="23">
+<div class="form-group shiny-input-container" style="width:10;">
+  <label class="control-label" id="mu_x23-label" for="mu_x23">Mean of the second Gaussian with respect to the x-axis:</label>
+  <div>
+    <select class="shiny-input-select form-select" id="mu_x23">      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3" selected="">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+      <option value="16">16</option>
+      <option value="17">17</option>
+      <option value="18">18</option>
+      <option value="19">19</option>
+      <option value="20">20</option></select>
+  </div>
+</div>
+</div>
+</div></aside>
+<button class="collapse-toggle" type="button" title="Toggle sidebar" aria-expanded="true" aria-controls="bslib-sidebar-5">
+    <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 16 16" class="bi bi-chevron-left collapse-icon" style="fill:currentColor;" aria-hidden="true" role="img">
+      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"></path>
+    </svg>
+</button>
+<script data-bslib-sidebar-init="">
+bslib.Sidebar.initCollapsibleAll()
+</script>
+</div>
+</div>
+</div>
+
 
 
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1393,7 +2710,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-</div> <!-- /container fluid -->
+<div id="quarto-appendix" class="default bslib-grid-item html-fill-item"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-den2012probability" class="csl-entry" role="listitem">
+Den Hollander, Frank. 2012. <span>“Probability Theory: The Coupling Method.”</span> <em>Lecture Notes Available Online (Http://Websites. Math. Leidenuniv. Nl/Probability/Lecturenotes/CouplingLectures. Pdf)</em>.
+</div>
+<div id="ref-durrett2019probability" class="csl-entry" role="listitem">
+Durrett, Rick. 2019. <em>Probability: Theory and Examples</em>. Vol. 49. Cambridge university press.
+</div>
+</div></section></div></div> <!-- /container fluid -->
 
 <script type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (_event) {
