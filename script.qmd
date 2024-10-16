@@ -1585,6 +1585,9 @@ where
 
 -   $\frac{S_m}{m} \xrightarrow{a.s.} \tilde{\l}$
 
+
+
+
 -   $\frac{S_m^i}{S_m} \xrightarrow{a.s.} \pi_s$
 :::
 
@@ -1877,3 +1880,5 @@ In $G(m, \k)$: $\mathcal P_n(i_0, j)$.
 Equivalent w.r.t. distribution to the **splitting time** of that same
 individual's parent, i.e., the moment his parent died and he was born.
 :::
+
+{{< include sub_quartos/_test.qmd >}}
