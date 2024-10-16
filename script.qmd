@@ -9,13 +9,11 @@ bibliography: references.bib
 ---
 
 ::: hidden
-$$
- \def\s{{\mathcal{S}}}
- \def\k{{\kappa}}
- \def\e{{\varepsilon}}
- \def\l{{\lambda}}
- \def\dif{{\mathop{}\!\mathrm{d}}}
-$$
+\newcommand*{\k}{\kappa}
+\newcommand*{\s}{\mathcal{S}}
+\newcommand*{\e}{\varepsilon}
+\newcommand*{\l}{\lambda}
+\newcommand*{\dif}{\mathop{}\!\mathrm{d}}
 :::
 
 # Page Navigation
@@ -23,15 +21,13 @@ $$
 1.  Percolation demo
 2.  Vincent Tassion
 3.  Metric Backbone & Spectral Clustering Simulations
-6 hybrid graph μ fixed n_neighbors varying
-7.  Module dependencies
-8.  Proof of THM 2.1
-9.  Instructions to deploy website
-10. First Passage Percolation On Inhomogeneous Random Graphs
-
 4.  Graph with Gaussian clusters & ABBE prediction
-5.  Plot with μ fixed & n_neighbors varying
-6.  graph
+5.  hybrid graph μ fixed n_neighbors varying
+6.  Module dependencies
+7.  Proof of THM 2.1
+8.  Instructions to deploy website
+9.  First Passage Percolation On Inhomogeneous Random Graphs
+
 
 # 1
 
@@ -268,9 +264,10 @@ def percolation_plot():
 
 # 2
 
-<!-- # Introduction -->
+## Row {.tabset}
 
 ::: {.card title="Introduction"}
+
 <h2>Bernoulli Bond Percolation on $\mathbb{Z}^d$</h2>
 
 <h3>Setup:</h3>
@@ -929,7 +926,7 @@ def graph_gaussian_clusters_ABBE_prediction_PLOT():
 ```
 
 
-# 6
+# 5
 
 ##  {.sidebar width="300px"}
 
@@ -1091,7 +1088,7 @@ def graph_mu_fixed_n_neighbors_varying_PLOT_HYBRID():
 ``` 
 
 
-# 7
+# 6
 
 ```{mermaid}
 %%| label: module_dependencies
@@ -1121,7 +1118,7 @@ flowchart LR
     J --> D
 ```
 
-# 8
+# 7
 
 ## Change of variables formula from wikipedia
 
@@ -1182,7 +1179,7 @@ $$E_p[N] = E[N \circ X].$$
 $A = \{w(e_1) = u_1, \ldots, w(e_k) = u_k\}$ because the measure $P_p$
 is characterized by its output on such setss.
 
-# 9
+# 8
 
 -   When preview yields the desired result in VsCode, compress the
     directory that contains "script.qmd" & "app.py" and upload to
@@ -1207,13 +1204,14 @@ is characterized by its output on such setss.
 # rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 
 ```
 
-# 10 {.tabset}
 
-<!-- ### Abstract & Introduction -->
+# 9
 
-<!-- #### First Passage Percolation Intuition -->
+## Row {.tabset}
 
 ::: {.card title="Abstract"}
+- $\e$
+
 -   Edge weights represent the time it takes to pass through the edge.
 
 -   For each vertex v, we want to find the path with the minimum time to
@@ -1277,9 +1275,9 @@ is characterized by its output on such setss.
     $X_n \xrightarrow{p} X \implies g(X_n) \xrightarrow{p} g(X).$
 :::
 
-## 1.1 The $G(n, \k)$ Model {.tabset}
 
 ::: {.card title="definitions"}
+### 1.1 The $G(n, \k)$ Model {.tabset}
 -   A **spanning tree** is a sub-graph that contains all original nodes
     and is a tree.
 
@@ -1442,8 +1440,8 @@ In addition, we will suppose that
 $\int_{\s} \frac{\pi}{\mu} d\mu < \infty$
 :::
 
-::: {.card title="Why $\\k = \\mu$"}
--   $(\tilde{\lambda} + 1) \pi_t = \int_{\s} \k(s, t) \mu_t \text{ } d\pi(s) = \mu_t \int_{\s} \k(s, t) \text{ } d\pi(s) \stackrel{\k \text{sym}}{=} \mu_t \int_{\s} \k(t, s) \text{ } d\pi(s) = \mu_t \int_{\s} \k(s, t) \text{ } d\pi(s) = \mu_t (\tilde{\lambda} + 1)$.
+::: {.card title="Why is κ = μ?"}
+-   $(\tilde{\lambda} + 1) \pi_t = \int_{\s} \k(s, t) \mu_t \text{ } d\pi(s) = \mu_t \int_{\s} \k(s, t) \text{ } d\pi(s) \stackrel{\k \text{ sym}}{=} \mu_t \int_{\s} \k(t, s) \text{ } d\pi(s) = \mu_t \int_{\s} \k(s, t) \text{ } d\pi(s) = \mu_t (\tilde{\lambda} + 1)$.
 
 $\begin{align}
 \mu_s (1 + \tilde{\lambda})
@@ -1484,9 +1482,11 @@ we thus have $\vec{\mu} = \vec{\pi}$.
     Wikipedia's poisson point process page?
 :::
 
-## 1.2 Main results {.tabset}
 
 ::: {.card title="Theorem 1.1"}
+
+### 1.2 Main results {.tabset}
+
 **Reminders:** - The function $f: X \to Y$ is said to be uniformly
 continuous if:
 
@@ -1568,15 +1568,17 @@ where
     $\stackrel{\textit{i.i.d.}}{\sim} \text{Exp}(\lambda = \frac{1}{\text{mean}} = 1).$
 :::
 
-## Proposition 2.1 {.tabset}
 
-::: {.card title="Hypotheses"}
+::: {.card title="Proposition 2.1"}
+### Proposition 2.1 {.tabset}
+
+**Hypotheses:**
 -   finite-type continuous-time BP
 
 -   on the nonextinction sets
-:::
 
-::: {.card title="Statement"}
+
+**Statement:**
 -   $\frac{(S_m^1, \dots, S_m^r)}{\tilde{\l} m} \xrightarrow{a.s.} \pi$
 
 -   $\frac{(N_m^1, \dots, N_m^r)}{m} \xrightarrow{a.s.} \pi$
@@ -1738,9 +1740,9 @@ $\begin{align*}                                                     W^s(t) &= e^
     Poisson point process.
 :::
 
-## 3. Embedding the BP into the IHRG {.tabset}
 
 ::: {.card title="Coupling"}
+<!-- 3. Embedding the BP into the IHRG {.tabset} -->
 $$\text{exploration process of the neighborhood of a vertex} \stackrel{\text{relate}}{\iff} \text{branching process}$$
 
 **Goal of section:** **Definition of**
@@ -1875,148 +1877,3 @@ In $G(m, \k)$: $\mathcal P_n(i_0, j)$.
 Equivalent w.r.t. distribution to the **splitting time** of that same
 individual's parent, i.e., the moment his parent died and he was born.
 :::
-
-
-
-
-
-
-
-
-
-
-====================================
-
-
-
-
-
-
-# graph μ fixed n_neighbors varying
-
-##  {.sidebar width="300px"}
-
-```{python}
-#| label: input_selects_3
-#| cache: True
-
-
-input_select_width = 10
-
-L = list(range(100, 501, 100))
-L.insert(0, 50)
-
-ui.input_select('n_simulations3', 'Number of simulations:',
-                choices=[1] + list(range(10, 101, 10)),
-                selected=10,
-                width=input_select_width
-)
-
-ui.input_select("n3", "Number of nodes in each cluster:",
-                choices=L,
-                selected=100,
-                width=input_select_width
-)
-
-ui.input_select("d3", "Number of dimensions & communities:",
-                choices=list((2, 3, 4)),
-                selected=2,
-                width=input_select_width
-)
-
-
-ui.input_select("mu_x23", "Mean of the second Gaussian with respect to the x-axis:",
-                choices=list(range(1, 21)),
-                selected=3,
-                width=input_select_width
-)
-
-
-```
-
-## Column
-
-
-```{python}
-#| label: shiny_mu_fixed_n_neighbors_varying_simulation
-#| cache: True
-@render.plot
-def graph_mu_fixed_n_neighbors_varying_PLOT():
-  
-    n_simulations = int(input.n_simulations3())
-    
-    n           = int(input.n3())
-    d           = int(input.d3())
-    n_clusters  = d
-    mu_x2       = float(input.mu_x23())
-    
-    n_neighbors_LIST = list(range(3, 51))
-
-    fig, axs = plt.subplots(2, 1, figsize=(6, 12))
-    
-    dim3_labels = [f'similarity_{i}' for i in range(n_simulations)]
-    
-    array_3d = StringIndexed3DArray(array=np.zeros((len(n_neighbors_LIST), 2, n_simulations)), dim1_labels=n_neighbors_LIST, dim2_labels=['ARI_original', 'ARI_MB'], dim3_labels=dim3_labels)
-    
-    for i in range(n_simulations):
-        print('Simulation:', i + 1, 'out of', n_simulations, 'started')
-        
-        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2, SEED=i)
-        col_slice = slice(1, samples.shape[1] + 1)
-        
-        for j, n_neighbors in enumerate(n_neighbors_LIST):
-            G = produce_distance_graph(samples, n, d, n_neighbors)
-            MB = get_metric_backbone_igraph(G)
-            
-            true_labels = list(nx.get_node_attributes(G, 'community').values())
-            true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
-
-            SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
-
-            A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-
-            pred_labels = SC.fit_predict(A)
-            pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            
-            array_3d[n_neighbors, 'ARI_original', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
-            
-            
-            A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
-            A = scipy.sparse.csr_matrix(A)
-
-            pred_labels = SC.fit_predict(A)
-            pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            
-            array_3d[n_neighbors, 'ARI_MB', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
-            
-    
-    
-    axs[0].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'))
-    axs[0].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), fmt='o', label="Mean with Std Dev", alpha=0.5)
-    axs[0].set_title('Original Graph')
-    axs[0].set_ylim(bottom=0, top=1)
-    
-    print(STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
-    print(array_3d)
-    
-    axs[1].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
-    axs[1].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), fmt='o', label="Mean with Std Dev", alpha=0.5)
-    axs[1].set_title('Metric Backbone')
-    axs[1].set_ylim(0, 1)
-    
-    for i in range(2):
-        ax = axs[i]
-        ax.set_xlabel('Number of nearest neighbors')
-        ax.set_ylabel('ARI')
-        ax.axis('on')
-        ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
-        if i < 2:
-            ax.legend(handles=[produce_patch(color='red', framework='gaussian', mu_x2=0), produce_patch(color='blue', framework='gaussian', mu_x2=mu_x2)])
-        else:
-            ax.legend(handles=[produce_patch(color='red', framework='ABBE',  plus_or_minus_one=1), produce_patch(color='blue', framework='ABBE', plus_or_minus_one=-1)])
-    
-
-``` 
-
-
-

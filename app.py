@@ -828,123 +828,12 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    input_select_width = 10
-
-    L = list(range(100, 501, 100))
-    L.insert(0, 50)
-
-    ui.input_select('n_simulations3', 'Number of simulations:',
-                    choices=[1] + list(range(10, 101, 10)),
-                    selected=10,
-                    width=input_select_width
-    )
-
-    ui.input_select("n3", "Number of nodes in each cluster:",
-                    choices=L,
-                    selected=100,
-                    width=input_select_width
-    )
-
-    ui.input_select("d3", "Number of dimensions & communities:",
-                    choices=list((2, 3, 4)),
-                    selected=2,
-                    width=input_select_width
-    )
-
-
-    ui.input_select("mu_x23", "Mean of the second Gaussian with respect to the x-axis:",
-                    choices=list(range(1, 21)),
-                    selected=3,
-                    width=input_select_width
-    )
-
-
-    # ========================================================================
-
-    @render.plot
-    def graph_mu_fixed_n_neighbors_varying_PLOT():
-  
-        n_simulations = int(input.n_simulations3())
-    
-        n           = int(input.n3())
-        d           = int(input.d3())
-        n_clusters  = d
-        mu_x2       = float(input.mu_x23())
-    
-        n_neighbors_LIST = list(range(3, 51))
-
-        fig, axs = plt.subplots(2, 1, figsize=(6, 12))
-    
-        dim3_labels = [f'similarity_{i}' for i in range(n_simulations)]
-    
-        array_3d = StringIndexed3DArray(array=np.zeros((len(n_neighbors_LIST), 2, n_simulations)), dim1_labels=n_neighbors_LIST, dim2_labels=['ARI_original', 'ARI_MB'], dim3_labels=dim3_labels)
-    
-        for i in range(n_simulations):
-            print('Simulation:', i + 1, 'out of', n_simulations, 'started')
-        
-            samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2, SEED=i)
-            col_slice = slice(1, samples.shape[1] + 1)
-        
-            for j, n_neighbors in enumerate(n_neighbors_LIST):
-                G = produce_distance_graph(samples, n, d, n_neighbors)
-                MB = get_metric_backbone_igraph(G)
-            
-                true_labels = list(nx.get_node_attributes(G, 'community').values())
-                true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
-
-                SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
-
-                A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-
-                pred_labels = SC.fit_predict(A)
-                pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            
-                array_3d[n_neighbors, 'ARI_original', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
-            
-            
-                A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
-                A = scipy.sparse.csr_matrix(A)
-
-                pred_labels = SC.fit_predict(A)
-                pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            
-                array_3d[n_neighbors, 'ARI_MB', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
-            
-    
-    
-        axs[0].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'))
-        axs[0].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), fmt='o', label="Mean with Std Dev", alpha=0.5)
-        axs[0].set_title('Original Graph')
-        axs[0].set_ylim(bottom=0, top=1)
-    
-        print(STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
-        print(array_3d)
-    
-        axs[1].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
-        axs[1].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), fmt='o', label="Mean with Std Dev", alpha=0.5)
-        axs[1].set_title('Metric Backbone')
-        axs[1].set_ylim(0, 1)
-    
-        for i in range(2):
-            ax = axs[i]
-            ax.set_xlabel('Number of nearest neighbors')
-            ax.set_ylabel('ARI')
-            ax.axis('on')
-            ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
-            if i < 2:
-                ax.legend(handles=[produce_patch(color='red', framework='gaussian', mu_x2=0), produce_patch(color='blue', framework='gaussian', mu_x2=mu_x2)])
-            else:
-                ax.legend(handles=[produce_patch(color='red', framework='ABBE',  plus_or_minus_one=1), produce_patch(color='blue', framework='ABBE', plus_or_minus_one=-1)])
-
-
-    # ========================================================================
-
 
 
     return None
 
 
-_static_assets = ["script_files","images/durrett.jpeg","script_files/libs/quarto-html/tippy.css","script_files/libs/quarto-html/quarto-syntax-highlighting.css","script_files/libs/bootstrap/bootstrap-icons.css","script_files/libs/bootstrap/bootstrap.min.css","script_files/libs/quarto-dashboard/datatables.min.css","script_files/libs/quarto-diagram/mermaid.css","script_files/libs/clipboard/clipboard.min.js","script_files/libs/quarto-html/quarto.js","script_files/libs/quarto-html/popper.min.js","script_files/libs/quarto-html/tippy.umd.min.js","script_files/libs/quarto-html/anchor.min.js","script_files/libs/bootstrap/bootstrap.min.js","script_files/libs/quarto-dashboard/quarto-dashboard.js","script_files/libs/quarto-dashboard/stickythead.js","script_files/libs/quarto-dashboard/datatables.min.js","script_files/libs/quarto-dashboard/pdfmake.min.js","script_files/libs/quarto-dashboard/vfs_fonts.js","script_files/libs/quarto-dashboard/web-components.js","script_files/libs/quarto-dashboard/components.js","script_files/libs/quarto-diagram/mermaid.min.js","script_files/libs/quarto-diagram/mermaid-init.js"]
+_static_assets = ["script_files","images/durrett.jpeg"]
 _static_assets = {"/" + sa: Path(__file__).parent / sa for sa in _static_assets}
 
 app = App(
