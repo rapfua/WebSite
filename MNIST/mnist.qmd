@@ -1,0 +1,532 @@
+---
+title: "MNIST"
+format: html
+editor: visual
+code-fold: true
+cache: true
+favicon: images/nine.png
+---
+
+```{python}
+#| label: imports
+#| cache: true
+
+import networkx as nx
+from tensorflow.keras.datasets import mnist
+import matplotlib.pyplot as plt
+import numpy as np
+
+import graphlearning as gl  # for get_Gaussian_weight_matrix
+import igraph as ig         # for get_metric_backbone_igraph
+from sklearn.cluster import SpectralClustering
+from sklearn.metrics import adjusted_rand_score
+import scipy.sparse
+import numpy as np
+
+import rpy2.robjects as ro
+from rpy2.robjects import pandas2ri
+from rpy2.robjects.conversion import localconverter
+import pandas as pd
+
+```
+
+```{r}
+library(mclust)
+```
+
+```{python}
+
+# Activate the pandas2ri for DataFrame conversion
+pandas2ri.activate()
+# Load the Rcpp source file
+ro.r('Rcpp::sourceCpp("../Rcpp/add_edges.cpp")')
+ro.r('Rcpp::sourceCpp("../Rcpp/getMB.cpp")')
+
+# Define the function to call Rcpp
+add_edges = ro.globalenv['add_edges']
+compute_ARI = ro.globalenv['compute_ARI']
+get_metric_backbone_adjacency_matrix = ro.globalenv['get_metric_backbone_adjacency_matrix']
+
+```
+
+```{python}
+#| label: global variables
+#| cache: true
+global_SEED = 42
+
+```
+
+```{python}
+def remove_isolated_nodes_sparse(adj_matrix):
+    # Sum rows and columns to identify isolated nodes
+    row_sum = adj_matrix.sum(axis=1).A1  # .A1 converts the sparse matrix to a 1D NumPy array
+    col_sum = adj_matrix.sum(axis=0).A1  # .A1 converts the sparse matrix to a 1D NumPy array
+    
+    # Find indices of isolated nodes (where both row and column sums are zero)
+    isolated_nodes = np.where((row_sum == 0) & (col_sum == 0))[0]
+    
+    # Remove the isolated nodes (rows and columns)
+    mask = np.ones(adj_matrix.shape[0], dtype=bool)
+    mask[isolated_nodes] = False
+    
+    new_adj_matrix = adj_matrix[mask, :][:, mask]
+    
+    return new_adj_matrix, isolated_nodes
+
+```
+
+
+```{python}
+#| label: def_get_Gaussian_weight_matrix
+#| cache: true
+
+def get_Gaussian_weight_matrix(X, n_neighbors):
+    Z = gl.weightmatrix.knn(data=X, k=n_neighbors)  # Gaussian similarity measure
+    A = (Z + Z.T) / 2
+    return A
+```
+
+```{python}
+#| label: def_get_metric_backbone_igraph
+#| cache: true
+
+def get_metric_backbone_igraph(D):
+    """
+     :param D: networkx distance graph (with weight and proximity edge attribute)
+     :return: Networkx Metric Backbone subgraph of D
+    """
+    D_ig = ig.Graph.from_networkx(D)
+    distances = D_ig.distances(weights='weight')
+
+    G = nx.Graph(D)
+    G.remove_edges_from([(x, y) for x, y, w in G.edges.data('weight') if w > distances[x][y]])
+    return G
+
+```
+
+
+```{python}
+#| label: to_array
+
+import scipy.sparse
+
+# Example: Create a sparse matrix (CSR format)
+sparse_matrix = scipy.sparse.csr_matrix([[0, 0, 1], [1, 0, 0], [0, 2, 0]])
+
+# Convert sparse matrix to a dense (normal) matrix
+dense_matrix = sparse_matrix.toarray()
+
+print(dense_matrix)
+```
+
+```{python}
+#| label: community_detection_on_Euclidean_graphs_FUNCTIONS
+#| cache: true
+
+def euclidean_distance(tuple_1, tuple_2):
+    return np.linalg.norm(np.array(tuple_1) - np.array(tuple_2))
+
+
+def φ(R):
+    return lambda r: 1 if r <= R else 0
+
+
+def f(f_r):
+    return lambda G_distance, u_idx, v_idx: f_r(euclidean_distance(tuple_1=G_distance.nodes[u_idx]['pos'], tuple_2=G_distance.nodes[v_idx]['pos']))
+  
+
+def indicator(condition):
+    return 1 if condition else 0
+  
+
+def make_F(f_in, f_out):
+    return lambda G, u_idx, v_idx: indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community']) * f_in(G, u_idx, v_idx) + (1 - indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community'])) * f_out(G, u_idx, v_idx)
+
+
+def make_F_from_R(R1, R2):
+    return make_F(f(φ(R1)), f(φ(R2)))
+
+```
+
+```{python}
+#| label: def_produce_distance_graph
+#| cache: true
+
+def produce_distance_graph(X_train, y_train, n_neighbors, SEED=global_SEED):
+  
+    rng = np.random.default_rng(SEED)
+    
+    n = len(X_train)  # n_nodes
+  
+    G = nx.Graph()
+    
+    d = {i: X_train[i] for i in range(n)}
+    
+    G.add_nodes_from(d.keys())
+    
+    nx.set_node_attributes(G, d, 'pos')
+    my_d = {i: y_train[i] for i in range(n)}
+    
+    nx.set_node_attributes(G, {i: y_train[i] for i in range(n)}, 'community')
+
+    # edges_to_add = [(u_idx, v_idx) for u_idx in range(n) for v_idx in range(u_idx + 1, n) if F(G, u_idx, v_idx) == 1]
+    # 
+    # G.add_edges_from(edges_to_add)
+    # 
+    # 
+    # 
+    # if framework == 'gaussian':
+    #     nx.set_node_attributes(G, {node: 1 if node + 1 > n else 0 for node in G.nodes}, 'community')
+    # 
+    #     col_slice = slice(1, samples.shape[1] + 1)
+    
+    W = get_Gaussian_weight_matrix(X_train, n_neighbors)
+        # Call the Rcpp function to get the edges
+
+    # for i in range(n):
+    #     for j in range(i + 1, n):
+    #         if i % 100 == 0 and j == i + 1:
+    #             print(f'Processing node {i}')
+    #         w = W[i, j]
+    #         if w > 0:
+    #             G.add_edge(i, j, weight=1 / w - 1)
+    # 
+    # return G
+    # 
+    W_dense = W.toarray()
+    
+    W_r = ro.r.matrix(W_dense, nrow=W_dense.shape[0], ncol=W_dense.shape[1])
+    
+    edges_df = add_edges(W_r)
+    
+    # # Convert R DataFrame to Python pandas DataFrame
+    # edges = pandas2ri.ri2py(edges_df)
+    
+    # Convert the R DataFrame to a pandas DataFrame using the updated conversion mechanism
+    with localconverter(ro.default_converter + pandas2ri.converter):
+        edges = ro.conversion.rpy2py(edges_df)
+
+    # Add edges to the graph
+    for index, row in edges.iterrows():
+        G.add_edge(int(row['from']), int(row['to']), weight=row['weight'])
+        
+    return G
+    
+```
+
+```{python}
+#| label: inter_and_intra_community_proportion_functions
+#| cache: true
+
+
+def get_inter_proportion(G):
+  
+  nominator = 0
+  
+  for u, v in G.edges():
+    if G.nodes[u]['community'] != G.nodes[v]['community']:
+      nominator += 1
+      
+  denominator = G.number_of_edges()
+      
+  res = nominator / denominator
+  
+  return res
+
+
+def get_intra_proportion(G):
+  return 1 - get_inter_proportion(G)
+```
+
+```{python}
+#| label: def_get_similarity_def_draw
+#| cache: true
+
+def get_similarity(X_train_flat, n_neighbors, true_labels, b_original=True):
+    
+    A = get_Gaussian_weight_matrix(X_train_flat, n_neighbors)
+    A, isolated_nodes = remove_isolated_nodes_sparse(A)
+    
+    true_labels = [true_labels[i] for i in range(len(true_labels)) if i not in isolated_nodes]
+    
+    if not b_original:
+        A = A.toarray()
+        df = add_edges(A)
+        A = get_metric_backbone_adjacency_matrix(df) 
+        # A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+        # A = scipy.sparse.csr_matrix(A)
+        
+    SC = SpectralClustering(n_clusters=10, affinity='precomputed')
+    pred_labels = SC.fit_predict(A)
+    
+    # Convert true_labels and pred_labels to Rcpp IntegerVectors
+    true_labels_r = ro.IntVector(true_labels)
+    pred_labels_r = ro.IntVector(pred_labels)
+    
+    # Call the Rcpp function to compute ARI
+    similarity = compute_ARI(true_labels_r, pred_labels_r)
+    
+    return similarity
+  
+# def get_similarity(X_train_flat, n_neighbors, true_labels, b_original=True, MB=None):
+#   
+#     A = None
+#     
+#     if b_original:
+#         A = get_Gaussian_weight_matrix(X_train_flat, n_neighbors)
+#     else:
+#         A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+#         A = scipy.sparse.csr_matrix(A)
+#         
+#     
+#     SC = SpectralClustering(n_clusters=10, affinity='precomputed')
+#     pred_labels = SC.fit_predict(A)
+#     
+#     print(max(pred_labels))
+#     print(pred_labels[:10])
+#     print(true_labels[:10])
+#     print()
+#     
+#     similarity  = adjusted_rand_score(true_labels, pred_labels)
+#     
+#     return similarity
+
+
+def get_similarities(G, MB, X_train_flat, n_neighbors, n_clusters, affinity='precomputed'):
+  
+    pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
+    
+    true_labels = list(nx.get_node_attributes(G, 'community').values())
+
+    
+      
+    similarity_original = get_similarity(X_train_flat, n_neighbors, true_labels)
+    
+    similarity_mb = get_similarity(
+      X_train_flat=None,
+      n_neighbors=None,
+      true_labels=true_labels,
+      b_original=False,
+      MB=MB
+    )
+
+
+
+    return similarity_original, similarity_mb
+  
+
+def print_similarities(G, MB, X_train_flat, n_neighbors, n_clusters, affinity='precomputed'):
+    similarity_original, similarity_mb = get_similarities(G, MB, X_train_flat, n_neighbors, n_clusters, affinity)
+    print(similarity_original)
+    print(similarity_mb)
+    # print(f'Original SC ARI: {similarity_original * 100:.2f}%')
+    # print(f'Metric Backbone SC ARI: {similarity_mb * 100:.2f}%')
+    
+    
+
+    
+# def get_original_similarities_given_true(true_labels, G, MB, X_train_flat, n_neighbors, n_clusters, affinity='precomputed'):
+#   
+#     similarity_original = get_similarity(X_train_flat, n_neighbors, true_labels)
+#     
+# 
+# 
+# 
+# 
+#     return similarity_original, similarity_mb
+#   
+# 
+# def print_similarities_given_true(G, MB, X_train_flat, n_neighbors, n_clusters, affinity='precomputed'):
+#     similarity_original, similarity_mb = get_similarities(G, MB, X_train_flat, n_neighbors, n_clusters, affinity)
+#     print(similarity_original)
+#     print(similarity_mb)
+    # print(f'Original SC ARI: {similarity_original * 100:.2f}%')
+    # print(f'Metric Backbone SC ARI: {similarity_mb * 100:.2f}%')
+```
+
+
+```{python}
+#| label: N_images
+#| cache: true
+
+n_images = 1000
+
+# Load the MNIST dataset
+(X_train, y_train), (_, _) = mnist.load_data()  # X_train is 28x28=784 <class 'numpy.ndarray'>
+print(len(X_train))
+
+X_train = X_train[:n_images] / 255.0
+
+# Normalization => maximum euclidean distance between two images is:
+# sqrt(\sum_{i=1}^{784} (1 - 0)^2) = sqrt(784) = 28.
+# We now choose R1 & R2 with this in mind.
+
+F = make_F_from_R(R1=12, R2=8)
+
+y_train = y_train[:n_images]
+
+# Print 4 images in a row
+plt.figure(figsize=(10, 5))
+for i in range(4):
+    plt.subplot(1, 4, i+1)
+    plt.imshow(X_train[i], cmap='gray')
+    plt.title(f"Label: {y_train[i]}")
+    plt.axis('off')
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+#| label: flatten the images
+#| cache: true
+#| 
+X_train_flat = X_train.reshape(X_train.shape[0], -1)
+#print(X_train_flat[0])
+```
+
+```{python}
+#| label: get_similarity_MB
+#| cache: true
+
+print(get_similarity(X_train_flat, n_neighbors=500, true_labels=y_train, b_original=False))
+```
+
+```{python}
+#| label: get_similarity_original
+#| cache: true
+
+print(get_similarity(X_train_flat, n_neighbors=500, true_labels=y_train))
+```
+
+
+
+
+```{python}
+#| label: test_produce_distance_graph_ORIGINAL
+#| cache: true
+
+
+G = produce_distance_graph(X_train_flat, y_train, n_neighbors=500)
+
+```
+
+
+
+
+```{python}
+#| label: draw the graph
+#| cache: true
+
+
+# col_slice = slice(1, samples.shape[1] + 1)
+# 
+#W = get_Gaussian_weight_matrix(X=X_train_flat, n_neighbors=500)
+# 
+#edges = list(G.edges())
+
+# print(f'number of edges: {len(edges)}')
+
+#weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
+
+#nx.set_edge_attributes(G, weights, 'weight')
+
+# print(f'edge attributes: {G.edges.data()}')
+# Get a list of all edge attribute names
+#edge_attributes = list(next(iter(G.edges(data=True)))[2].keys())
+#print("Edge Attributes:", edge_attributes)
+ 
+mb_igraph = get_metric_backbone_igraph(G)
+```
+
+```{python}
+#| label: remove isolated nodes
+#| cache: true
+
+isolated_nodes_G = list(nx.isolates(G))
+G.remove_nodes_from(isolated_nodes_G)
+
+isolated_nodes_mb_igraph = list(nx.isolates(mb_igraph))
+mb_igraph.remove_nodes_from(isolated_nodes_mb_igraph)
+
+
+
+if not isolated_nodes_G:
+    print("G has no isolated nodes")
+else:
+    print("G has isolated nodes")
+    
+# for elt in isolated_nodes:
+#     print(f'Isolated node: {elt}')
+
+if not isolated_nodes_mb_igraph:
+    print("MB has no isolated nodes")
+else:
+    print("MB has isolated nodes")
+
+```
+
+
+
+
+```{python}
+#| label: print the results
+#| cache: true
+
+
+print()
+# print(get_similarity(X_train_flat, n_neighbors=500, true_labels=y_train))
+
+# print(f'Original number of edges: {G.number_of_edges()}')
+# print(f'Original inter-proportion: {get_inter_proportion(G) * 100:.2f}%\n')
+# 
+# print(f'Metric Backbone number of edges: {mb_igraph.number_of_edges()}')
+# print(f'Metric Backbone inter-proportion: {get_inter_proportion(mb_igraph) * 100:.2f}%\n')
+# 
+# print('--------------------------')
+# print_similarities(G, mb_igraph, X_train_flat, n_neighbors=500, n_clusters=2, affinity='precomputed')
+
+
+
+```
+
+```{python}
+#| label: toy example for removing isolated nodes
+
+import networkx as nx
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Create a toy example graph with 10 nodes
+G = nx.Graph()
+G.add_nodes_from(range(10))
+
+# Add some edges (nodes 0-5 are connected, 6-9 are isolated)
+edges = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5)]
+G.add_edges_from(edges)
+
+# Plot the graph before removing isolated nodes
+plt.figure(figsize=(10, 5))
+
+plt.subplot(1, 2, 1)
+nx.draw(G, with_labels=True, node_color='skyblue', font_weight='bold')
+plt.title("Before removing isolated nodes")
+
+# Find and remove isolated nodes
+isolated_nodes = list(nx.isolates(G))
+G.remove_nodes_from(isolated_nodes)
+
+# Plot the graph after removing isolated nodes
+plt.subplot(1, 2, 2)
+nx.draw(G, with_labels=True, node_color='lightgreen', font_weight='bold')
+plt.title("After removing isolated nodes")
+
+plt.tight_layout()
+plt.show()
+
+print(f"Isolated nodes removed: {isolated_nodes}")
+```
+
+
+
+
+

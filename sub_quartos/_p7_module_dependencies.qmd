@@ -1,0 +1,29 @@
+# 7
+
+```{mermaid}
+%%| label: module_dependencies
+%%| cache: true
+flowchart LR
+    A[clustering.py] --> B[community_experiments_plots.py]
+    A --> C[community_experiments_tables.py]
+    C --> D[helper_plots.py]
+    E[metric_backbone.py] --> F[SSL.py]
+    E --> G[graph_builder.py]
+    G --> F
+    G --> H[TSC.py]
+    G --> B
+    G --> C
+    G --> D
+    G --> I[datasets.py]
+    I --> J[metrics.py]
+    I --> F
+    D --> F
+    D --> H
+    J --> H
+    J --> B
+    I --> B
+    J --> C
+    I --> C
+    K[EffectiveResistanceSampling/Network.py] --> G
+    J --> D
+```

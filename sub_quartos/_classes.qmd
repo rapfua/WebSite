@@ -1,0 +1,95 @@
+```{python}
+#| label: class_Pipe
+#| cache: true
+
+class Pipe:
+    def __init__(self, function):
+        self.function = function
+
+    def __ror__(self, other):
+        return self.function(other)
+
+# EXAMPLE USAGE: define custom functions to use with the pipe
+
+# @Pipe
+# def add_one(x):
+#     return x + 1
+# 
+# @Pipe
+# def square(x):
+#     return x * x
+# 
+# result = 5 | add_one | square
+# print(result)  # Output: 36
+
+```
+
+
+```{python}
+#| label: class_StringIndexed3DArray
+#| cache: true
+
+class StringIndexed3DArray:
+    def __init__(self, array, dim1_labels, dim2_labels, dim3_labels):
+        self.array = array
+        # Create dictionaries to map strings to indices for each dimension
+        self.index_map_dim1 = {label: i for i, label in enumerate(dim1_labels)}
+        self.index_map_dim2 = {label: i for i, label in enumerate(dim2_labels)}
+        self.index_map_dim3 = {label: i for i, label in enumerate(dim3_labels)}
+        self.dim1_labels = dim1_labels
+        self.dim2_labels = dim2_labels
+        self.dim3_labels = dim3_labels
+
+    def __getitem__(self, indices):
+        row_label, col_label, depth_label = indices
+        # Convert string labels to indices
+        row = self._convert_to_index(row_label, self.index_map_dim1)
+        col = self._convert_to_index(col_label, self.index_map_dim2)
+        depth = self._convert_to_index(depth_label, self.index_map_dim3)
+        # Access the value or slice from the array
+        return self.array[row, col, depth]
+    
+    def _convert_to_index(self, label, index_map):
+        if isinstance(label, slice):
+            # If it's a slice, return the slice itself
+            return slice(
+                self.index_map_dim1.get(label.start, 0) if label.start else None,
+                self.index_map_dim1.get(label.stop, None),
+                label.step
+            )
+        elif isinstance(label, str):
+            # If it's a string, convert it to the index using the map
+            return index_map[label]
+        else:
+            return label  # Allow passing integers directly
+
+    def __setitem__(self, indices, value):
+        row_label, col_label, depth_label = indices
+        # Convert string labels to indices
+        row = self.index_map_dim1[row_label]
+        col = self.index_map_dim2[col_label]
+        depth = self.index_map_dim3[depth_label]
+        # Set the value in the array
+        self.array[row, col, depth] = value
+        
+        
+    def __str__(self):
+        result = []
+        for i, dim1_label in enumerate(self.dim1_labels):
+            result.append(f"\nDim1 ({dim1_label}):\n")
+            for j, dim2_label in enumerate(self.dim2_labels):
+                row = f"Dim2 ({dim2_label}): "
+                row += " ".join(f"{self.array[i, j, k]:.2f}" for k in range(len(self.dim3_labels)))
+                result.append(row)
+        return "\n".join(result)
+      
+      
+    def AVG_ARI_LIST(self, n_neighbors_LIST, framework_str):
+        return [self[n_neighbors - 3, framework_str, slice(None)].mean() for n_neighbors in n_neighbors_LIST]
+      
+      
+    def STD_ARI_LIST(self, n_neighbors_LIST, framework_str):
+        return [self[n_neighbors - 3, framework_str, slice(None)].std() for n_neighbors in n_neighbors_LIST]
+      
+      
+```

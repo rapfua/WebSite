@@ -1,0 +1,186 @@
+---
+title: "rcpp_test"
+format: html
+editor: visual
+---
+
+```{r}
+# Load Rcpp
+library(Rcpp)
+library(igraph)
+
+# Source the C++ code
+Rcpp::sourceCpp("/cloud/project/Rcpp/add_edges.cpp")
+
+# Example matrix
+W <- matrix(c(0, 0.2, 0.5, 0.1, 
+              0.2, 0, 0.3, 0.4, 
+              0.5, 0.3, 0, 0.7, 
+              0.1, 0.4, 0.7, 0), nrow=4, byrow=TRUE)
+
+# Call the C++ function
+edges_df <- add_edges(W)
+
+# Convert to graph (using igraph, for example)
+library(igraph)
+g <- graph_from_data_frame(edges_df, directed=FALSE)
+
+# Print the graph
+print(g)
+
+print(E(g)$weight)
+```
+
+
+
+```{r}
+Rcpp::sourceCpp("/cloud/project/Rcpp/getMB.cpp")
+# Assuming Rcpp::sourceCpp has been used to compile the C++ code
+
+# Example DataFrame representing edges of the Metric Backbone
+edgesMB <- data.frame(from = c(0, 1, 2),
+                      to = c(1, 2, 3),
+                      weight = c(0.5, 0.7, 0.9))
+
+# Number of nodes in the graph (MB)
+n <- 4
+
+# Create the adjacency matrix
+adj_matrix <- create_adjacency_matrix(n, edgesMB)
+
+# Print the result
+print(adj_matrix)
+
+
+
+```
+
+
+```{r}
+#| label: create_and_display_graph
+
+# Assuming Rcpp::sourceCpp has been used to compile the C++ code
+
+# Example DataFrame representing edges of the graph
+df <- data.frame(from = c(0, 1, 2, 2),
+                 to = c(1, 2, 3, 0),
+                 weight = c(0.5, 0.7, 0.9, 1.0))
+
+# Create and display the graph from the DataFrame
+create_and_display_graph_from_df(df)
+```
+
+
+```{r}
+#| label: get_metric_backbone_adjacency_matrix
+
+
+# Assuming Rcpp::sourceCpp has been used to compile the C++ code
+
+
+# Example DataFrame with more edges where many edges will be removed
+df <- data.frame(from = c(0, 1, 1, 2, 2, 3, 3, 4, 0, 0, 1, 1, 2, 2, 3, 4),
+                 to = c(1, 2, 3, 3, 4, 4, 0, 0, 4, 3, 3, 4, 0, 1, 2, 1),
+                 weight = c(1.0, 2.5, 3.5, 1.0, 1.5, 2.0, 1.0, 3.0, 5.0, 2.2, 4.0, 2.8, 3.7, 2.9, 1.6, 3.4))
+
+# Get the adjacency matrix of the metric backbone
+adj_matrix <- get_metric_backbone_adjacency_matrix(df)
+
+# Print the adjacency matrix
+print(adj_matrix)
+create_and_display_graph_from_df(df)
+
+# Function to plot the graph
+plot_graph <- function(graph_obj, title) {
+  plot(graph_obj, edge.label = E(graph_obj)$weight, vertex.color = "skyblue", vertex.size = 30, 
+       vertex.label.cex = 1.2, main = title, edge.color = "black", edge.width = 2)
+}
+
+# 1. Plot the original graph
+original_graph <- igraph::graph_from_data_frame(df, directed = FALSE)
+plot_graph(original_graph, "Original Graph")
+
+# 2. Apply the metric backbone algorithm (Rcpp)
+adj_matrix_backbone <- get_metric_backbone_adjacency_matrix(df)
+
+# Convert the adjacency matrix to an igraph object
+backbone_edges <- which(adj_matrix_backbone != 0, arr.ind = TRUE)
+backbone_df <- data.frame(from = backbone_edges[, 1] - 1,  # Adjust 1-based index from R to 0-based for igraph
+                          to = backbone_edges[, 2] - 1,
+                          weight = adj_matrix_backbone[backbone_edges])
+
+# 3. Ensure backbone_df is upper triangular
+backbone_df <- within(backbone_df, {
+  temp <- pmin(from, to)
+  to <- pmax(from, to)
+  from <- temp
+})
+
+
+# Remove any duplicates that may arise from the swapping process
+backbone_df <- unique(backbone_df)
+
+# 3. Plot the metric backbone graph
+metric_backbone_graph <- graph_from_data_frame(backbone_df, directed = FALSE)
+plot_graph(metric_backbone_graph, "Metric Backbone Graph")
+```
+
+```{r}
+#| label: sanity_check
+
+
+# Assuming Rcpp::sourceCpp has been used to compile the C++ code
+
+
+# Example DataFrame with more edges where many edges will be removed
+df <- data.frame(from = c(0, 0, 2),
+                 to = c(1, 2, 1),
+                 weight = c(5.0, 1.0, 2.0))
+
+# Get the adjacency matrix of the metric backbone
+adj_matrix <- get_metric_backbone_adjacency_matrix(df)
+
+# Print the adjacency matrix
+print(adj_matrix)
+create_and_display_graph_from_df(df)
+
+# Function to plot the graph
+plot_graph <- function(graph_obj, title) {
+  plot(graph_obj, edge.label = E(graph_obj)$weight, vertex.color = "skyblue", vertex.size = 30, 
+       vertex.label.cex = 1.2, main = title, edge.color = "black", edge.width = 2)
+}
+
+# 1. Plot the original graph
+original_graph <- igraph::graph_from_data_frame(df, directed = FALSE)
+plot_graph(original_graph, "Original Graph")
+
+# 2. Apply the metric backbone algorithm (Rcpp)
+adj_matrix_backbone <- get_metric_backbone_adjacency_matrix(df)
+
+# Convert the adjacency matrix to an igraph object
+backbone_edges <- which(adj_matrix_backbone != 0, arr.ind = TRUE)
+backbone_df <- data.frame(from = backbone_edges[, 1] - 1,  # Adjust 1-based index from R to 0-based for igraph
+                          to = backbone_edges[, 2] - 1,
+                          weight = adj_matrix_backbone[backbone_edges])
+
+# 3. Ensure backbone_df is upper triangular
+backbone_df <- within(backbone_df, {
+  temp <- pmin(from, to)
+  to <- pmax(from, to)
+  from <- temp
+})
+
+
+# Remove any duplicates that may arise from the swapping process
+backbone_df <- unique(backbone_df)
+
+# 3. Plot the metric backbone graph
+metric_backbone_graph <- graph_from_data_frame(backbone_df, directed = FALSE)
+plot_graph(metric_backbone_graph, "Metric Backbone Graph")
+```
+
+
+
+
+
+

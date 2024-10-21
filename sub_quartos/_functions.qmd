@@ -1,0 +1,272 @@
+```{python}
+#| label: def_get_Gaussian_weight_matrix
+#| cache: true
+
+def get_Gaussian_weight_matrix(X, n_neighbors):
+    Z = gl.weightmatrix.knn(X, n_neighbors)  # Gaussian similarity measure
+    A = (Z + Z.T) / 2
+    return A
+```
+
+```{python}
+#| label: def_get_metric_backbone_igraph
+#| cache: true
+
+def get_metric_backbone_igraph(D):
+    """
+     :param D: networkx distance graph (with weight and proximity edge attribute)
+     :return: Networkx Metric Backbone subgraph of D
+    """
+    D_ig = ig.Graph.from_networkx(D)
+    distances = D_ig.distances(weights='weight')
+
+    G = nx.Graph(D)
+    G.remove_edges_from([(x, y) for x, y, w in G.edges.data('weight') if w > distances[x][y]])
+    return G
+
+```
+
+```{python}
+#| label: community_detection_on_Euclidean_graphs_FUNCTIONS
+#| cache: true
+
+def euclidean_distance(tuple_1, tuple_2):
+    return np.linalg.norm(np.array(tuple_1) - np.array(tuple_2))
+
+
+def φ(R):
+    return lambda r: 1 if r <= R else 0
+
+
+def f(f_r):
+    return lambda G_distance, u_idx, v_idx: f_r(euclidean_distance(tuple_1=G_distance.nodes[u_idx]['pos'], tuple_2=G_distance.nodes[v_idx]['pos']))
+  
+
+def indicator(condition):
+    return 1 if condition else 0
+  
+
+def make_F(f_in, f_out):
+    return lambda G, u_idx, v_idx: indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community']) * f_in(G, u_idx, v_idx) + (1 - indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community'])) * f_out(G, u_idx, v_idx)
+
+
+```
+
+
+
+```{python}
+#| label: inter_and_intra_community_proportion_functions
+#| cache: true
+
+
+def get_inter_proportion(G):
+  
+  nominator = 0
+  
+  for u, v in G.edges():
+    if G.nodes[u]['community'] != G.nodes[v]['community']:
+      nominator += 1
+      
+  denominator = G.number_of_edges()
+      
+  res = nominator / denominator
+  
+  return res
+
+
+def get_intra_proportion(G):
+  return 1 - get_inter_proportion(G)
+```
+
+```{python}
+#| label: functions_to_produce_samples
+#| cache: true
+
+ 
+def produce_samples(n, d , type_samples, mu_x2=None, SEED=global_SEED):
+    
+    rng = np.random.default_rng(SEED)
+  
+    n_rows = n * d  # one row per node
+    samples = np.empty((n_rows, d + 1))
+    samples[:, 0] = np.arange(len(samples))
+    
+    
+    if type_samples == "gaussian":
+    
+        col_slice = slice(1, samples.shape[1] + 1)
+    
+        idx = 0
+        for last_row in range(0, n_rows, n):  # step size is n
+            mean_val = mu_x2 * idx
+            row_slice = slice(last_row, last_row + n)
+            samples[row_slice, col_slice] = rng.multivariate_normal(
+                mean=np.insert(np.zeros(d - 1), 0, mean_val), cov=np.eye(d), size=n
+            )
+            idx += 1
+    
+    
+    elif type_samples == "uniform":
+      
+        d_root_n = n_rows ** (1 / d)
+        samples[:, 1:] = d_root_n  * rng.uniform(size=(n_rows, d))  # type(.)    : np.ndarray
+                                                                     # np.shape(.): (N_n, d)
+      
+    else:
+        raise ValueError("type_samples must be either 'gaussian' or 'uniform'")
+      
+    
+    return samples
+```
+
+
+```{python}
+#| label: def_produce_distance_graph
+#| cache: true
+
+def produce_distance_graph(samples, n, n_communities, n_neighbors=None, framework='gaussian', SEED=global_SEED, F=None, R1=None, R2=None):
+  
+    rng = np.random.default_rng(SEED)
+  
+    G = nx.Graph()
+    
+    d = {int(row[0]): (row[1], row[2]) for row in samples}
+    
+    G.add_nodes_from(d.keys())
+    nx.set_node_attributes(G, d, 'pos')
+    
+    n_nodes = n * n_communities
+        
+    if framework == 'gaussian':
+        nx.set_node_attributes(G, {node: 1 if node + 1 > n else 0 for node in G.nodes}, 'community')
+    
+        col_slice = slice(1, samples.shape[1] + 1)
+    
+        W = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+    
+        for i in range(n_nodes):
+            for j in range(i + 1, n_nodes):
+                w = W[i, j]
+                if w > 0:
+                    G.add_edge(i, j, weight=1 / w - 1)
+                
+    
+    elif framework == 'ABBE':
+    
+        community_labels = np.array(range(1, n_communities + 1))
+        nx.set_node_attributes(G, {node: rng.choice(community_labels) for node in G.nodes}, 'community')
+        
+        
+        edges_to_add = [(u_idx, v_idx) for u_idx in range(n_nodes) for v_idx in range(u_idx + 1, n_nodes) if F(G, u_idx, v_idx) == 1]
+        
+        G.add_edges_from(edges_to_add)
+        
+    elif framework == 'hybrid':
+        nx.set_node_attributes(G, {node: 1 if node + 1 > n else 0 for node in G.nodes}, 'community')
+        
+        
+ 
+        edges_to_add = [(u_idx, v_idx) for u_idx in range(n_nodes) for v_idx in range(u_idx + 1, n_nodes) if F(G, u_idx, v_idx) == 1]
+        
+        G.add_edges_from(edges_to_add)
+
+    return G
+    
+```
+
+```{python}
+#| label: def_produce_patch
+#| cache: true
+
+
+# Helper functions to add legend
+def produce_patch(color, framework='gaussian', mu_x2=None, plus_or_minus_one=None):
+  if framework == 'gaussian':
+    return plt.Line2D(
+        [0],
+        [0], 
+        marker='o', 
+        color='w', 
+        markerfacecolor=color, 
+        markersize=8, 
+        label=f'X-mean: {round(mu_x2)}'
+    )
+  elif framework == 'ABBE':
+    return plt.Line2D(
+        [0],
+        [0], 
+        marker='o', 
+        color='w', 
+        markerfacecolor=color, 
+        markersize=8, 
+        label=f'Community label: {plus_or_minus_one}'
+    )
+
+
+```
+
+```{python}
+#| label: def_get_predColors_similarity_def_draw
+#| cache: true
+
+
+def get_predColors_similarity(samples, col_slice, n_neighbors, true_labels, b_original=True, MB=None):
+  
+    A = None
+    
+    if b_original:
+        A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+    else:
+        A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+        A = scipy.sparse.csr_matrix(A)
+        
+    pred_labels = SC.fit_predict(A)
+    pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
+    similarity  = adjusted_rand_score(true_labels, pred_labels)
+    
+    if b_original:
+        print(f"Adjusted Rand Score on Original Graph: {similarity * 100}")
+    else:
+        print(f"Adjusted Rand Score on MB : {similarity * 100}")
+        
+    return pred_colors, similarity
+
+
+def draw(G, MB, samples, n_neighbors, axs, n_clusters, L_idx=[0, 1], affinity='precomputed'):
+  
+    pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
+    
+    true_labels = list(nx.get_node_attributes(G, 'community').values())
+    true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
+
+    col_slice = slice(1, samples.shape[1] + 1)
+
+    SC = SpectralClustering(n_clusters=n_clusters, affinity=affinity)
+    
+      
+    pred_colors_original, similarity_original = get_predColors_similarity(
+      samples,
+      col_slice,
+      n_neighbors,
+      true_labels
+    )
+    
+    pred_colors_mb, similarity_mb = get_predColors_similarity(
+      samples=None,
+      col_slice=None,
+      n_neighbors=None,
+      true_labels=true_labels,
+      b_original=False,
+      MB=MB
+    )
+
+
+
+    nx.draw(G, pos, node_color=true_colors, node_size=5, ax=axs[L_idx[0], 0], edge_color='lightgray')
+    nx.draw(MB, pos, node_color=true_colors, node_size=5, ax=axs[L_idx[0], 1], edge_color='lightgray')
+    
+    nx.draw(G, pos, node_color=pred_colors_original, node_size=5, ax=axs[L_idx[1], 0], edge_color='lightgray')
+    nx.draw(MB, pos, node_color=pred_colors_mb, node_size=5, ax=axs[L_idx[1], 1], edge_color='lightgray')
+    
+    return similarity_original, similarity_mb
+```

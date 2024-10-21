@@ -1,0 +1,7 @@
+::: hidden
+\newcommand*{\k}{\kappa}
+\newcommand*{\s}{\mathcal{S}}
+\newcommand*{\e}{\varepsilon}
+\newcommand*{\l}{\lambda}
+\newcommand*{\dif}{\mathop{}\!\mathrm{d}}
+:::

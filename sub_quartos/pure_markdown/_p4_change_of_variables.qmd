@@ -1,0 +1,60 @@
+# 4
+
+## Change of variables formula from wikipedia
+
+$$\int_{X_2} g \text{ } d(f_*\mu) = \int_{X_1} g \circ f \text{ } d\mu$$
+
+for
+
+•⁠ ⁠$f: (X_1, \Sigma_1) \to (X_2, \Sigma_2)$,
+
+•⁠ ⁠$g: (X_2, \Sigma_2) \to (\mathbb{R}, \mathcal{B}_\mathbb{R})$,
+
+•⁠ ⁠$\mu: \Sigma_1 \to [0, \infty]$ a measure,
+
+•⁠ ⁠$f_\mu: \Sigma_2 \to [0, \infty]$ a measure defined by
+$f_\mu(A) = \mu(f^{-1}(A))$, the pushforward measure of $\mu$ with
+respect to $f$.
+
+## Application to the proof of THM 2.1
+
+•⁠ ⁠We replace the professor's $f$ by Grimmett's $N$.
+
+We have
+
+•⁠ ⁠$\mu: \mathcal{F} \to [0, \infty]$ is a measure on $[0, 1]^E$.
+
+•⁠ ⁠$X: ([0, 1]^E, \mathbb{B(\cdot)})\to (\Omega, \mathcal{F})$ meausrable
+$\implies$ \* $(X_1, \Sigma_1) = ([0, 1]^E$, $\mathbb{B(\cdot)}$), \*
+$(X_2, \Sigma_2) = (\Omega, \mathcal{F})$, \* $f = X$, \* $g = N$,
+
+So that:
+
+$$\int_{\Omega} N \text{ } d(X_*\mu) = \int_{[0, 1]^E} N \circ X \text{ } d\mu$$
+
+Clearly,
+
+$$E[N \circ X] = \int_{[0, 1]^E} N \circ X \text{ } d\mu.$$
+
+Furthermore, if we consider
+
+-   ⁠$P_p: \mathcal{F} \to [0, 1]$,
+-   ⁠$A = \{w(e_1) = u_1, \ldots, w(e_k) = u_k\} \in \mathcal{F}$
+
+we have:
+
+•⁠
+⁠$P_p(A) = p^k(1-p)^{|E| - k} = [0, p]^k \times [p, 1]^{|E| - k} = \int_{[0, p]^k \times [p, 1]^{|E| - k}} d\lambda = \int_{X^{-1}(A)} d\lambda = \mu(X^{-1}(A))= X_*(\mu)(A)$.
+
+so that we also have
+
+•⁠
+⁠$E_p[N] = \int_{\Omega} N \text{ } dP_p = \int_{\Omega} N \text{ } d(X_*\mu)$,
+
+allowing us to conclude that
+
+$$E_p[N] = E[N \circ X].$$
+
+•⁠ ⁠Note that we are able to concentrate on sets such as
+$A = \{w(e_1) = u_1, \ldots, w(e_k) = u_k\}$ because the measure $P_p$
+is characterized by its output on such setss.

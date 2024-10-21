@@ -34,6 +34,11 @@ import igraph as ig         # for get_metric_backbone_igraph
 
 
 def server(input: Inputs, output: Outputs, session: Session) -> None:
+    global_SEED = 42
+    SC = SpectralClustering(n_clusters=2, affinity='precomputed')
+
+    # ========================================================================
+
     class Pipe:
         def __init__(self, function):
             self.function = function
@@ -41,9 +46,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         def __ror__(self, other):
             return self.function(other)
 
-    # # EXAMPLE USAGE
+    # EXAMPLE USAGE: define custom functions to use with the pipe
 
-    # # Define custom functions to use with the pipe
     # @Pipe
     # def add_one(x):
     #     return x + 1
@@ -110,19 +114,15 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
                     row += " ".join(f"{self.array[i, j, k]:.2f}" for k in range(len(self.dim3_labels)))
                     result.append(row)
             return "\n".join(result)
+      
+      
+        def AVG_ARI_LIST(self, n_neighbors_LIST, framework_str):
+            return [self[n_neighbors - 3, framework_str, slice(None)].mean() for n_neighbors in n_neighbors_LIST]
+      
+      
+        def STD_ARI_LIST(self, n_neighbors_LIST, framework_str):
+            return [self[n_neighbors - 3, framework_str, slice(None)].std() for n_neighbors in n_neighbors_LIST]
 
-
-    def AVG_ARI_LIST(array_3d, n_neighbors_LIST, framework_str):
-        return [array_3d[n_neighbors - 3, framework_str, slice(None)].mean() for n_neighbors in n_neighbors_LIST]
-  
-    def STD_ARI_LIST(array_3d, n_neighbors_LIST, framework_str):
-        return [array_3d[n_neighbors - 3, framework_str, slice(None)].std() for n_neighbors in n_neighbors_LIST]
-
-
-    # ========================================================================
-
-    global_SEED = 42
-    SC = SpectralClustering(n_clusters=2, affinity='precomputed')
 
     # ========================================================================
 
@@ -130,7 +130,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         Z = gl.weightmatrix.knn(X, n_neighbors)  # Gaussian similarity measure
         A = (Z + Z.T) / 2
         return A
-
 
     # ========================================================================
 
@@ -145,114 +144,6 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
         G = nx.Graph(D)
         G.remove_edges_from([(x, y) for x, y, w in G.edges.data('weight') if w > distances[x][y]])
         return G
-
-    # ========================================================================
-
-    ui.markdown("## Percolation Demo")
-
-    ui.input_select("p", "Probability:",
-                    choices=[x / 100 for x in range(1, 100)],
-                    selected=0.5,
-                    width=10
-    )
-    ui.input_select("grid_size", "Number of nodes in each dimension:",
-                    choices=[x for x in range(2, 101)],
-                    selected=10
-    )
-
-    # ========================================================================
-
-    @render.plot
-    def percolation_plot():
-  
-        p = float(input.p())
-        grid_size = int(input.grid_size())
-        G = nx.grid_2d_graph(grid_size, grid_size)
-        pos = {(x, y): (x, y) for x, y in G.nodes()}
-    
-        # needs to be this high in code
-        plt.figure(figsize=(6, 6))  
-    
-        for (u, v) in G.edges():
-            edge_color = 'red' if random.random() < p else 'black'
-            edge_width = 3 if edge_color == 'red' else 1  # Thicker for red edges
-            nx.draw_networkx_edges(G, pos, edgelist=[(u, v)], edge_color=edge_color, width=edge_width)
-    
-        nx.draw_networkx_nodes(G, pos, node_size=0)
-    
-        legend_elements = [
-            Line2D([0], [0], color='red', lw=3, label  ='open   & w(e) = 1'),
-            Line2D([0], [0], color='black', lw=1, label='closed & w(e) = 0'),
-        ]
-    
-    
-        plt.legend(handles=legend_elements, bbox_to_anchor=(1.4, 0.96))
-        plt.gca().set_aspect('equal')
-        plt.axis('off')
-        plt.title(f"{grid_size}x{grid_size} Grid with p = {p:.2f}", fontsize=14)
-        plt.text(
-          0.5,
-          -0.05, 
-          'Figure 1: each edge is open with probability p.',
-          fontsize=12,
-          ha='center',
-          va='center', 
-          transform=plt.gca().transAxes
-        )
-
-        # Adjust layout to ensure the caption fits within the figure area
-        plt.tight_layout()
-
-    # ========================================================================
-
-    input_select_width = 10
-
-    L = list(range(100, 501, 100))
-    L.insert(0, 50)
-
-    ui.input_select("n", "Number of nodes in each cluster:",
-                    choices=L,
-                    selected=50,
-                    width=input_select_width
-    )
-
-    ui.input_select("d", "Number of dimensions & communities:",
-                    choices=list((2, 3, 4)),
-                    selected=2,
-                    width=input_select_width
-    )
-
-    # for graph creation (& spectral clustering)
-    ui.input_select("n_neighbors", "Number of nearest neighbors ",
-                    choices=list(range(5, 21)),
-                    selected=10,
-                    width=input_select_width
-    )
-
-    ui.input_select("mu_x2", "Mean of the second Gaussian with respect to the x-axis:",
-                    choices=list(range(1, 21)),
-                    selected=3,
-                    width=input_select_width
-    )
-
-
-    ui.input_select("λ", "Intensity parameter (N_n ~ Poisson(λ * n)):",
-                    choices=[1],
-                    selected=1,
-                    width=input_select_width
-    )
-
-    ui.input_select("R_1", "Big radius for intra-community edges:",
-                    choices=list(range(1, 11)),
-                    selected=3,
-                    width=input_select_width
-    )
-
-    ui.input_select("R_2", "Small radius for inter-community edges:",
-                    choices=[1, 1.5, 2, 2.5, 3],
-                    selected=[1.5],
-                    width=input_select_width
-    )
 
     # ========================================================================
 
@@ -474,6 +365,114 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
+    ui.markdown("## Percolation Demo")
+
+    ui.input_select("p", "Probability:",
+                    choices=[x / 100 for x in range(1, 100)],
+                    selected=0.5,
+                    width=10
+    )
+    ui.input_select("grid_size", "Number of nodes in each dimension:",
+                    choices=[x for x in range(2, 101)],
+                    selected=10
+    )
+
+    # ========================================================================
+
+    @render.plot
+    def percolation_plot():
+  
+        p = float(input.p())
+        grid_size = int(input.grid_size())
+        G = nx.grid_2d_graph(grid_size, grid_size)
+        pos = {(x, y): (x, y) for x, y in G.nodes()}
+    
+        # needs to be this high in code
+        plt.figure(figsize=(6, 6))  
+    
+        for (u, v) in G.edges():
+            edge_color = 'red' if random.random() < p else 'black'
+            edge_width = 3 if edge_color == 'red' else 1  # Thicker for red edges
+            nx.draw_networkx_edges(G, pos, edgelist=[(u, v)], edge_color=edge_color, width=edge_width)
+    
+        nx.draw_networkx_nodes(G, pos, node_size=0)
+    
+        legend_elements = [
+            Line2D([0], [0], color='red', lw=3, label  ='open   & w(e) = 1'),
+            Line2D([0], [0], color='black', lw=1, label='closed & w(e) = 0'),
+        ]
+    
+    
+        plt.legend(handles=legend_elements, bbox_to_anchor=(1.4, 0.96))
+        plt.gca().set_aspect('equal')
+        plt.axis('off')
+        plt.title(f"{grid_size}x{grid_size} Grid with p = {p:.2f}", fontsize=14)
+        plt.text(
+          0.5,
+          -0.05, 
+          'Figure 1: each edge is open with probability p.',
+          fontsize=12,
+          ha='center',
+          va='center', 
+          transform=plt.gca().transAxes
+        )
+
+        # Adjust layout to ensure the caption fits within the figure area
+        plt.tight_layout()
+
+    # ========================================================================
+
+    input_select_width = 10
+
+    L = list(range(100, 501, 100))
+    L.insert(0, 50)
+
+    ui.input_select("n", "Number of nodes in each cluster:",
+                    choices=L,
+                    selected=50,
+                    width=input_select_width
+    )
+
+    ui.input_select("d", "Number of dimensions & communities:",
+                    choices=list((2, 3, 4)),
+                    selected=2,
+                    width=input_select_width
+    )
+
+    # for graph creation (& spectral clustering)
+    ui.input_select("n_neighbors", "Number of nearest neighbors ",
+                    choices=list(range(5, 21)),
+                    selected=10,
+                    width=input_select_width
+    )
+
+    ui.input_select("mu_x2", "Mean of the second Gaussian with respect to the x-axis:",
+                    choices=list(range(1, 21)),
+                    selected=3,
+                    width=input_select_width
+    )
+
+
+    ui.input_select("λ", "Intensity parameter (N_n ~ Poisson(λ * n)):",
+                    choices=[1],
+                    selected=1,
+                    width=input_select_width
+    )
+
+    ui.input_select("R_1", "Big radius for intra-community edges:",
+                    choices=list(range(1, 11)),
+                    selected=3,
+                    width=input_select_width
+    )
+
+    ui.input_select("R_2", "Small radius for inter-community edges:",
+                    choices=[1, 1.5, 2, 2.5, 3],
+                    selected=[1.5],
+                    width=input_select_width
+    )
+
+    # ========================================================================
+
     @render.plot
     def normals_nNodes_dDimensions_PLOT():
     
@@ -685,8 +684,8 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     L.insert(0, 50)
 
     ui.input_select('n_simulations4', 'Number of simulations:',
-                    choices=[1] + list(range(10, 101, 10)),
-                    selected=10,
+                    choices=[1, 3] + list(range(10, 101, 10)),
+                    selected=3,
                     width=input_select_width
     )
 
@@ -798,16 +797,16 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
     
     
         axs[0].set_ylim(bottom=0, top=1)
-        axs[0].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'))
-        axs[0].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_original'), fmt='o', label="Mean with Std Dev", alpha=0.5)
+        axs[0].plot(n_neighbors_LIST, array_3d.AVG_ARI_LIST(n_neighbors_LIST, 'ARI_original'))
+        axs[0].errorbar(n_neighbors_LIST,  array_3d.AVG_ARI_LIST( n_neighbors_LIST, 'ARI_original'), yerr= array_3d.STD_ARI_LIST( n_neighbors_LIST, 'ARI_original'), fmt='o', label="Mean with Std Dev", alpha=0.5)
         axs[0].set_title('Original Graph')
     
-        print(STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
+        print(array_3d.STD_ARI_LIST(n_neighbors_LIST, 'ARI_MB'))
         print(array_3d)
     
         axs[1].set_ylim(0, 1)
-        axs[1].plot(n_neighbors_LIST, AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'))
-        axs[1].errorbar(n_neighbors_LIST,  AVG_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), yerr= STD_ARI_LIST(array_3d, n_neighbors_LIST, 'ARI_MB'), fmt='o', label="Mean with Std Dev", alpha=0.5)
+        axs[1].plot(n_neighbors_LIST, array_3d.AVG_ARI_LIST(n_neighbors_LIST, 'ARI_MB'))
+        axs[1].errorbar(n_neighbors_LIST,  array_3d.AVG_ARI_LIST( n_neighbors_LIST, 'ARI_MB'), yerr= array_3d.STD_ARI_LIST( n_neighbors_LIST, 'ARI_MB'), fmt='o', label="Mean with Std Dev", alpha=0.5)
         axs[1].set_title('Metric Backbone')
     
         for i in range(2):
@@ -824,16 +823,12 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    # rsconnect add --account rfua --name rfua --token 81C1E677FB6E5544A763A83C69AF49E9 
-
-    # ========================================================================
-
 
 
     return None
 
 
-_static_assets = ["script_files","images/durrett.jpeg","script_files/libs/quarto-html/tippy.css","script_files/libs/quarto-html/quarto-syntax-highlighting.css","script_files/libs/bootstrap/bootstrap-icons.css","script_files/libs/bootstrap/bootstrap.min.css","script_files/libs/quarto-dashboard/datatables.min.css","script_files/libs/quarto-diagram/mermaid.css","script_files/libs/clipboard/clipboard.min.js","script_files/libs/quarto-html/quarto.js","script_files/libs/quarto-html/popper.min.js","script_files/libs/quarto-html/tippy.umd.min.js","script_files/libs/quarto-html/anchor.min.js","script_files/libs/bootstrap/bootstrap.min.js","script_files/libs/quarto-dashboard/quarto-dashboard.js","script_files/libs/quarto-dashboard/stickythead.js","script_files/libs/quarto-dashboard/datatables.min.js","script_files/libs/quarto-dashboard/pdfmake.min.js","script_files/libs/quarto-dashboard/vfs_fonts.js","script_files/libs/quarto-dashboard/web-components.js","script_files/libs/quarto-dashboard/components.js","script_files/libs/quarto-diagram/mermaid.min.js","script_files/libs/quarto-diagram/mermaid-init.js"]
+_static_assets = ["script_files","images/durrett.jpeg"]
 _static_assets = {"/" + sa: Path(__file__).parent / sa for sa in _static_assets}
 
 app = App(

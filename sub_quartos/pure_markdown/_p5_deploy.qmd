@@ -1,0 +1,19 @@
+# 5
+
+-   When preview yields the desired result in VsCode, compress the
+    directory that contains "script.qmd" & "app.py" and upload to
+    RStudio in posit.cloud
+
+-   In posit.cloud's RStudio, do: script.qmd \> Run Document (you will
+    not get a good result, don't worry)
+
+-   rsconnect add --account rfua --name rfua --token
+
+
+-   rsconnect deploy shiny -n rfua . (This can take up to three minutes)
+
+-   Possible to develop directly from posit.cloud's RStudio by doing:
+
+    -   script.qmd \> Run Document
+    -   app.py \> Run App
+    -   this makes it possible to see intermediary results.
