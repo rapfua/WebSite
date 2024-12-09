@@ -1,0 +1,4 @@
+:::{.card title="Lemma 5.2"}
+hello
+
+:::

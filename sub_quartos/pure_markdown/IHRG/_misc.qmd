@@ -1,0 +1,183 @@
+### Miscellaneous {.tabset}
+
+::: {.card title="convergence"}
+-   $(X_n) \xrightarrow{a.s.} X \iff$ for almost all $\omega \in \Omega, X_n(w) \rightarrow X(\omega)$.
+
+-   $(X_n) \xrightarrow{p} X \iff \forall \varepsilon > 0, \lim_{n \to \infty} P(|X_n - X| > \varepsilon) = 0.$
+
+-   For $p > 0, (X_n) \xrightarrow{L_p} X \iff \lim_{n \to \infty} E(|X_n - X|^p) = 0.$
+
+-   $(X_n) \xrightarrow{d} X \iff \forall x$ for which $F_X$ is continuous, we have $\lim_{n \to \infty} F_{X_n}(x) = F_X(x).$
+
+-   $L_p \implies p \implies d.$
+
+-   $a.s. \implies p.$
+
+-   $p \implies \exists \varphi: \mathbf{N} \to \mathbf{N}$ strictly increasing $\: s.t. (X_{\varphi(n)}) \xrightarrow{a.s.} X.$
+
+-   $c$ constant $+$ $X_n \xrightarrow{d} c \implies X_n \xrightarrow{p} X.$
+
+-   **Weak Law of Large Numbers:** $\overline{X}_n \xrightarrow{p} E(X_i)$ if the $X_i$s are i.i.d. & $E(X_i) < \infty$.
+
+-   **Continuous mapping theorem:** $\forall g$ continuous, $X_n \xrightarrow{p} X \implies g(X_n) \xrightarrow{p} g(X).$
+
+- Let $(A_n)_{n \geq 0}$ be a sequence of events on $(\Omega, \mathcal{F}, P)$. Then, $(A_n)$ converges **with high probability** if $\lim A_n = 1$.
+:::
+
+
+
+::: {.card title="PPP"}
+
+![Durrett](images/durrett.jpeg)
+
+![Characterization via sums of exponentials](images/PPP.png)
+
+$$
+P(N_t = k) = \frac{e^{-\lambda t} (\lambda t)^k}{k!} \implies N_t \sim \text{Poisson}(\lambda t).
+$$ 
+In our
+:::
+
+
+::: {.card title="Markov"}
+-   **Markov property**: next state depends only on the current state, not on how the process arrived there.
+-   stochastic domination
+:::
+
+
+:::{.card title="Gamma Function and Distribution"}
+
+<h2>Gamma Function:</h2>
+
+The Gamma function is an extension of the factorial function to complex numbers.
+
+<h3>Definition:</h3>
+
+$$
+\Gamma(z) = \int_0^\infty t^{z-1} e^{-t} \text{ } dt \text{ , for complex numbers } z \text{ with positive real part}.
+$$
+
+<h3>Properties:</h3>
+
+$$
+\Gamma(n) = (n-1)!.
+$$
+
+More generally:
+
+$$
+\Gamma(z+1) = z \, \Gamma(z)
+$$
+
+$$
+\Gamma \text{ has no zeros} \implies \frac{1}{\Gamma} \text{ is well defined}. 
+$$
+
+We also have Euler's reflection formula:
+
+$$
+\Gamma(z) \Gamma(1-z) =  \frac{\pi} {\sin(\pi z)} \text{ , for } z \text{ not an integer}.
+$$
+
+Euler's reflection formula $\implies$ the Legendre duplication formula.
+
+<h2>Gamma Distribution:</h2>
+
+<h3>Parameters:</h3>
+
+- $k > 0$ shape
+- $\theta > 0$ scale
+
+<h3>Suport:</h3>
+
+- $x \in ]0, \infty[$
+
+
+<h3>PDF:</h3>
+
+$$
+f(x) = \frac{x^{k-1} e^{-\frac{x}{\theta}}}{\Gamma(z) \, \theta^k}.
+$$
+
+<h3>Properties:</h3>
+
+$$
+E[X] = k \, \theta.
+$$
+
+$$
+Var[X] = k \, \theta^2.
+$$
+
+:::
+
+
+
+:::{.card title="Memorylessness"}
+
+$$
+P(\text{Exp} > t + s | \text{ Exp} > s) = P(\text{Exp} > t).
+$$
+:::
+
+:::{.card title="Law of Total Expectation"}
+$$
+\mathcal{F}_{ \text{ ext} } \subset \mathcal{F}_{ \text{ int} } \implies E[E[X|\mathcal{F}_{ \text{ int} } ] | \mathcal{F}_{ \text{ ext} } ] = E[X|\mathcal{F}_{ \text{ ext} }].
+$$
+:::
+
+
+
+:::{.card title="Tail Sum for Expectation"}
+
+$X \geq 0$
+
+**Discrete**
+
+$$
+E[X] = \sum_{k=0}^\infty P(X > k)
+$$
+
+**Continuous**
+$$
+E[X] = \int_{0}^\infty P(X > x) \text{ } dx
+$$
+
+:::
+
+
+::: {.card title="Dominated Convergence Theorem"}
+[DCT](https://fr.wikipedia.org/wiki/Th%C3%A9or%C3%A8me_de_convergence_domin%C3%A9e)
+
+**Conditions**
+
+- Measure space $(E, \mathcal A, \mu)$,
+- Sequence of functions $(f_n)_n$ from $E$ to $\mathbf{R}$, measurable with respect to $\mathcal A$,
+- $f_n \to f$ pointwise, *i.e.* $\forall x \in E, f_n(x) \to f(x)$,
+- $\exists \, g: E \to \mathbf R_{\geq 0}$ s.t. 
+  * $\int_E g \mathop{}\!\mathrm{d} \mu < \infty$,
+  * $\forall n, |f_n| \leq g$.
+
+
+**Implications**
+
+- $\int_E |f| \mathop{}\!\mathrm{d} \mu < \infty$,
+- $\int_E |f_n - f| \mathop{}\!\mathrm{d} \mu \to 0$,
+  * $\implies \int f_n \mathop{}\!\mathrm{d} \mu \to \int f \mathop{}\!\mathrm{d} \mu$.
+
+
+Convergence in measure is a generalization of convergence in probability.ß
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+

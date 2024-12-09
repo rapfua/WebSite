@@ -1,0 +1,15 @@
+### Ideas {.tabset}
+
+:::{.card title="Newest Ideas"}
+- Would be useful to make the connection between $S_t^{\text{continuous}}$ and $S_m^{\text{discrete}}$. The first gives us the number of alive particles at time t, the second gives us the number of alive particles after the $m$th split. Might it be that:
+$$
+S_{e^{}}^{\text{continuous}} = S_m^{\text{discrete}} 
+$$
+Not sure about the equal to $0$ part:
+$$
+t - \frac{\log m}{\tilde \lambda} = 0 \implies 
+t = \frac{\log m}{\tilde \lambda} \implies
+\tilde \lambda t = \log m \implies
+e^{\tilde \lambda t} = m 
+$$
+:::

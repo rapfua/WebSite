@@ -1,0 +1,74 @@
+:::{.card title="Lemma 5.1"}
+$$
+\begin{align*}
+& C_n^i = \min \{ k \geq C_n^{i - 1}: |A^x(a_n) \cap D^y(k)| = i\} \\
+& A = A_{a_n}^{x, t} \\
+& U = [n_t] \setminus \left( D_{a_n}^{x, t} \, \cup \, A_{a_n}^{x, t} \right) = \{v \in [n_t]: v \text{ never touched in SWT}^x \}  \\
+& A^{y,t}(k) \subset A_{a_n}^{x, t} \, \cup \, \{v \in [n_t]: v \text{ never touched in SWT}^x \} \\
+& A^{y,t}(k) 
+  = \{v \in A_{a_n}^{x, t}: v \text{ touched in SWT}^y \text{ by time }k \} \, 
+\cup \, \{v \in [n_t]: v \text{ never touched in SWT}^x \text{ but touched in SWT}^y \text{ by time }k \} \\
+& \phantom{A^{y,t}(k)} = L_A(k) \cup L_U(k) \\
+& L_A = A^{y,t}(k) \cap A_{a_n}^{x, t} \\
+& \text{Since we are frozen at time }a_n \text{, all collisions edges we find remain alive in SWT}^x 
+  \text{ as well as in SWT}^y \text{ until SWT}^x \text{ is unfrozen}. \\
+& \text{Each time a vertex splits in } \Psi_{\kappa}^y \text{, the label of its type } t \text{ children are picked uniformly at random without replacement amongst } \\
+& \text{the possible labels } [n_t] \setminus D_{a_n}^{x, t} \\
+& \text{Clearly } A \cup U = [n_t] \setminus D_{a_n}^{x, t} \\
+& \text{Memorylessness and independence of the exponential waiting times } \implies \\
+& \quad \mathrm{P} \left( v_{ \text{split} }^k = v \, | \, \text{type } t \text{ particle dies at step } k \right) 
+= \frac{1}{|L_A^t(k) \cup L_U^t(k)|}, \forall v \in |L_A^t(k) \cup L_U^t(k)|. \\
+\end{align*}
+$$ 
+
+
+
+
+
+$$
+\begin{align*}
+\mathrm{P} \left( v_{ \text{split} }^k = v \, | \, v \in L_A(k) \right)
+& = \mathrm{P} \left( v_{ \text{split} }^k = v , v \in L_A(k) \, | \, v \in L_A(k)\right) \\
+& =  \frac{
+  \mathrm{P} \left( v \in L_A(k) \, | \, v_{ \text{split} }^k = v , v \in L_A(k) \right) 
+  \mathrm{P} \left( v_{ \text{split} }^k = v \right) 
+  }
+  {\mathrm{P} \left( v \in L_A(k) \right)} \\
+& = \frac{1 \cdot \frac{1}{ |L_U(k) \cup L_A(k)|} }{ \frac{|L_A(k)|}{|L_U(k) \cup L_A(k)| } } \\
+& = \frac{1}{|L_A(k)|} \\
+\end{align*}
+$$
+
+
+$$
+\begin{align*}
+M_n \, \& \, N_n \text{ independent } + M_n \xrightarrow{d} M + N_n \xrightarrow{d} N 
+& \implies (M_n, N_n) \xrightarrow{d} (M, N) \\
+& \implies M_n + N_n \xrightarrow{d} M + N 
+\end{align*}
+$$
+[sumConvDist](https://math.stackexchange.com/questions/1188643/convergence-in-distribution-weak-convergence-of-sum-of-real-valued-random-vari)
+
+
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

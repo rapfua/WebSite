@@ -1,0 +1,65 @@
+### Questions {.tabset}
+
+
+::: {.card title="Newest Questions"}
+- Lemma 4.2 | exponential decay | link to percolation
+:::
+
+::: {.card title="Older Questions"}
+-   Why is separability of $\mathcal{S}$ important?
+
+-   What is the **main** eigenvalue?
+
+-   What is the intuition of something that is **stationary**?
+
+-   What is meant by the **Poissonian property** in remark 2.2. and on Wikipedia's poisson point process page?
+:::
+
+
+::: {.card title="Maximilien email"}
+Cher Maximilien,
+
+They first write:
+
+$\eta_{st} \sim \text{Binomial}(n_t, \kappa(s,t) /n)$,
+
+$\xi_{st} \sim \text{Poisson}(\lambda_{st} = \mu_t\kappa(s,t))$.
+
+They then state:
+
+We couple $\eta_{st}$ to $\xi_{st}$ with error probability $n_t (\kappa(s,t)^2 / n^2) = \lambda_{st} \kappa(s,t) / n(1+o(1))$.
+
+Yesterday, you explained to me that they probably meant $o_p(1).$
+
+However, I do not understand how they get more than:
+
+$$
+n_t (\kappa(s,t)^2 / n^2) =\lambda_{st} \kappa(s,t) / n + o_p(1)
+$$
+
+$\frac{n_t}{n} \xrightarrow{p} \mu_t < \infty \implies \frac{n_t}{n} - \mu_t = o_p(1) \implies \frac{n_t}{n} - \mu_t \stackrel{\mu_t \text{ constant}}{=} \mu_t o_p(1) \implies \frac{n_t}{n} = \mu_t(1 +  o_p(1)).$
+
+This leads to:
+
+$n_t \frac{\kappa(s,t)^2}{n^2} = \frac{n_t}{n}\frac{\kappa(s,t)^2}{n} = \mu_t(1 +  o_p(1))\frac{\kappa(s,t)^2}{n}= \mu_t \kappa(s,t) \frac{\kappa(s,t)}{n}(1+o_p(1)) = \frac{\lambda_{st}\kappa(s,t)}{n}(1+o_p(1)),$
+
+as claimed in the article.
+
+Let us bound the coupling error. For $t$ fixed, we have:
+
+$$
+\begin{align*}
+P(\exists j \leq m, D_j^{\text{bin}} \neq D_j^{\text{Poi}}) &\leq \sum_{s=1}^{n_t} P(\text{one of the splits at a vertex of type }s\text{ did not yield the same result for } D^{\text{bin}} \text{ & } D^{\text{Poi}})\\
+&\leq\sum_{s=1}^{n_t} \sum_{v\in\text{set of vertices of type }s\text{ at which a split occured}}P(\text{split at }v\text{ did not yield the same result for } D^{\text{bin}} \text{ & } D^{\text{Poi}}) \\
+&=\sum_{s=1}^{n_t} N_m^s \:P(\text{split at }v\text{ did not yield the same result for } D^{\text{bin}} \text{ & } D^{\text{Poi}}) \\
+&\leq\sum_{s=1}^{n_t} N_m^s \: \sum_{t=1}^{n_t} P(\eta_{st} \neq\xi_{st}) \\
+&\leq\sum_{s=1}^{n_t} N_m^s \: \sum_{t=1}^{n_t} \frac{\lambda_{st}\kappa(s,t)}{n}(1+o_p(1)) \\
+&=\frac{m}{n}\sum_{s,t} \frac{N_m^s}{m}\lambda_{st}\kappa(s,t)(1+o_p(1)) \\
+&\leq\frac{m}{n} \max \kappa\sum_{s,t} \frac{N_m^s}{m}\lambda_{st}(1+o_p(1)) \\
+&=\frac{m}{n} \max \kappa\sum_{s,t} \pi_s\lambda_{st}(1+o_p(1))^2 \\
+&\stackrel{\text{Slutsky}}{=}\frac{m}{n} \max \kappa\sum_{s,t} \pi_s\lambda_{st}(1+o_p(1)) \\
+\end{align*}
+$$
+
+since we know if $E_u > t \:\:(\iff \text{node }u\text{ is still alive})$ for $t$ fixed.
+:::

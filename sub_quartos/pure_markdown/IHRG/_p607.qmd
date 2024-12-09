@@ -1,0 +1,379 @@
+::: {.card title="p 607"}
+$$
+\lim_{n \to \infty} \mathrm{P} \left( \left.
+  \frac{G_n - \sum_{k=1}^n \frac{V_k}{Z_k}}
+  {\left( \sum_{k=1}^n \frac{U_k V_k}{Z_k^2}\right)^{\frac{1}{2}}} 
+  \leq x
+  \right| W > 0
+\right) = \Phi(x)
+$$
+
+$$
+\lim_{n \to \infty} \mathrm{P} \left( \left.
+  \frac{ G_n - \frac{m \log n}{\alpha + m - 1}    }
+       { \sqrt{ \frac{m \log n}{\alpha + m - 1} } }
+  \leq x
+  \right| W > 0
+\right) = \Phi(x)
+$$
+
+
+$$
+a_n \, \colon = \sqrt{n} \implies a_n = \frac{n}{a_n} = \sqrt{n}.
+$$
+
+Recall that an edge is present between $u$ and $v$ with probability
+$$
+\text{Edge probability} = \frac{\kappa(u, v)}{n}.
+$$
+
+$$
+\begin{align*}
+a(1-b) + b(1-a)
+& = b(1-b) \frac{a}{b} + a(1-a) \frac{b}{a} \\
+& = \frac{b(1-b) a^2}{ab} + \frac{a(1-a) b^2}{ab} \\
+& = \frac{b a^2 - b^2 a^2 + ab^2 - a^2 b^2}{ab} \\
+& = \frac{a - 2 b a + b}{ab} \\
+& \leq \frac{2 \max - 2 \min}{ab}
+\end{align*}
+$$
+
+
+
+
+$$
+\begin{align*}
+\mathrm{P} \left( \mathbf 1_{\{\{x, y\} \in e(G(n, \kappa))\}} \neq \mathbf 1_{\{\{A_m^x, A_m^y\} \in e(G(n, \overline{\kappa}_m))\}} \right)
+& = a(1-b) + b(1-a)
+&& a \, \colon = \frac{\kappa}{n}, b \, \colon = \frac{\overline{\kappa}}{n}\\
+& \leq 2 \max(a,b) - 2 \min(a,b)  \\
+& \leq \frac{2 \varepsilon_m}{n}.
+\end{align*}
+$$
+
+
+$$
+\mathrm{P} \left( e(G(n, \kappa)) \neq e(G(n, \overline{\kappa}_m)) \right) \leq n \varepsilon_m.
+$$
+
+
+
+Objective: express the expression below differently using linear algebra:
+
+$$
+\int_{\mathcal S} \frac{\pi(t)}{\mu(t)} \mathop{}\!\mathrm{d} \pi(t).
+$$
+
+
+$$
+\begin{align*}
+\pi_t
+& = \frac{1}{\tilde \lambda + 1} \int_{\mathcal S} \kappa(s, t) \mu_t(s) \mathop{}\!\mathrm{d} \pi(s)
+&& \text{p. } 591 \\
+& = \frac{\mu_t}{\tilde \lambda + 1} \int_{\mathcal S} \kappa(s, t) \mathop{}\!\mathrm{d} \pi(s) \\
+& \leq \frac{\sup_{n, x, y} \kappa_n(x, y) \cdot\mu_t}{\tilde \lambda + 1}  \int_{\mathcal S} \mathop{}\!\mathrm{d} \pi(s) \\
+& = \frac{\sup_{n, x, y} \kappa_n(x, y)}{\tilde \lambda + 1} \mu_t
+&& \text{hello} \\
+\end{align*}
+$$
+
+$$
+\begin{align*}
+\pi_{m(n)}^t
+& = \frac{1}{\tilde \lambda_{m(n)} + 1} \int_{\mathcal S} \kappa(s, t) \mu_{m(n)}^t(s) \mathop{}\!\mathrm{d} \pi_{m(n)}(s)
+&& \text{p. } 591 \\
+& = \frac{\mu_{m(n)}^t}{\tilde \lambda_{m(n)} + 1} \int_{\mathcal S} \kappa(s, t) \mathop{}\!\mathrm{d} \pi_{m(n)}(s) \\
+& \leq \frac{\sup_{n, x, y} \kappa_n(x, y) \cdot\mu_{m(n)}^t}{\tilde \lambda_{m(n)} + 1}  \int_{\mathcal S} \mathop{}\!\mathrm{d} \pi_{m(n)}(s) \\
+& = \frac{\sup_{n, x, y} \kappa_n(x, y)}{\tilde \lambda_{m(n)} + 1} \mu_{m(n)}^t
+&& \implies \text{define} \quad c \, \colon = \sup_{n, x, y} \kappa_n(x, y) \\
+& \leq c \cdot \mu_{m(n)}^t
+\end{align*}
+$$
+
+For the top of p. 608, this implies that:
+
+$$
+\frac{ \pi_{m(n)}^t }{\mu_{m(n)}^t} \leq c^2.
+$$
+
+Since
+
+$$
+\int_{\mathcal S} c ^ 2 \mathop{}\!\mathrm{d} \pi_v   
+$$
+
+
+$$
+\begin{align*}
+\forall s \in \{1, \dots, M_{m(n)} \} &, \quad \mu_{m(n)}(s) = \mu(A_{m(n)s}), \quad \pi_{m(n)}(s) = \pi_{m(n)}(A_{m(n)s}) \\
+\end{align*}
+$$
+
+
+
+
+
+:::
+
+::: {.card title="p607_final"}
+
+By definition, we have
+
+$$
+\begin{align*}
+(\tilde \lambda + 1) \cdot \pi(t)
+& = \int_{\mathcal S} \kappa(s, t) \mu(t) \mathop{}\!\mathrm{d} \pi(s) \\
+& = \lim_{n \to \infty} \sum_{s=1}^{M_{m(n)}}
+    \overline \kappa_{m(n)}(s, t) \mu(A_{m(n)t}) \pi(A_{m(n)s}). \\
+\end{align*}
+$$
+
+
+This leads to
+
+$$
+\begin{align*}
+\tilde \lambda + 1
+& = \frac{1}{\pi(t)} \cdot
+    \int_{\mathcal S} \kappa(s, t) \mu(t) \mathop{}\!\mathrm{d} \pi(s) \\
+& = \lim_{n \to \infty} \frac{1}{\pi(A_{m(n)t})} \cdot \sum_{s=1}^{M_{m(n)}}
+    \overline \kappa_{m(n)}(s, t) \mu(A_{m(n)t}) \pi(A_{m(n)s}). \\
+& = \lim_{n \to \infty} \tilde \lambda_{m(n)} + 1 \\
+& = \lim_{n \to \infty} \frac{1}{ \pi_{m(n)} (t) } \cdot \sum_{s=1}^{M_{m(n)}}
+    \overline \kappa_{m(n)}(s, t) \mu_{m(n)}(t) \pi_{m(n)}(s).
+&& \mu_{m(n)}(t) \, \colon = \mu(A_{m(n)t})
+\end{align*}
+$$
+
+By uniqueness of $\pi_{m(n)}$, the equality between the second and last expression above implies that
+
+
+
+$$
+\pi_{m(n)}(t) = \pi(A_{m(n)t}).
+$$ {#eq-piMN}
+
+
+We now have the tools to explain why
+
+$$
+\sum_{s \in \mathcal S_{m(n)}} \frac{\pi_{m(n)} (s) ^ 2}{\mu_{m(n)}(s)}
+\xrightarrow{n \to \infty}
+\int_{\mathcal S} \frac{\pi(s)}{\mu(s)} \mathop{}\!\mathrm{d} \pi(s).
+$$
+
+
+Indeed
+
+$$
+\begin{align*}
+\int_{\mathcal S} \frac{\pi(s)}{\mu(s)} \mathop{}\!\mathrm{d} \pi(s)
+& = \lim_{n \to \infty}
+    \sum_{s=1}^{M_{m(n)}}
+    \frac{\pi(A_{m(n)s})}{\mu(A_{m(n)s})} \pi(A_{m(n)s})
+&& \text{by definition of the integral} \\
+& = \lim_{n \to \infty}
+    \sum_{s \in \mathcal S_{m(n)}}
+    \frac{\pi_{m(n)}(s)}{\mu_{m(n)}(s)} \pi_{m(n)}(s) \\
+& = \lim_{n \to \infty}
+    \sum_{s \in \mathcal S_{m(n)}}
+    \frac{\pi_{m(n)}(s) ^ 2}{\mu_{m(n)}(s)}.
+\end{align*}
+$$
+
+
+Where we used (@eq-piMN) to go from the first to the second line.
+
+:::
+
+::: {.card title="dense setting proof"}
+
+Recall that a kernel $\kappa$ is homogeneous if
+
+$$
+\int_{\mathcal S} \kappa(s, t) \mathop{}\!\mathrm{d} \mu(t) = 1
+\quad \text{for a.e. } s \in \mathcal S.
+
+$$
+
+
+$$
+\tilde \lambda_n \to \infty \, + \, 
+\kappa \text{ is a homogeneous kernel} \implies
+\text{Dense setting.}
+$$
+
+$$
+\eta_{st}^n \sim \text{Binomial}
+\left( n_t - \delta_{st}, \frac{\kappa_n(s, t)}{n} \right)
+$$
+
+$$
+\begin{align*}
+\implies \mathrm{E} \left[ \eta_{st}^n \right] 
+& = \kappa_n(s,t) \cdot \frac{(n_t - \delta_{st})}{n} \\
+& \xrightarrow{p} \kappa_n(s,t) \cdot \mu(t)
+
+\end{align*}
+$$
+$$
+\begin{align*}
+&\mathrm{E} \left[ \eta_{st}^n \right] 
+&& \approx \int_{\mathcal S} \kappa_n(s,t) \mathop{}\!\mathrm{d} \mu(t)
+&& \text{assumption 1} \\
+&&& = \tilde \lambda_n + 1
+&& \text{homogeneous kernel} \\
+&&& \to \infty, \\
+&\mathrm{E} \left[ \eta_{st}^n \right] 
+&& \approx \int_{\mathcal S} \kappa_n(s,t) \mathop{}\!\mathrm{d} \mu(t)
+&& \text{assumption 2} \\
+&&& = (\tilde \lambda_n + 1) 
+      \int_{\mathcal S} \kappa(s,t) \mathop{}\!\mathrm{d} \mu(t)
+&& \kappa_n = (\tilde \lambda_n + 1) \cdot\kappa \\
+&&& \geq (\tilde \lambda_n + 1)  \cdot c
+&& \text{integral striclty greater than constant } c > 0 \\ 
+&&& \to \infty.
+\end{align*}
+$$
+
+Time between two consecutive splits given the number N of alive particles after the first of these two splits: minimum of N independent EXP(1) random variables.
+
+Recall that the minimum of N independent exponential random variables with the ith of these random variables having parameter $\lambda_i$ is ALSO distributed as an exponential random variable but with parameter $\sum_{i=1}^N \lambda_i$. Since
+
+$$
+\mathrm{E} \left[ \text{Exp}(\lambda) \right] = \frac{1}{\lambda},
+$$
+$$
+\mathrm{E} \left[ \min_{i=1}^N \text{Exp}(\lambda_i) \right] = \frac{1}{\sum_{i=1}^N \lambda_i}.
+$$
+Recall that $D_j^n$ denotes the number of children produced at the moment the jth particle dies.
+
+$$
+D_j^n \sim \text{Poisson} \left( \int_{\mathcal S} 
+\kappa_n(\text{type of node } j, t) \mathop{}\!\mathrm{d} \mu(t)\right)
+\stackrel{\kappa_n \text{ homogeneous}}{=}
+\text{Poisson} \left( \tilde \lambda_n + 1 \right).
+$$
+
+$$
+\begin{align*}
+D_j^n 
+& \sim \text{Poisson} \left( \int_{\mathcal S} 
+\kappa_n(\text{type of node } j, t) \mathop{}\!\mathrm{d} \mu(t)\right) \\
+& = \text{Poisson} \left( (\tilde \lambda_n + 1) 
+\int_{\mathcal S} \kappa(\text{type of node } j, t) \mathop{}\!\mathrm{d} \mu(t) \right).
+\end {align*}
+$$
+
+$$
+\begin{align*}
+S_i^n 
+&=&&\text{number of children born up to and including the ith split } - \\
+&&&\text{number of particles that have died up to and including the ith split } +\\
+&&&\text{the original particle a.k.a. the source particle} \\
+&=&&\sum_{j=1}^i D_j^n - i + 1.
+
+\end{align*}
+$$
+CLT:
+
+$$
+\frac
+  {\sum_{i\in[n]} X_i - n \mathrm{E} \left[ X \right]}
+  {\sqrt{  \mathrm{Var} \left[ X \right] n }}
+\xrightarrow{d} \mathcal N(0,1).
+$$
+
+CLT applied to $X \sim \text{Poisson}$
+
+$$
+\begin{align*}
+\frac
+  {\sum_{j\in[i]} D_j^n - i (\tilde \lambda_n + 1)} 
+  {\sqrt{i (\tilde \lambda_n + 1)}}
+& \xrightarrow{d} \mathcal N(0,1). \\
+\frac
+  {\sum_{j\in[i]} D_j^n - i (\tilde \lambda_n + 1)} 
+  {\sqrt{i (\tilde \lambda_n + 1)}}
+& = \frac
+  {S_i^n - i \tilde \lambda_n - 1} 
+  {\sqrt{i (\tilde \lambda_n + 1)}} \\
+& = 
+\frac
+  {S_i^n - i \tilde \lambda_n} 
+  {\sqrt{i (\tilde \lambda_n + 1)}} -
+\frac
+  {1} 
+  {\sqrt{i (\tilde \lambda_n + 1)}}
+\implies \\
+\frac
+  {S_i^n - i \tilde \lambda_n} 
+  {\sqrt{i (\tilde \lambda_n + 1)}}
+& \xrightarrow{d} \mathcal N(0,1). \\
+\end{align*}
+$$
+
+
+Recall that the sum of independent Poisson random variables is Poisson distributed with the new parameter being the sum of the parameters. Thus,
+
+$$
+\sum_{j\in[i]} D_j^n \sim
+\text{Poisson} \left(
+  (\tilde \lambda_n + 1)
+  \sum_{j\in[i]} \int_{\mathcal S} \kappa(\text{type of node } j, t) \mathop{}\!\mathrm{d} \mu(t)
+\right).
+$$
+
+
+The Lindeberg condition then allows us to use the CLT event though the $D_j^n$s are not identically distributed. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:::

@@ -1,0 +1,93 @@
+### 3. Embedding the BP into the IHRG {.tabset}
+
+::: {.card title="Coupling"}
+
+$$\text{exploration process of the neighborhood of a vertex} \stackrel{\text{relate}}{\iff} \text{branching process}$$
+
+**Goal of section:** **Definition of** $\Psi_k^{\text{binomial}}(t)$**:**
+
+**Definition of the offspring distribution** $D^{\text{binomial}}$**:**
+
+$D^{\text{bin}|\text{type}(v)=s} \mathrel{\vcenter{:}}= \sum_{j \in [r]} \eta_{sj}, \quad \eta_{sj} \stackrel{\unicode{x2AEB}}{\sim} B(n_j - \mathbf{1}_{s=j}, \kappa(s, j) / n)$.
+
+$$
+\eta_{st}^n \sim \text{Bin}(n_t, \kappa(s, t) / n) \implies \eta_{st}^n = \sum_{i=1}^{n_t} b_{st}^i, \text{ where } \forall i: b_{st}^i \stackrel{iid}{\sim} \text{Bern}(\kappa(s, t) / n)
+$$
+
+Let $\xi_{st}^n \sim \text{Poi}(\frac{n_t}{n} \kappa(s, t))$ be the poisson random variable coupled to $\eta_{st}^n$ ($= Y_m'$ in [@den2012probability]).
+
+Using the result from p.9. of [@den2012probability], we get:
+
+$$
+P(\eta_{st}^n \neq \xi_{st}^n) \leq \sum_{i=1}^{n_t} \frac{\kappa(s,t)^2}{n^2}= \frac{n_t \, \kappa(s,t)^2}{n^2} = \frac{n_t}{n} \frac{\kappa(s,t)^2}{n}.
+$$
+
+Let $\varepsilon > 0$,
+
+$$
+\begin{align*}
+P\left( \left|\frac{n_t}{n} \frac{\kappa(s,t)^2}{n} - \lambda_{st} \frac{\kappa(s,t)}{n}\right| > \varepsilon \right) &= P\left( \left|\frac{n_t}{n} \frac{\kappa(s,t)^2}{n} - \mu_{t} \frac{\kappa(s,t)^2}{n}\right| > \varepsilon \right) \\
+&= P\left( \left|\frac{n_t}{n} - \mu_{t}\right| > \frac{\varepsilon n}{\kappa(s,t)^2} \right) \\
+&\leq P\left( \left|\frac{n_t}{n} - \mu_{t}\right| > \frac{\varepsilon}{\kappa(s,t)^2} \right)
+\end{align*}
+$$
+
+This last expression goes to $0$ as $n \to \infty$ since we know that
+
+$$
+\frac{n_t}{n} \xrightarrow{p} \mu_{t}, \, \text{as } n \to \infty.
+$$
+
+In other words:
+
+$$
+\frac{n_t \, \kappa(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\kappa(s,t)}{n}
+$$
+
+$$
+\frac{n_t \, \kappa(s,t)^2}{n^2}  - \lambda_{st} \frac{\kappa(s,t)}{n} = o_p(1)
+$$
+
+$$
+\frac{n_t \, \kappa(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\kappa(s,t)}{n} (1 + o_p(1)).
+$$
+
+$$
+\begin{align*}
+P\left( \left|\frac{n_t}{n} \frac{\kappa(s,t)^2}{n} - \lambda_{st} \frac{\kappa(s,t)}{n} (1 + o(1))\right| > \varepsilon \right) &= P\left( \left|\frac{n_t}{n} \frac{\kappa(s,t)^2}{n} - \mu_{t} \frac{\kappa(s,t)^2}{n} (1 + o(1)) \right| > \varepsilon \right) \\
+&= P\left( \left|\frac{n_t}{n} - \mu_{t} (1 + o(1))\right| > \frac{\varepsilon n}{\kappa(s,t)^2} \right) \\
+&\stackrel{\mu_t \leq1}{\leq} P\left( \left|\frac{n_t}{n} - \mu_{t} \right| + |o(1)| > \frac{\varepsilon n}{\kappa(s,t)^2} \right) \\
+&\leq P\left( \left|\frac{n_t}{n} - \mu_{t}\right| + |o(1)| > \frac{\varepsilon}{\kappa(s,t)^2} \right)
+\end{align*}
+$$
+
+$$
+\implies\frac{n_t \, \kappa(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\kappa(s,t)}{n} (1 + o(1)).
+$$
+
+$$
+\begin{align*}
+\sum_{s\in[r]} N_m^s \sum_{t\in[r]} \frac{\lambda_{st}\kappa(s,t)}{n}
+\end{align*} 
+$$
+:::
+
+
+::: {.card title="thinning"}
+In $G(m, \kappa)$: $\mathcal H_n(i_0, j)$.
+
+Equivalent w.r.t. distribution to the **generation** of the first **individual** in $th(\Psi_k^{i_0})$ to have label $j.$
+
+In $G(m, \kappa)$: $\mathcal P_n(i_0, j)$.
+
+Equivalent w.r.t. distribution to the **splitting time** of that same individual's parent, i.e., the moment his parent died and he was born.
+:::
+
+
+:::{.card title="Lemma 3.4."}
+
+Note: The number of distinct labels among the alive vertices of type $t$ as split time $\tau_k$ ($|A^t(k)|$) is given by the number of alive vertices of type $t$ at time $\tau_k$ ($S_k^t$) minus the labels that are repeated.
+
+:::
+
+

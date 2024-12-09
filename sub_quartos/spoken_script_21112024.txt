@@ -1,0 +1,7 @@
+We determine the distribution of the weight of the shortest path between uniformly chosen vertices in the giant component and show that the hopcount of this minimal-weight path, properly normalized, follows a central limit theorem.
+
+
+
+When the average degree of wSBM_n $ = \tilde \lambda_n + 1 \sim \Theta(\log(n))$, then the metric backbone 
+Why is the dense setting interesting? 
+

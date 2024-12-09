@@ -1,0 +1,553 @@
+### FPP
+
+#### Row {.tabset}
+
+
+##### Motivation
+
+Below, we assume the framework of finite weighted stochastic blockmodels (WSBM).
+
+--- 
+
+[@dreveton2024metric] shows that, among other things, under the assumption that 
+$$
+\lim_{n\to\infty} \frac{\log n} {n \cdot p_{ab}^n} = 0,
+$$
+
+the ratio
+
+
+$\frac{p_{ab}^{mb}}{p_{ab}}$ scales as $\Theta\left(\frac{\log n}{n \rho_n} \right)$.
+
+---
+
+If one could loosen the requirement so that we only needed
+
+$$
+\lim_{n\to\infty} \frac{\log n} {n \cdot p_{ab}^n} \leq c \in \mathbf R_{>0},
+$$
+then we could choose $p_{ab}^n = \frac{\log n}{n}$ so that
+
+
+$\frac{p_{ab}^{mb}}{p_{ab}}$ scales as $\Theta\left(\frac{\log n}{n \rho_n} \right) = \Theta(1)$.
+
+We will see later that this idea corresponds to the theorem we hope to prove in the dense setting where the average degree $\tilde \lambda_n + 1 = \log n \to \infty$.
+
+
+##### The Model
+
+
+
+
+
+:::{.callout-note collapse=true title="Definition: μ"}
+<!-- :::{.card title="Description of the of the model"} -->
+
+Let $\mathcal S$ be the set of possible types and let $\mu$ be a Borel probability measure on $\mathcal S$. We will use $\mu$ to define the type distribution of the vertices in our graph.
+
+$$
+\begin{align*}
+& \text{Empirical distribution } \nu \text{ converges in probability to } \mu \iff \\
+& \nu(S) = \frac{|\{i \in [n]: x_i \in S \}|}{n} \xrightarrow[n \to \infty]{p} \mu(S)
+\qquad \forall \mu\text{-continuity sets }S \subset \mathcal S. \\
+& \\
+& \\
+& \text{In particular, for } S = \{t\}, \text{ we have:} \\
+& \\
+& \frac{|\{i \in [n]: \text{type}(x_i) = t \}|}{n} = \frac{n_t(n)}{n} = \frac{n_t}{n}  \xrightarrow[n \to \infty]{p} \mu(\{t\}) = \mu_t.
+\end{align*}
+$$
+
+
+:::
+
+:::{.callout-tip collapse=true title="Definition: G(n, κ)"}
+
+- Sample vertices $x_n$,
+
+- $\forall i, j \in \{1, \dots, n \} = [n], \text{ the edge } \{i, j\}$ is present in the inhomogeneous random graph (IHRG) $G(n, \kappa)$ with probability $p_{ij} = \frac{\kappa(x_i, x_j)}{n}$ independently of other edges,
+
+- Conditioned on the edges of $G(n, \kappa)$, assign i.i.d. weights $X_e \sim \text{Exp}(1)$ to each edge $e$.
+
+:::
+
+
+:::{.callout-caution collapse=true title="Definition: μ-continuity set"}
+
+Let $S \in \mathcal B ( \mathcal S)$. As $S$ is a Borel set, it is measurable with respect to our vertex space $(\mathcal S, \mu, (x_n)_n)$. We say that $S$ is **$\mu$-continuous** if $\mu(\partial S) = 0$.
+
+$\mu$-continuity is the key to expressing the condition on $\kappa$ that guarantees the **uniqueness** of the giant component. More precisely, $\kappa$ must **quasi-irreducible**. As the name suggests, this property is closely related to the notion of **irreducibility** for kernels. 
+
+
+:::
+
+:::{.callout-important collapse=true title="Definition: irreducible kernel"}
+$\kappa$ is **irreducible** if 
+$$
+A \subset \mathcal S \quad \& \quad \kappa \equiv 0  \text{ on } A \times (\mathcal S \setminus A) \implies \mu(A) = 0 \quad \text{ or } \quad\mu(\mathcal S \setminus A) = 0.
+$$
+
+The fact that $\kappa \equiv 0$ on $A \times (\mathcal S \setminus A)$ teaches us that:
+
+Starting from $A$, one cannot exit $A$. In this sense, $A$ is isolated from the rest of the graph. Thus, the emergence of components in $A$ is completely independent from the emergence of components in $\mathcal S \setminus A$.
+
+To guarantee **uniqueness** of the giant component in the super-critical regime, we want to avoid this. $\mu(A) = 0$ or $\mu(\mathcal S \setminus A) = 0$ does exactly that as it ensures asymptotically that the vertices will land in positions, from which there is a strictly positive probability of reaching any other vertex.
+
+:::
+
+:::{.callout-note collapse=true title="Definition: quasi-irreducible kernel"}
+
+$\kappa$ is **quasi-irreducible** if $\exists$ a $\mu$-continuous set $\mathcal S' \subset \mathcal S$ with $\mu(\mathcal S') > 0$ s.t. $\kappa(x, y) = 0 \text{ if } x \notin \mathcal S'$ or $y \notin \mathcal S'$.
+
+In essence, this allows us to ignore the vertices in $\mathcal S \setminus \mathcal S'$ and start over with a new ground space $(\mathcal S', \mu')$, where $\mu' = \frac{\mu}{\mu(\mathcal S')}$ on which our kernel is irreducible. 
+
+The fact that $\mu(\partial \mathcal S') = 0$ ensures that the separation is « clean » and that one can serenely ignore the vertices in $\mathcal S \setminus \mathcal S'$ as explained above.
+
+
+:::
+
+:::{.callout-tip collapse=true title="Definition: graphical kernel"}
+A sequence of kernels $(\kappa_n)$ on a vertex space $(\mathcal{S}, \mu, (x_n))$ is **graphical** **with limit** $\boldsymbol{\kappa} \in L^1(\mathcal{S} \times \mathcal{S}, \mu \times \mu) \text{ and continuous a.e.}$ if
+- For a.e. $(y, z) \in \mathcal{S}^2$: $y_n \to y$ & $z_n \to z \implies \kappa(y_n, z_n) \to \kappa(y, z),$
+
+- $\frac{1}{n} E_{\mu}[e(G(n, \kappa))] \to \int_{\mathcal{S}^2} \kappa(x, y) \text{ } d \mu(x) \text{ } d \mu(y).$
+
+**Motivation**
+
+$$
+\begin{align*}
+\frac{1}{2} \int_{\mathcal S^2} \kappa(x, y) \mathop{}\!\mathrm{d} \mu(x) \mathop{}\!\mathrm{d} \mu(y)
+& = \frac{1}{2} \sum_{xy} \kappa(x, y) \mu(x) \mu(y) \\
+& = \frac{1}{2} \sum_x \mu(x) \sum_y \kappa(x, y) \mu(y) \\
+& \approx \frac{1}{2} \sum_x \frac{n_x}{n} \sum_y \kappa(x, y) \mu(y)\\
+& = \frac{1}{n} \cdot \frac{1}{2} \sum_x n_x \sum_y \kappa(x, y) \mu(y)\\
+& = \frac{1}{n} \cdot \frac{1}{2} \sum_x n_x \mathrm{E} \left[ \text{deg}(v_x) \right] \\
+& = \frac{1}{n} \mathrm{E} \left[ e(G(n, \kappa)) | v_1, \dots v_n\right]
+\end{align*}
+$$
+
+
+$$
+\implies
+\frac{1}{2} \int_{\mathcal S^2} \kappa(x, y) \mathop{}\!\mathrm{d} \mu(x) \mathop{}\!\mathrm{d} \mu(y) =
+\mathrm{E} \left[ \frac{1}{2} \int_{\mathcal S^2} \kappa(x, y) \mathop{}\!\mathrm{d} \mu(x) \mathop{}\!\mathrm{d} \mu(y) \right] =  \frac{1}{n} \mathrm{E} \left[ \mathrm{E} \left[ e(G(n, \kappa)) | v_1, \dots v_n\right] \right] = \frac{1}{n} \mathrm{E} \left[ e(G(n, \kappa)) \right].
+$$
+:::
+
+
+:::{.callout-caution collapse=true title="Definition: first passage percolation"}
+First passage percolation (FPP) is a stochastic model introduced to study random growth and flow processes on graphs.
+
+This article shows turns the problem of finding the shortest path (weighted or not) between two vertices $u$ and $v$, into finding the path associated to the **first passage time** from $u$ to $v$. That is the path through which the **minimum** amount of time is needed for the liquid to get from $u$ to $v$.
+:::
+
+
+
+
+
+##### Discussion
+
+###### Row {.tabset}
+
+:::{.card title="Link between integral operator and percolation"}
+
+:::{.callout-note collapse="true" title="Hilbert-Schmidt integral operator" icon=false}
+
+$$
+T_{\kappa}f(s) = \int_{\mathcal S} 
+\kappa(s, t) f(t) \mathop{}\!\mathrm{d} \mu(t).
+$$ 
+
+
+
+
+
+
+
+
+- Since $\kappa$ is symmetric, $T_{\kappa}$ is compact and self-adjoint, *i.e.* $\langle Tf, g \rangle = \langle f, Tg \rangle$.
+
+- Compact $+$ self-adjoint $\implies$ spectral theorem applies, which is needed to guarantee the existence and uniqueness of the stationary type distribution $\pi$. Example 3: the homogeneous case is a good illustration of this.
+:::
+
+:::{.callout-tip collapse="true" title="Conditions for the giant component" icon=false}
+
+**Theorem 3.1.** [@bollobas2007phase]
+
+Let $(\kappa_n)$ be a graphical sequence of kernels with limit $\kappa$. Then 
+
+$$
+\begin{align*}
+C_1(G(n, \kappa_n)) &= \Theta (n) \text{ w.h.p. } 
+& \iff \| T_{\kappa} \| = \text{value of } T_{\kappa} \text{'s largest eigenvalue} > 1. \\
+C_1(G(n, \kappa_n)) &= o_p(n) 
+& \iff \| T_{\kappa} \| = \text{value of } T_{\kappa} \text{'s largest eigenvalue} \leq 1.
+\end{align*}
+$$
+
+:::
+
+:::{.callout-caution collapse="true" title="Our paper's framework" icon=false}
+
+In [@kolossvary2015first], we restrict ourselves to the super-critical regime since we suppose that $T_{\kappa}$'s largest eigenvalue $\tilde \lambda + 1$ is greater than one.
+:::
+
+:::
+
+:::{.card title="Examples"}
+
+:::{.callout-note collapse="true" title="Example 1: the Erdös-Rényi random graph"}
+
+Let $\mathcal S = \{1\}$.
+
+$G(n, p) \sim G(n, \kappa)$ for $\kappa \equiv c$, where $c$ is a strictly positive constant s.t. $c = p \cdot n$.
+
+Indeed, the edge probabilities are then given by
+
+$$
+p_{ij} = \frac{\kappa(v_i, v_j)}{n} = \frac{c}{n} = p.
+$$
+
+Also note that $\| T_{\kappa} \| = c$ since the constant function $\mathbf 1$ is an eigenvector of $T_{\kappa}$ associated to the eigenvalue $c$.
+:::
+
+
+:::{.callout-tip collapse="true" title="Example 2: the homogeneous bipartite random graph"}
+
+Let us show how $G(m, m, p) \sim G(n, \kappa)$ for $p = \frac{c}{m}$ and $m = \frac{n}{2}$.
+
+There are two types of vertices $\implies$ we can define the type space as
+
+$$
+\mathcal S \, \colon = \{1, 2\}.
+$$
+
+Define the Borel probability measure $\mu$ on $\mathcal B( \mathcal S)$ by
+
+$$
+\mu(\{1\}) = \mu(\{2\}) = \frac{1}{2}.
+$$
+
+The kernel $\kappa$ is then defined by
+
+$$
+\kappa(1, 1) = \kappa(2, 2) = 0 \quad \& \quad \kappa(1, 2) = \kappa(2, 1) = 2c.
+$$
+
+Finally, we decide only to define $x_n$ only for even $n$ and set $m \, \colon = \frac{n}{2}$. Also, $(x_n)$ is a **deterministic** sample with $m$ vertices of type 1 and $m$ vertices of type 2.
+
+The edge probabilities are then given by
+
+$$
+p_{ij} = \frac{2c}{n} = \frac{c}{m} = p \quad \forall i, j \in [n] \text{ s.t. } x_i \neq x_j,
+$$
+so that we have the desired homogeneous bipartite graph $G(m, m, p)$.
+
+:::
+
+:::{.callout-caution collapse="true" title="Example 3: the homogeneous case"}
+
+Suppose
+
+$$
+\int_\mathcal S \kappa(s, t) \mathop{}\!\mathrm{d} \mu(t) = c \quad \forall s \in \mathcal S.
+$$
+
+Intuitively, this means that asymptotically, the average vertex degree is equal to $c$ and is independent of the vertex type.
+
+Note that
+
+$$
+c \cdot \mathbf 1(s) = c = \int_\mathcal S \kappa(s, t) \mathop{}\!\mathrm{d} \mu(t) = \int_\mathcal S \kappa(s, t) \mathbf 1(t) \mathop{}\!\mathrm{d} \mu(t) = T_{\kappa} \mathbf 1(s).
+$$
+
+so that the constant function $\mathbf 1$ is an eigenvector of $T_{\kappa}$ associated to the eigenvalue $c$. By the Min-Max theorem for compact, self-adjoint operators, we have that $\| T_{\kappa} \| = c$.
+
+
+This allows us to ignore the type-specific details when studying the giant component.
+
+Indeed, just like in the Erdös-Rényi case, the emergence of the giant component depends only whether $c > 1$ or not.
+
+:::
+
+
+
+
+
+
+
+:::{.callout-important collapse="true" title="Example 4: the finite-type case a.k.a. the weighted stochastic block model"}
+
+$$
+\begin{align*}
+& \bullet \quad\mathcal S = \{1, \dots, r\} &&= [r] \\
+& \bullet \quad (\kappa(s, t))_{s, t \in \mathcal S} &&\text{ is a symmetric } r \times r 
+  \text{ matrix with nonnegative entries} \\
+& \bullet \quad \mu_t = \mu(\{t\}) \\
+& \bullet \quad \text{Equivalent to regular finitary kernels} 
+&& \text{a.k.a. step functions constant on } \mathcal S_i \times \mathcal S_j \text{, where } \amalg_{i = 1}^r \mathcal S_i = \mathcal S \\
+& \bullet \quad \text{Sequence of regular finitary kernels}
+&& \text{ used to approximate general kernel}
+\end{align*}
+$$
+
+:::
+
+:::{.callout-note collapse="true" title="Example 5: edge percolation"}
+Start with a graph $G(n, \kappa)$ and keep each edge with probability $p$ independently of everything else. Let us call the resulting graph $G^{\langle p \rangle}(n, \kappa)$. Then one can show that
+
+$$
+\begin{align*}
+G^{\langle p \rangle}(n, \kappa) \text{ has w.h.p. a component of order } \Theta(n)
+& \iff \| T_{p \kappa} \| > 1 \\
+& \iff p > \frac{1}{\| T_{\kappa} \|}
+\quad \text{, useful threshold for edge percolation in } G(n, \kappa) \text{ if norm computable}\\
+& \iff G(n, p \cdot \kappa) \text{ has w.h.p. a component of order } \Theta(n)
+\quad , G^{\langle p \rangle}(n, \kappa) \to \text{known structure} \\
+\end{align*}
+$$
+Same threshold for **edge percolation** on $G(n, \kappa)$ as for the **emergence of a giant component** in $G(n, p \cdot \kappa)$.
+:::
+
+
+:::{.callout-tip collapse="true" title="Example 6: vertex percolation"}
+Start with a graph $G(n, \kappa)$ and keep each vertex with probability $p$ independently of everything else. Let us call the resulting graph $G^{[ p ]}(n, \kappa)$. Then one can show that
+
+$$
+\begin{align*}
+G^{[ p ]}(n, \kappa) \text{ has w.h.p. a component of order } \Theta(n)
+& \iff p \cdot \| T_{\kappa} \| > 1 \\
+& \iff p > \frac{1}{\| T_{\kappa} \|}
+\quad \text{, useful threshold for vertex percolation in } G(n, \kappa) \text{ if norm computable}\\
+& \iff G(n, p \cdot \kappa) \text{ has w.h.p. a component of order } \Theta(n)
+\quad , G^{[ p ]}(n, \kappa) \to \text{known structure} \\
+\end{align*}
+$$
+Same threshold for **vertex percolation** on $G(n, \kappa)$ as for the **emergence of a giant component** in $G(n, p \cdot \kappa)$.
+:::
+
+
+
+
+
+
+
+
+:::
+
+:::{.card title="Poisson"}
+
+:::{.callout-note collapse="true" title="Asymptotic vertex degree"}
+
+$$
+\text{Asymptotic degree of a vertex of type s}  
+\sim \text{Poisson} \left(\int_\mathcal S \kappa(s, t) \mathop{}\!\mathrm{d} \mu(t) \right).
+$$
+
+:::
+
+:::{.callout-tip collapse="true" title="Poisson intensity measure"}
+
+Let $A^s(t)$ be the number of alive vertices at time $t$ when the source is of type $s$.
+
+<!-- ### \| Plan of Attack \| -->
+
+<!-- - examples -->
+
+$$
+\begin{align*}
+A^s(t) 
+&= \sum_{u \in \mathcal S} A^u(t - E_1) \cdot \xi_{su} \cdot \mathbf 1_{\{E_1 < t\}} + \mathbf 1_{\{E_1 \geq t\}}
+&& \xi_{su} \sim \text{Poisson} \left(\kappa(s, u) \mu_u \right) \\
+&= \int_{\mathcal S} A^u(t - E_1) \cdot \mathbf 1_{\{E_1 < t\}} + \mathbf 1_{\{E_1 \geq t\}} \mathop{}\!\mathrm{d} \xi_{su}(us)
+\end{align*}
+$$
+
+:::
+
+:::
+
+##### Theorems
+
+:::{.callout-note collapse=true title="Notation"}
+- $\mathcal P_n(u, v) = \min_{\text{path} \in \{\text{paths connectings u to v}\}} \sum_{e \in \text{path}} X_e$, where $X_e$ is the $\text{Exp}(1)$ edge weight attached to edge $e$.
+
+- $\mathcal H_n(u, v)$ denotes the number of edges or hopcount of the path above.
+:::
+
+
+:::{.callout-tip collapse="true" title="Assumptions: sparse setting"}
+
+- Let $(\mathcal{S}, \mu)$ be a ground space,
+
+-   let $(\kappa_n)$ be a sequence of uniformly continuous graphical kernels with $\sup_{n \in \mathbf{N}, \: x, y \in \mathcal{S}} \kappa_n(x, y) < \infty,$
+
+-   $\tilde{\lambda}_n \to \tilde{\lambda} < \infty$
+
+- $\kappa$ quasi-irreducible,
+
+- $1 + \tilde{\lambda} > 1,$
+
+- $\int_{\mathcal{S}} \frac{\pi}{\mu} d\mu = 1.$
+
+- $u, v \in V$ chosen uniformly at random
+
+:::
+
+:::{.callout-caution collapse="true" title="Theorem: sparse setting"}
+
+Conditionally on $u$ being connected to $v$, we have
+
+$$
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\lambda}) \log n}{\tilde{\lambda}}}{\sqrt{\frac{(1 + \tilde{\lambda}) \log n}{\tilde{\lambda}}}}, \mathcal{P}_n(u, v) - \frac{\log n}{\tilde{\lambda}}  \right) \xrightarrow{d} (Z, L),
+$$
+
+where
+
+-   $Z \sim \mathcal{N}(0, 1),$
+
+-   $L$ is a non-degenerate real random variable whose distribution can be computed using ideas from branching process theory during the exploration phase of the components of $G(n, \kappa).$ In the finite-type case for example, we have
+
+$$
+L = 
+- \frac{1}{\tilde \lambda} \log \hat W^x \hat W^y 
+- \frac{\Lambda}{\tilde \lambda}
++ \frac{1}{\tilde \lambda} \log 
+    \frac
+    {\tilde \lambda (\tilde \lambda + 1)}
+    {\sum_{s \in \mathcal S} \frac{\pi(s)^2}{\mu(s)}
+    },
+$$
+
+where 
+
+-  $\hat W^x = \lim_{t \to \infty} e^{-\tilde \lambda t} S^x(t)$,
+-  $\hat W^y = \lim_{t \to \infty} e^{-\tilde \lambda t} S^y(t)$,
+- $\Lambda \sim \text{standard Gumbel} \iff f_\Lambda (z) = z e^{-z}$.
+:::
+
+
+:::{.callout-important collapse="true" title="Assumptions: dense setting"}
+
+If:
+
+-   Sparse settings assumptions are satisfied,
+
+-   $\kappa_n$s and $\kappa$ are homogeneous kernels,
+
+-   $\tilde{\lambda}_n \to +\infty$,
+
+OR
+
+-   Sparse settings assumptions are satisfied for $\kappa$,
+
+-   $\forall n \in \mathbf{N}, \kappa_n = (1 + \tilde{\lambda}_n) \kappa$,
+
+-   $\tilde{\lambda}_n \to +\infty$
+
+:::
+
+:::{.callout-note collapse="true" title="Theorem: dense setting"}
+Conditionally on $u$ being connected to $v$, we have
+$$
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\lambda}_n) \log n}{\tilde{\lambda}_n}}{\sqrt{\log n}}, \tilde{\lambda}_n \mathcal{P}_n(u, v) - \log n\right) \xrightarrow{d} (Z, \tilde{L}),
+$$
+
+where $\tilde L \sim \Lambda_1 + \Lambda_2 - \Lambda_3 - c$ with $\Lambda_1, \Lambda_2, \Lambda_3$ independent standard Gumbel variables and $c = 0$ for case 1, and $c = \log \int_{\mathcal S} \frac{\pi}{\mu} d\mu$ for case 2.
+
+We know see how the weighted stochastic blockmodel with $p_{ab} = \frac{\log n}{n} \implies \mathrm{E} \left[ \text{vertex degree} \right] = \log n = \tilde \lambda_n \to \infty$. 
+
+We now aim to see if this central limit result allows us so loosen the assumption on $p_{ab}^n$.
+<!-- :::{.card title="Candidate examples"} -->
+
+<!-- Examples taken from [@bollobas2007phase]. -->
+
+<!-- - Example 4.1: the Erdös-Rényi random graph, -->
+<!-- - Example 4.2: the homogeneous bipartite random graph, -->
+<!-- - Example 4.3: the finite-type case (should be used for intuition), -->
+<!-- - Example 4.6: the homogeneous case, -->
+<!-- - Example 4.8: i.i.d. vertices, -->
+<!-- - Example 4.9: Poisson process graph (canonical example), -->
+<!-- - Example 4.10: Edge percolation (demo?) -->
+<!-- - Example 4.11: Vertex percolation (new demo?) -->
+<!-- - Example 4.12: Large second component -->
+<!-- - Example 4.13: Dense giant component -->
+<!-- - Example 16.1: Dublin's Model -->
+<!-- - Example 16.2: the Mean-field Scale-free Model -->
+<!-- - Example 16.3: the CHKNS model -->
+<!-- - Example 16.4: the rank 1 case -->
+<!-- - Example 16.5: Turova's model -->
+
+
+<!-- demo for 4.10? - prob -->
+<!-- new demo for 4.11? - prob not -->
+<!-- ::: -->
+
+:::
+
+
+
+##### Main steps of proof
+
+**Step 0:** Start with the finite-type case.
+
+**Step 1:** frame the problem of finding the shortest path between two vertices $u$ and $v$ as a first passage percolation problem.
+
+To find the shortest-weight path between two vertices x and y, we consider the edge weights as lengths and let fluid percolate through the edges of the graph simultaneously at a constant rate, starting from both vertices. We call this procedure the **exploration processes of the neighborhoods of vertices x and y**. 
+
+**Step 2:** relate the exploration processes to a branching process.
+
+Define a continuous-time branching process (CTBP) $\Psi_{\kappa}^s$ with 
+
+- root of type $s$,
+- If root is of type $s$, the number of root's children of type $t$ is $\text{Poisson}(\kappa(s, t) \mu_t)$.
+- Waiting times are $\text{Exp}(1)$.
+
+Intuitively, when the flows collide, the shortest-weight path has been found: up to any time τ each exploration process contains the vertices with distance at most τ from x or y. It is standard to relate an exploration process to a branching process (BP). In our context this BP is a continuous-time multitype BP, which we introduce in Section 2.
+We can apply BP theory once we embed the BP into the IHRG: in Section 3 we assign labels to the vertices of the BP according to their type in a way that we can rule out loop and multiple edges in the embedding in the IHRG. We thin the BP to deal with cycles.
+The problem with the scenario of colliding flows in continuous time is that we can keep track of the flows only in discrete steps as new vertices are explored. So we first start the exploration process from x until a given number of vertices are explored and stop. Then we start the flow from y and wait until a vertex vy which shares an edge with a wet vertex vx in the flow of x becomes wet. We have then just found a path between x and y through vx and vy, which, however, might not be the shortest one. Thus, we have to minimize over all such possible choices of vx and vy . The rigorous treatment of the connection time is contained in Section 4. Finally, in Section 5 we prove our main results, Theorems 1.1 and 1.2.
+
+
+
+##### References 
+
+
+:::{#refs}
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

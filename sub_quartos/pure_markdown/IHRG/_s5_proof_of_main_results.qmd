@@ -1,0 +1,147 @@
+### 5. Proof of the main results {.tabset}
+
+:::{.card title="5.1 proof"}
+
+$$
+\begin{align*}
+P(v \in \text{th}^C A^{y,t} (C_n^{i})) &= E \left[ \frac{\text{th}^C A^{y,t} (C_n^{i})}{A^{y,t} (C_n^{i})}\right] \\
+&= E \left[ f(C_n^{i}) \right] \\
+&= E \left[ f \left( \frac{n \cdot \Gamma(i, \lambda)}{a_n} \right) \right] \\
+&= E \left[ f \left( \Gamma \cdot n^{\frac{3}{5}} \right) \right] && a_n = n^{\frac{2}{5}} \implies \beta = \frac{3}{5}\\
+&= E \left[ E \left[ f \left( \Gamma \cdot n^{\frac{3}{5}} \right) \Big| \, \Gamma\right] \right] \\
+&\leq E \left[ \sum_{j=1}^{\Gamma \cdot n^\alpha} \frac{c \cdot j}{n} + \sum_{j=\Gamma \cdot n^\alpha}^{\Gamma \cdot n^\beta } \frac{c \cdot n^{\beta - \alpha}}{n} \right]
+&& \eta_{su} \leq \pi_u \frac{\Gamma \cdot n^\beta}{\Gamma \cdot n^\alpha} \text{ , the number of } u \text{ type vertices in the whole subtree of } i_j\\ 
+& \leq E \left[ \Gamma^2 \cdot n^{2 \alpha - 1} \right] + E \left[ \Gamma \cdot n^{2\beta - \alpha - 1} \right] \\
+& = o(1) \left( E \left[ \Gamma^2 \right] + E \left[ \Gamma \right] \right) \\
+& = o(1) \left( \frac{i \cdot (i + 1)}{\lambda^2} + \frac{i}{\lambda} \right) \\
+\end{align*}
+$$
+
+---
+
+$$
+\begin{align*}
+P(v \in \text{th}^C A^{y,t} (C_n^{\text{con}})) &=
+\sum_i P(v \in \text{th}^C A^{y,t} (C_n^{i})) \cdot P(\argmin_j \{ C_n^j = C_n^{\text{con} } \} = i ) \\
+&\leq \sum_i P(v \in \text{th}^C A^{y,t} (C_n^{i})) \cdot \left( \frac{\lambda}{\lambda + 1} \right) ^ i \cdot \left( \frac{1}{\lambda + 1} \right) 
+&& \text{Lemma } 4.2. \, (\argmin \& \text{Geom})
+\end{align*}
+$$
+
+---
+
+
+$$
+o(1) \cdot E \left( \frac{\argmin \cdot (\argmin + 1)}{\lambda^2} + \frac{\argmin}{\lambda} \right) \leq
+o(1) \cdot \left( 2 \cdot \frac{\left( \lambda + 1 \right)^2}{\lambda^2} + \frac{\lambda + 1}{\lambda} \right) = o(1)
+$$
+
+
+---
+
+Below, we explain where $2 \cdot \frac{\left( \lambda + 1 \right)^2}{\lambda^2} + \frac{\lambda + 1}{\lambda}$ comes from.
+
+
+
+$\argmin$ stochastically dominated by $G \sim \text{Geom} \left( \frac{1}{\tilde \lambda + 1} \right) \implies$
+
+
+
+$$
+\begin{align*}
+\mathrm{E} \left[ \text{arg min} ^ 2 \right]  & \leq \mathrm{E} \left[ G^2 \right] \\
+& = \mathrm{Var} \left[ G \right] + \mathrm{E} \left[ G \right] ^ 2 \\ 
+& = \frac{1 - p}{p^2} + \frac{1}{p^2} && p \, \colon = \frac{1}{\tilde \lambda + 1} \\
+& \leq \frac{2}{p^2} \\
+& = 2 \left( \tilde \lambda + 1 \right) ^ 2
+\end{align*}
+$$
+
+$M_t = e^{-\lambda t} |S_t|$ and $\frac{1}{\lambda} \log P_i$ are somehow related. Maybe:
+
+$$
+e ^ {P_i}  = S_t?
+$$
+
+---
+
+$$
+\begin{align*}
+|S_j - \lambda j| & \leq C j ^ {\frac{1}{2}} && \text{Law of iterated logarithm for } S_j \\
+& \implies 
+\end{align*}
+$$
+
+---
+
+$$
+\begin{align*}
+S(t) 
+& = \text{number of alive vertice at time } t \\
+& = \text{ } \\
+& \text{Recall that } \tilde \lambda \text{ is smaller by } 1 \text{ that the eigenvalue of the integral opertator } T_\kappa \\
+& Z_n = \text{ number of particles in the } n \text{th generation} \\
+& \text{The number of splits by time } t \sim \text{Poisson}(\lambda t) \\
+& \frac{1}{\tilde \lambda} \log \left( \frac{W}{\tilde \lambda} \right) \\
+&= \frac{1}{\tilde \lambda} \log \left( \frac{e^{-\tilde \lambda t} A(t)}{\tilde \lambda} \right)   \\
+&= \frac{-t}{\tilde \lambda}  (\log A(t) - \log \tilde \lambda) \\
+\end{align*}
+$$
+:::
+
+
+:::{.card title="Main steps of the proof"}
+
+1. Argue that the probability that the shortest-weight path contains thinned vertices is $o(1)$.
+
+2. Determine the distribution of the shortest-weight path.
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

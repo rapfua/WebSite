@@ -1,0 +1,91 @@
+$$
+\lim_{n \to \infty} \mathrm{P} \left( \left.
+  \frac{G_n - \sum_{k=1}^n \frac{V_k}{Z_k}}
+  {\left( \sum_{k=1}^n \frac{U_k V_k}{Z_k^2}\right)^{\frac{1}{2}}} 
+  \leq x
+  \right| W > 0
+\right) = \Phi(x)
+$$
+
+$$
+\lim_{n \to \infty} \mathrm{P} \left( \left.
+  \frac{ G_n - \frac{m \log n}{\alpha + m - 1}    }
+       { \sqrt{ \frac{m \log n}{\alpha + m - 1} } }
+  \leq x
+  \right| W > 0
+\right) = \Phi(x)
+$$
+
+
+$$
+a_n \, \colon = \sqrt{n} \implies a_n = \frac{n}{a_n} = \sqrt{n}.
+$$
+
+Recall that an edge is present between $u$ and $v$ with probability
+$$
+\text{Edge probability} = \frac{\kappa(u, v)}{n}.
+$$
+
+$$
+\begin{align*}
+a(1-b) + b(1-a)
+& = b(1-b) \frac{a}{b} + a(1-a) \frac{b}{a} \\
+& = \frac{b(1-b) a^2}{ab} + \frac{a(1-a) b^2}{ab} \\
+& = \frac{b a^2 - b^2 a^2 + ab^2 - a^2 b^2}{ab} \\
+& = \frac{a - 2 b a + b}{ab} \\
+& \leq \frac{2 \max - 2 \min}{ab}
+\end{align*}
+$$
+
+
+$$
+
+
+$$
+
+$$
+\begin{align*}
+\mathrm{P} \left( \mathbf 1_{\{\{x, y\} \in e(G(n, \kappa))\}} \neq \mathbf 1_{\{\{A_m^x, A_m^y\} \in e(G(n, \overline{\kappa}_m))\}} \right)
+& = a(1-b) + b(1-a)
+&& a \, \colon = \frac{\kappa}{n}, b \, \colon = \frac{\overline{\kappa}}{n}\\
+& \leq 2 \max(a,b) - 2 \min(a,b)  \\
+& \leq \frac{2 \varepsilon_m}{n}.
+\end{align*}
+$$
+
+
+$$
+\mathrm{P} \left( e(G(n, \kappa)) \neq e(G(n, \overline{\kappa}_m)) \right) \leq n \varepsilon_m.
+$$
+
+
+
+Objective: express the expression below differently using linear algebra:
+
+$$
+\int_{\mathcal S} \frac{\pi(t)}{\mu(t)} \mathop{}\!\mathrm{d} \pi(t).
+$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

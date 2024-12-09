@@ -1,0 +1,241 @@
+### 4. Connection time {.tabset}
+
+:::{.card title="Proposition 4.1."}   
+
+$$
+\hat\lambda \, \colon = \tilde \lambda \sum_{s \in \mathcal{S}} \frac{\pi_s^2}{\mu_s}.
+$$
+Note that under Assumption 1.1
+
+$$
+\hat\lambda < \infty.
+$$
+Conditioned on the event that the continuous time branching processes starting from $x$ and $y$ survive, the **point process**
+
+$$
+\frac{C_n^{(i)} a_n}{n} \xrightarrow{d} \text{PPP}(\hat\lambda)
+\text{ , as } n \to \infty.
+$$
+
+:::
+
+
+:::{.card title="Point Process"}
+
+<h2>Definition of a point process:</h2>
+
+<h3>Assumptions:</h3>
+
+- Let $(\Omega, \mathcal{F}, P)$ be a probability space.
+
+- Let $(S, \mathcal{S})$ be a measurable space with some conditions on $S$ and $\mathcal{S}$.
+
+
+<h3>Construction:</h3>
+
+A point process on $S$ is an integer-valued **random measure** $\xi$ constructed in the following way:
+
+$$
+\xi \, \colon \Omega \times \mathcal{S}  \to \mathbf{N}
+$$
+
+$$
+\xi(\cdot, B) \text{ is a random variable for each } B \in \mathcal{S}.
+$$
+
+$$
+\forall \omega \in \Omega, \xi(\omega, \cdot) \text{ is a measure on } \mathcal{S}.
+$$
+
+
+:::
+
+
+
+<!-- :::{.card title="Proof of Proposition 4.1."} -->
+
+$$
+\begin{align*}
+P(C > N) &= P(\{C > 1\} \cap \{C > 2\} \cap \cdots \cap \{C > N\}) \\
+& \stackrel{ \text{chain rule} }{=} P(C > 1)P(C > 2|C > 1) \cdots P(C > N|C > N-1) \\
+& = E[\mathbf{1}_{\{C > 1\}}]E[\mathbf{1}_{\{C > 2\}}|\mathbf{1}_{\{C > 1\}}] \cdots E[\mathbf{1}_{\{C > N\}}|\mathbf{1}_{\{C > N-1\}}] \\
+& \stackrel{ \text{law of iterated expectation} }{=} 
+
+
+\end{align*}
+
+
+$$
+
+
+$$
+\begin{align*}
+\Pi_{i=1}^N E \left[ P(C>j \, | \, C>j-1, \mathcal{F}_{j-1})\right] &= \Pi_{i=1}^N E \left[ \frac{P(\{C>j\} \cap \{C>j-1\} \, | \, \mathcal{F}_{j-1})}{P(C > j-1|\mathcal{F}_{j-1})}  \right] \\
+&= \Pi_{i=1}^N E \left[ \frac{P(C>j|\mathcal{F}_{j-1})}{P(C > j-1)}  \right] \\
+&= \Pi_{i=1}^N \frac{1}{P(C > j-1)} E \left[ P(C>j| \mathcal{F}_{j-1})  \right] \\
+& \stackrel{ \text{law of total expectation} }{=} \Pi_{i=1}^N \frac{P(C > j)}{P(C > j-1)}  \\
+&= \frac{P(C > N)}{P(C > 0)} \\
+&= P(C>N).
+\end{align*}
+$$
+
+$$
+
+\left ( 1 + \frac{r}{n} \right)^n \to e^r, \text{ for all } r > 0.
+
+$$
+
+
+$$
+\begin{align*}
+\prod_{j=1}^{\frac{x \cdot n}{a_n}} \left[ \sum_{t \in \mathcal{S}} \frac {S_{j - 1}^{y,t}} {S_{j-1} ^ y} \left( 1 - \frac { S_{a_n}^{x,t} } {n_t}  \right) \right]
+&= \prod_{j=1}^{\frac{x \cdot n}{a_n}} \left[ 1 - \sum_{t \in \mathcal{S}} \frac {S_{j - 1}^{y,t}} {S_{j-1} ^ y} \frac { S_{a_n}^{x,t} } {n_t} \right] \\ 
+&= \exp(\ln(\prod)) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \ln \left[ 1 - \sum_{t \in \mathcal{S}} \frac {S_{j - 1}^{y,t}} {S_{j-1} ^ y} \frac { S_{a_n}^{x,t} } {n_t} \right] \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \ln \left[ 1 + x_j \right] \right) \\
+&\stackrel{\text{Taylor}}{=} \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \left[ x_j + x_j \cdot\varepsilon(x_j) \right] \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} x_j \right) \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} x_j \cdot\varepsilon(x_j) \right) \\
+\end{align*}
+$$
+
+Let us show that
+
+$$
+\exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} x_j \cdot\varepsilon(x_j) \right) \to 1, \text{ as } n \to \infty.
+$$
+Using the Lagrange form for of the remainder $\varepsilon$, which is decreasing, we have:
+
+$$
+\begin{align*}
+\exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} x_j \cdot\varepsilon(x_j) \right) 
+&\leq \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{n_t} \right) 
+\cdot\varepsilon \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{n_t} \right) \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{n_t} \frac{n}{n} \right) 
+\cdot\varepsilon \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{n_t} \frac{n}{n} \right) \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{\mu_t} \frac{1}{n} \right) 
+\cdot\varepsilon \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{\mu_t} \frac{1}{n} \right) \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \frac{1}{n} \cdot \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{\mu_t}  \right) 
+\cdot\varepsilon \left( \frac{1}{n} \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{\mu_t}  \right) \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \frac{c}{n} \cdot\varepsilon \left( \frac{c}{n} \right) \right) \\
+&= \exp \left( \frac{x \cdot n}{a_n} \frac{c}{n} \cdot\varepsilon \left( \frac{c}{n} \right) \right) \\
+&= \exp \left( \frac{x \cdot c \cdot \varepsilon \left( \frac{c}{n} \right)}{a_n}  \right)
+\end{align*}
+$$
+
+Since
+
+$$
+\varepsilon \left( \frac{c}{n} \right)\to 0, \text{ as } n \to \infty,
+$$
+and since $x$ and $c$ are constants, and since $a_n \to \infty$, we have:
+
+$$
+\exp \left( \frac{x \cdot c \cdot \varepsilon \left( \frac{c}{n} \right)}{a_n}  \right) \to 1, \text{ as } n \to \infty.
+$$
+
+
+
+$$
+\exp \left( e^{\tilde \lambda z} \left( \frac{\tilde \lambda}{\tilde \lambda + 1} - 1   \right) \right)
+$$
+
+:::
+
+
+:::{.card title="Lemma 4.2."}
+
+<h2>Statements:</h2>
+
+The probability that the shortest-weight path is not among the first $k$ collision edges decays exponentially in $k$. More specifically:
+
+$$
+P(\argmin_i(C_n^i = C_n^{\text{con}}) > k) \leq \left( \frac{\tilde \lambda}{\tilde \lambda + 1} \right) ^ k.
+$$
+<h2>Definition of Stochastic Domination:</h2>
+
+Let $X$ and $Y$ be two random variables. We say that $X$ stochastically dominates $Y$ if:
+
+$$
+P(X \geq x) > P(Y \geq x) \text{ for all } x.
+$$
+We then have:
+
+$$
+X \text{ stochastically dominates } Y \implies \exists \text{ a coupling of } X \text{ and } Y \text{ such that } X \geq Y \text{ almost surely}.
+$$
+<h2>Proof:</h2>
+
+
+$$
+\begin{align*}
+& \text{Distribution of the rescaled connection time is stochastically dominated by the Geo} \left( \frac{1}{\tilde \lambda + 1} \right) \implies \\
+& I \, \colon= \argmin_i(C_n^i = C_n^{\text{con}}) \leq N \text{ , for some coupling of } I \text{ and } N. \\
+& \text{Since } \frac{a_n C_n^{(i)}}{n} \stackrel{\text{Proposition 4.1.}}{\approx} \sum_{j=1}^I \tilde E_i \quad \text{ , and } \tilde E_i \geq 0 \text{ , we have:} \\
+& \frac{a_n C_n^{\text{con}}}{n} \leq \sum_{j=1}^N \tilde E_i.
+\end{align*}
+$$
+
+As explained at the beginning of the 4th section "Connection time", the shortest-weight path goes through the collision edge that minimizes:
+
+$$
+\begin{align*}
+& f(i) = \tau_{C_n^{(i)}} + E_i \implies \\
+& C_n^{\text{con}} = \argmin_i f(i).
+\end{align*}
+$$
+
+
+$$
+
+\begin{align*}
+E \left[ P \left( \forall i \leq k, \, E_i > z - X_i | X_{k + 1} = c, \, \min = z \right) \right] &= 
+E \left[ E \left[ \prod_{i=1}^k \mathbf 1_{ \{ E_i > z - X_i\} }  | X_{k + 1} = c, \, \min = z \right] \right]\\
+&=  E \left[ E \left[ \prod_{i=1}^k \mathbf 1_{ \{ E_i > z - X_i\} }  | X_1, \dots, X_k, X_{k + 1} = c, \, \min = z \right] \Bigg | X_{k + 1} = c, \, \min = z \right]
+&&\text{total law of expectation} \\
+&=  E \left[ \prod_{i=1}^k \mathbf e^{- (z - X_i)} \Bigg | X_{k + 1} = c, \, \min = z \right]
+&&\text{independance} \\
+\end{align*}
+$$
+Note that $z - X_i \geq 0$, else:
+
+$$
+z - X_i < 0 \implies z < X_i \leq X_j \leq X_j + E_j, \quad \forall j \geq k + 1 \implies \min_{j \geq k + 1} X_j + E_j > z = \min_{j \geq k + 1} X_j + E_j, \text{ a contradiction}.
+$$
+$$
+\begin{align*}
+E \left[ U^{\frac{1}{\lambda}} \right] &=
+\int_0^{e^{\lambda c}} x^{\frac{1}{\lambda}} e^{-\lambda c} \text{ } dx \\
+&= \frac{\lambda}{\lambda + 1} \left[ x^{\frac{\lambda + 1}{\lambda}} \right]_0^{e^{\lambda c}} e^{-\lambda c} \\
+&= \frac{\lambda}{\lambda + 1} e^{(\lambda + 1) c} e^{-\lambda c} \\
+&= \frac{\lambda}{\lambda + 1} e^{c} \\
+\end{align*}
+$$
+
+
+$$
+\begin{align*}
+E[E[\Pi | c, z] | c] &= E[\Pi | c] && \text{law of total expectation} \\
+\end{align*}
+$$
+$$
+\begin{align*}
+E(E[E[\Pi | c, z] | c]) &= E(E[\Pi | c]) \\
+&= E(E[\Pi | c, z])  && E(E(X|\mathcal{H})) = E(X) \\
+\end{align*}
+$$
+
+
+$$
+\begin{align*}
+E[E[\Pi | c, z]] = E[E[\Pi | c, z] | c] =
+
+E[E[\Pi|c]]
+\end{align*}
+$$
+
+:::
+
+
+
+
+

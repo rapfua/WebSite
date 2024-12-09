@@ -1,0 +1,13 @@
+# Abstract
+
+**Introduction to Quarto and to a Measure-Theoretic First Passage Percolation Framework for Inhomogeneous Random Graphs.**
+
+## Row {.tabset}
+
+::: {.card title="Quarto Abstract"}
+Quarto documents are similar to Jupyter Notebooks, but better. They allows one to centralize all ones work and to share it with the world without having to establish a parallel workflow for presentation preparation. In other words, your work is always ready to be shown. The most obvious way in which Quarto does this is by building and deploying an interactive website connected to your htlm-free code behind the scenes. This allows anyone with a WiFi connection, to play with your model's parameters and see the effects in real time. I will demonstrate this and give a short tutorial for people who wish to use this exciting tool.
+:::
+
+::: {.card title="Percolation Abstract"}
+I will be presenting the main ideas of Kolossváry's and Komjáthy's "First Passage Percolation on Inhomogeneous Random Graphs (IHRG)" paper. Here, "Inhomogeneous" refers to the fact that the edge probabilities depend on the types of the end vertices in the model of interest. The weighted stochastic block model (wSBM) can be seen as a special case of an IHRG, so that all results from this paper remain true for wSBMs. The authors of the paper strive to offer the most general framework possible. In an applied setting, this should help us adjust models serenely, knowing that no core properties will be lost.
+:::

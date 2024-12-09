@@ -1,0 +1,15 @@
+::: {.card title="Lemma 5.2"}
+*Reminder*
+
+$$
+\lim_{n \to \infty}
+$$
+
+
+
+$$
+\lim_{n \to \infty} \mathrm{P}
+$$
+
+
+:::

@@ -1,0 +1,283 @@
+### SBM & IHRG
+
+#### Row {.tabset}
+
+##### First try
+
+
+:::{.callout-note collapse="true" title="Assumptions: sparse setting"}
+
+- Let $(\mathcal{S}, \mu)$ be a ground space,
+
+-   let $(\kappa_n)$ be a sequence of uniformly continuous graphical kernels with $\sup_{n \in \mathbf{N}, \: x, y \in \mathcal{S}} \kappa_n(x, y) < \infty,$
+
+-   $\tilde{\lambda}_n \to \tilde{\lambda} < \infty$
+
+- $\kappa$ quasi-irreducible,
+
+- $1 + \tilde{\lambda} > 1,$
+
+- $\int_{\mathcal{S}} \frac{\pi}{\mu} d\mu = 1.$
+
+
+:::
+
+:::{.callout-tip collapse="true" title="Assumptions: dense setting"}
+
+If:
+
+-   Sparse settings assumptions are satisfied,
+
+-   $\kappa_n$s and $\kappa$ are homogeneous kernels,
+
+-   $\tilde{\lambda}_n \to +\infty$,
+
+OR
+
+-   Sparse settings assumptions are satisfied for $\kappa$,
+
+-   $\forall n \in \mathbf{N}, \kappa_n = (1 + \tilde{\lambda}_n) \kappa$,
+
+-   $\tilde{\lambda}_n \to +\infty$
+
+:::
+
+:::{.callout-caution collapse="true" title="Assumptions: new"}
+Suppose that $\mathcal S$ is finite and let $a, b \in \mathcal S$.
+
+Conditionally on the community memberships of the vertices, 
+
+- the first source vertex $u \in V$ is chosen uniformly at random among vertices of type $a$,
+
+- while the second source vertex $v \in V$ is chosen uniformly at random among vertices of type $b$.
+
+:::
+
+:::{.callout-important collapse="true" title="Theorem: dense setting"}
+Conditionally on $u$ being connected to $v$, we have
+$$
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\lambda}_n) \log n}{\tilde{\lambda}_n}}{\sqrt{\log n}}, \tilde{\lambda}_n \mathcal{P}_n(u, v) - \log n\right) \xrightarrow{d} (Z, \tilde{L}),
+$$
+
+where $\tilde L \sim \Lambda_1 + \Lambda_2 - \Lambda_3 - c$ with $\Lambda_1, \Lambda_2, \Lambda_3$ independent standard Gumbel variables and $c = 0$ for case 1, and $c = \log \int_{\mathcal S} \frac{\pi}{\mu} d\mu$ for case 2.
+:::
+
+:::{.callout-note collapse="true" title="brouillon"}
+$$
+\begin{align*}
+\mathrm E \left[ \hat{\mathcal H}_n(a, b) \right]
+& \, \colon = \mathrm E \left[ \mathcal H_n(U_a, U_b) \right] \\
+& \stackrel{?}{=} 
+\mathrm E \left[ 
+  \mathcal H_n (u, v) | \text{type}(u) = a, \text{type}(v) = b 
+\right] \\
+\end{align*}
+$$
+
+:::
+
+
+:::{.callout-tip collapse="true" title="link between the two papers"}
+
+In [@dreveton2024metric]'s Proposition 1., we have 
+
+$$
+\frac{1}{\tau_{\text{max}}}
+\leq 
+\frac{n \rho_n}{\log n} \cdot C(u, v)
+\leq
+\frac{1}{\tau_{\text{min}}}.
+$$ {#eq-prop1}
+
+Using the notation of [@kolossvary2015first] instead, this becomes
+
+$$
+\frac{1}{\tau_{\text{max}}}
+\leq 
+\frac{n \rho_n}{\log n} \cdot \mathcal P_n(u, v)
+\leq
+\frac{1}{\tau_{\text{min}}}.
+$$ 
+
+Note that for $u \in a$, we then have 
+
+$$
+\begin{align*}
+\mathrm{E} \left[ \text{deg}(u) \right]
+& = \sum_{b \in \mathcal S} \sum_{v \in b} p_{ab} \\
+& = \sum_{b \in \mathcal S} \sum_{v \in b} B_{ab} \cdot \rho_n \\
+& = \rho_n \sum_{b \in \mathcal S} B_{ab} \cdot |b| \\
+& \leq \rho_n \sum_{b \in \mathcal S} B_{\max} \cdot |b| \\
+& = n \rho_n \cdot B_{\max}.
+\end{align*}
+$$
+
+Similarly, we have
+$$
+\begin{align*}
+\mathrm{E} \left[ \text{deg}(u) \right]
+& \geq \rho_n \sum_{b \in \mathcal S} B_{\min} \cdot |b| \\
+& = n \rho_n \cdot B_{\min}.
+\end{align*}
+$$
+
+Combining these two inequalities with (@eq-prop1), we get
+
+$$
+\frac{B_{\min}}{\tau_{\text{max}}}
+\leq
+\frac{\mathrm{E} \left[ \text{deg}(u) \right]}
+     {\log n} 
+     \cdot \mathcal P_n(u, v)
+\leq
+\frac{B_{\max}}{\tau_{\text{min}}}.
+$$
+
+In [@kolossvary2015first], the asymptotic expected degree we hope to achieve is
+
+$$
+\mathrm{E} \left[ \text{deg} (u) \right] \approx
+\text{asymtpotic expected degree} = \tilde \lambda + 1.
+$$
+So that the previous equation becomes
+
+$$
+\frac{B_{\min}}{\tau_{\text{max}}}
+\leq
+\frac{\mathrm{E} \left[ \text{deg}(u) \right]}
+     {\log n} 
+     \cdot \mathcal P_n(u, v)
+\leq
+\frac{B_{\max}}{\tau_{\text{min}}}.
+$$
+
+
+In [@kolossvary2015first]'s Proposition 4.1., we have
+
+$$
+\left(
+\frac{C_n^i \cdot a_n}{n}
+\right)_i
+\sim
+\text{PPP}(\hat \lambda_n)
+$$
+
+
+:::
+
+:::{.callout-caution collapse="true" title="wSBM as IHRG"}
+$$
+\begin{align*}
+p_{n_{ab}} 
+& = \frac{\kappa_n(a, b)}{n} 
+&& \text{FPP on IHRG, Definition 1.1.} \\
+& = B_{ab} \cdot \rho_n
+&& \text{Why the Metric Backbone Preserves Community Structure, Assumption 1.}
+\end{align*}
+$$
+
+This implies
+
+$$
+\kappa_n(a, b) = B_{ab} \cdot n \rho_n.
+$$ {#eq-kappa}
+
+We dream of setting 
+
+$$
+\rho_n = \frac{\log n}{n}.
+$$ {#eq-dream}
+
+In the next callout-note, we will see what happens in this case.
+
+:::
+
+
+:::{.callout-important collapse="true" title="$\rho_n = \frac{\log n}{n}$"}
+
+(@eq-kappa) $\implies$ 
+
+$$
+\kappa_n(a, b) = B_{ab} \cdot \log n.
+$$
+Let us find the principal eigenvalue $\tilde \lambda_n + 1$.
+
+Let $\lambda_B$ be the principal eigenvalue of $B$ with unitary eigenvector $v_B$.
+
+Then 
+
+$$
+B v_B = (\lambda_B + 1) v_B.
+$$
+
+Let the matrix $M_n$ be given by $m_{n_{ab}} = \kappa_n(a, b) \mu_b = \log n \cdot B_{ab} \mu_b$.
+
+Let the matrix $C_n$ be given by $c_{n_{ab}} = B_{ab} \mu_b$.
+
+This gives us
+
+$$
+M v_B = \log n \cdot C_n v_B = \log n \cdot (\lambda_B + 1) v_B.
+$$
+
+so that 
+
+$$
+v_
+$$
+
+
+$$
+\pi_B \, \colon = v_B^T
+$$
+
+$$
+\pi_B M_n 
+= \log n \cdot \pi_BC_n  
+= \log n \cdot (\lambda_B + 1) \pi_B
+$$
+
+so that 
+
+$$
+\lambda_n + 1 = \log n \cdot (\lambda_B + 1) 
+$$ {#eq-dream-eigen}
+
+
+
+
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

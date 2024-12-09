@@ -1,0 +1,170 @@
+**Hi everyone!**
+
+My name is Raphaël and I started working with Patrick and Maximilien on the first of August this year. I did my Bachelor's here at EPFL in math and then specialized in probability theory, statistics and stochastic processes at ETH in Zürich. On the probability theory side in particular, I followed courses taught by Vincent Tassion on percolation. When I first saw him, I actually thought he was a fellow student, or at most a PHD, at which point he started writing on the black board... it felt like the scene in "catch me if you can", though I am not sure if Leonardo Di Caprio is quite as good at math. I went to the first course out of curiosity, and stayed for the many cute problems that were so easy to state, yet required methods I had never seen to solve. I saw it as a wonderful theoretical framework completely separate from any dirty applications. Of course, as a Frenchman, Professor Tassion se devait de l'enseigner ainsi (he could teach it no other way)!
+
+In any case, percolation, and in particular this book that accompanied me during Professor Tassion's lectures, is the reason I was able to get into contact with Patrick. Not times series, not machine learning or any other of the applied courses I followed.
+
+Long story short, I am thrilled to be working on a subject that I used to think was too niche to find work in. Also, it seems it can even be useful... shocker! The starting point for my research is Maximilien & Patrick's "Why the Metric Backbone Preserves Community Structure". In this paper, they discovered, empirically on datasets such as the MNIST dataset of digits, that spectral clustering applied to the metric backbone is far less sensitive to the number of neighbors chosen when running the spectral clustering algorithm than the original graph and has a similar level of predicting power. In other words, without losing any prediction power, there is one hyperparameter less for which we need to optimize. 
+
+My first main objective is to do the same comparison with generated data for which we know the underlying distribution, in marked contrast with the MNIST dataset for instance. The hope is then to prove under certain conditions that the metric backbone is indeed insensitive to the number of neighbors. I will show you one exploratory tool I have developed using quarto to visualize this comparison.
+
+**Ok, enough with the niceties. Let's talk about Quarto**
+
+I was introduced to Quarto at the end of my time in Geneva working for ODDO BHF, a bank. As you know, banks can be a bit... conservative shall we say with technology. In a word, PowerPoint, whose production they wanted to make uniform and as automatic as possible via a python API. The senior developer with whom I was working extremely closely did not have the highest regard for PowerPoint to say the least. Among people who hate it, I have never heard anyone put it quite so wittily... and brutally: "il faut à tout prix et à tout temps se battre pour être libre de l'avilissement intellectuel qu'amène ce type de logiciel" (at all costs and at all times, we must fight to be free from the intellectual degradation brought about by this type of software). I wanted to say it in French because I believe it was the first time I ever heard the word "avilissement" being used.
+
+Anyway, together we thought of an architecture that would allow the user write the inputs he had to write in manually in a reactive webapp (that is, this input might change, if his portfolio's performance changes for instance). The behind the scenes python server of the webapp then produces a customized PowerPoint with tailored trade recommendations. This server would automatically rerun the python code whenever one of the inputs changed. One of the main points being that neither Jeremy, nor I ever had to open a PowerPoint and/or try to make anything robust with Microsoft's native solutions. To be honest, I am not sure such a thing is even possible.
+
+The reactive WebApp I just described is actually called a "shiny Python app", shiny being a python library. It was actually only during my last meeting with Jeremy, in which I asked for advice for my PHD aspirations, that he told me about quarto and how it was the natural next step. He told me that he is convinced that it is the best at the following things
+
+- all in one platform
+- no formatting required for web development 
+- teaching
+- making reactive animations accessible to everyone (this point overlaps heavily with the point about teaching).
+
+This convinced me to start working from day one within this framework when I got here. It has simplified my life enormously, allowed me to do things I could not even imagine being able to do. And makes it so that all my work is actually edited as a presentation => this means that it is always showable. It is also the first time I have been able to publish a website completely online, that actually had any added value. Maybe some of you have the same problems I had, in which case I hope to convince you to give Quarto a try.
+
+**Plan of attack**
+
+- Corporate pitch
+- Quarto Editor Video Demo
+- Quarto introductory examples
+- Reactive programming with shiny
+- A simulation that accesses Python and C++ from within quarto
+- Hello World Reactive example
+
+
+**Introductory examples**
+
+**Inline code** 
+
+- variables can be accessed **outside** of code cells in the text proper.
+- they can even have the same name... as long as they originate from different types of code chunks. That is, quarto is smart enough to identif which radius you are referring to given the context $\implies$ reproducible documents $\implies$ peace of mind.
+
+**Accessing C++ code from Python**
+
+- In the simulation I will show in two tabs, I started out with 2 dimensional data. To make sure it scaled properly, Patrick asked me to do it in 784 dimensions and compare my results with a known benchmark. I think you see where I am going with this. My python code was SLOWWW. So I asked myself if quarto's multi-language support is powerful enough to define a function in C++ and call it from Python. Since unlike in the bank, I am allowed to hop from one software to another, I started with what I now: the R programming language's Rcpp library that makes a bridge between C++ and R. I then found Python's rpy2 library that makes a bridge between R and Python. I sounds convoluted, but it is actually as simple as this. Note that it is also possible to have a seperate C++ file that is called in the python script, without having to define the C++ function in the python script.
+
+**Reactive Percolation**
+
+- We now get to the fun part of the presentation: reactive programming! 
+- Quarto is powerful enough that it can receive the whole shiny python framework and place it within the project in its own private dashboard. The key point here is that anyone online, without even having a python installation can change the parameters on the webApp which will lead to python code being rerun behind the scenes and automatically. 
+
+Point of the figure is to show that it is not so easy to intuitively see why the critical point is equal to 1/2 in Z2
+
+We also see the result of the latex written in the editor in the final product.
+
+
+**Reactive Spectral Clustering: Python & Shiny**
+
+- Idea of figure is to do what was done on MNIST in paper but with generated data whose underlying distribution is known
+- This model is a hybrid model:
+  * edge probability from the model in "Community detection on Euclidean random graphs"
+  * location of vertices and community membership depend on realizations of Gaussian random variables.
+- We think, that this model gives us a good chance of being able to use theoretical results that have been proven for first passage percolation. Indeed, the edges cannot be arbitrarily far away from each other for FPP to work.
+
+
+
+
+
+
+
+<!-- **Markdown** -->
+
+
+<!-- The name of the document ends with .qmd which stands for quarto markdown document. As such, anything that can be done in markdown can be done in quarto. -->
+
+<!-- **This is bold for instance,** -->
+
+<!--  -   and this is the first item in a list, -->
+<!--  -   and this is the second. -->
+
+<!-- **LATEX** -->
+
+<!-- **Inline** -->
+
+<!-- One can also insert inline math latex code within the markdown text. For instance, the equation $y = x^2$ is a parabola. As I just showed you by hovering over the equation, I can instantly preview how my latex code will be compiled. -->
+
+<!-- **Display** -->
+
+<!-- One can also use latex display mode as follows: -->
+
+<!-- $$ -->
+<!-- \begin{align} -->
+<!-- A & = \frac{\pi r^2}{2} \\ -->
+<!--  & = \frac{1}{2} \pi r^2, -->
+<!-- \end{align} -->
+<!-- $$  -->
+
+<!-- in which case the preview actually stays on the screen without having to hover over the equation. -->
+
+<!-- **Visual editor** -->
+
+<!-- Let us now switch to the visual editor. -->
+
+<!-- Sometimes, a Word type editor can be helpful. For example: -->
+
+<!-- -   When reading a paper and trying to understand the math it is explaining, it is helpful to have the math already compiled like so: $E = m c^2$. In other words, you get a better feel for what you will actually be producing, -->
+
+<!-- -   when working with tables, latex is the most unpleasant, markdown is slightly less bad and I personally think this is one of those times where letting the software handle it is ideal: -->
+
+<!--     | Col1                              | Col2           | Col3 | -->
+<!--     |-----------------------------------|----------------|------| -->
+<!--     | I can even write math in my table | $f(x) = x ^ 2$ |      | -->
+<!--     |                                   |                |      | -->
+<!--     |                                   |                |      | -->
+
+<!-- -   when taking notes for a talk, -->
+
+<!-- -   when there is a lot of syntax highlighting. **There are for example nice shortcuts to write in bold** *or in italic* quickly. -->
+
+<!-- **No HTML** -->
+
+
+<!-- We will see later that without any HTML coding, we are able to develop aesthetic and useful websites. -->
+
+<!-- **Code** -->
+
+<!-- ```{python} -->
+<!-- #| eval: false -->
+<!-- #| code-fold: true -->
+<!-- import matplotlib.pyplot as plt -->
+<!-- a = 1 -->
+<!-- plt.plot(range(10)) -->
+<!-- plt.show() -->
+<!-- ``` -->
+
+
+
+<!-- ```{python} -->
+<!-- #| eval: false -->
+<!-- #| code-fold: true -->
+<!-- # plot(1:10) -->
+<!-- ``` -->
+<!-- It remembers what you did in previous code chunks. Even when you switch back and forth between different languages. -->
+
+<!-- ```{python} -->
+<!-- #| eval: false -->
+<!-- #| code-fold: true -->
+<!-- print(a) -->
+
+<!-- ``` -->
+
+<!-- One can choose among a great variety of languages, all within the same document! Without any conflict! -->
+<!-- This allows to use specialized tools for each task, thus reducing the complexity of our code and having a -->
+<!-- very fluid division of labor between the different parts of our project. -->
+
+
+<!-- An indispensable tool for this lab for example is the following decision flowchart: -->
+
+<!-- ```{mermaid} -->
+<!-- flowchart LR -->
+<!--   A{Wednesday?} |No| B[FoodLab] -->
+<!--   A |Yes| C[Stochastic] -->
+<!-- ``` -->
+
+<!-- Once you are done with your document, you can export it to a variety of formats, including html, pdf, and docx by pressing -->
+<!-- the render button at the top of the screen. -->
+
+<!-- Most importantly, this will create a website that is easy to navigate and read and that can be easily deployed online. -->
+
+

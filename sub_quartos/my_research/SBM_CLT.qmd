@@ -1,0 +1,480 @@
+### CLT for SBM
+
+#### Row {.tabset}
+
+##### Hopcount
+
+
+$$
+\begin{align*}
+\Psi_{\kappa_n, v_i} &= \Psi_{\kappa_n}^{\text{type}(v_i), i}
+\qquad i \in [n], \Psi_{\kappa_n}^{\text{type}(v_i), i} \stackrel{\perp \!\! \perp}{\sim} 
+\text{PPP}(\kappa_n(\text{type}(v_i), t) \mathop{}\!\mathrm{d} \mu(t)) \\
+G_{\kappa_n, v_i, k}^t & \, \colon = 
+  \text{generation of uniformly picked alive individual of type } t 
+  \text{ in } A_{\kappa_n, v_i}(k) \\
+& \; \equiv G_{\kappa_n, k}^{\text{type}(v_i),t, i}
+\end{align*} 
+$$
+
+From p. 605 of [@kolossvary2015first], we define
+
+$$
+\mathcal H_n^{ab} \, \colon = \sum_{t \in \mathcal S}
+  \mathbf 1_{E_t} \cdot 
+  \left(
+    G_{\kappa_n, a_n}^{a,t} +
+    G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right),
+$$
+
+where we define the event $E_t$ as
+
+$$
+E_t \colon = \text{collision on shortest path happens at a type }t\text{ vertex.}
+$$
+
+
+And so that each vertex has its own version when considered as one of the two sources, we define
+
+$$
+\mathcal H_n(v_i, v_j) \, \colon = \sum_{t \in \mathcal S}
+  \mathbf 1_{E_t} \cdot 
+  \left(
+    G_{\kappa_n, a_n}^{\text{type}(v_i),t, i} +
+    G_{\kappa_n, C_n^{\text{con}}}^{\text{type}(v_j),t, j} \right).
+$$
+
+So:
+
+
+$$
+\begin{align*}
+\mathcal H_n
+& = \sum_{i , j \in [n]} 
+      \mathbf 1_{\{ \text{sources at } v_i \& v_j  \}} \cdot
+      \mathcal H_n(v_i, v_j) \\ 
+& = \sum_{i , j \in [n]} 
+      \mathbf 1_{\{ \text{sources at } v_i \& v_j  \}} \cdot
+      \sum_{t \in \mathcal S}
+      \mathbf 1_{E_t} \cdot 
+      \left(
+        G_{\kappa_n, a_n}^{\text{type}(v_i),t, i} +
+        G_{\kappa_n, C_n^{\text{con}}}^{\text{type}(v_j),t, i} \right).
+\end{align*}
+$$
+
+---
+
+Framework: wSBM in finite-type case.
+
+Let $A_n$ and $B_n$ be two disjoint sets of vertices each defining a community.
+
+Let $U_a \sim \text{Unif}(A_n)$ and $U_b \sim \text{Unif}(B_n)$
+
+Let us study the probability mass function of $\mathcal H_n(U_a, U_b)$.
+
+$$
+\begin{align*}
+p_{\mathcal H_n(U_a, U_b)}(y)
+& = \mathrm{P} \left( \mathcal H_n(U_a, U_b) = y \right) \\
+& = \sum_{\substack{
+          i , j \in [n] \\
+          v_i \in A_n, v_j \in B_n}}
+    \mathrm{P} \left( \mathcal H_n(v_i, v_j) = y, U_a = v_i, U_b = v_j\right) \\
+& =     
+  \sum_{\substack{
+            i, j \in [n] \\
+            v_i \in A_n, v_j \in B_n}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t, i} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t, j} \right) = y,
+          U_a = v_i, U_b = v_j
+        \right) \\
+& \stackrel{\perp \!\! \perp}{=}      
+  \frac{1}{|A_n| \cdot |B_n|}
+  \sum_{\substack{
+            i, j \in [n] \\
+            v_i \in A_n, v_j \in B_n}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t, i} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t, j} \right) = y
+        \right) \\
+& =
+  \frac{1}{|A_n| \cdot |B_n|}
+  \sum_{\substack{
+            i, j \in [n] \\
+            v_i \in A_n, v_j \in B_n}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right) = y
+        \right) 
+&& \text{identically distributed} \\
+& =
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right) = y
+        \right) \\
+& = 
+    \mathrm P \left( 
+      \mathcal H_n^{ab} = y
+    \right)
+\end{align*}
+$$
+
+
+Let us study the probability mass function of $\mathcal H_n$ conditional on the type of the sources.
+
+$$
+\begin{align*}
+p_{\mathcal H_n | U_1 \in A_n, U_2 \in B_n}(y) 
+& = 
+  \frac
+  {\mathrm{P} \left( \mathcal H_n = y, U_1 \in A_n, U_2 \in B_n  \right)}
+  {\mathrm{P} \left( U_1 \in A_n, U_2 \in B_n \right)} \\
+& = 
+  \frac{\left( |A_n| + |B_n| \right)^2}{|A_n| \cdot |B_n|}
+  \sum_{\substack{
+          i, j \in [n] \\
+          v_i \in A_n, v_j \in B_n}}
+    \mathrm{P} \left( \mathcal H_n = y, U_1 = v_i, U_2 = v_j  \right) \\
+& = \frac{\left( |A_n| + |B_n| \right)^2}{|A_n| \cdot |B_n|}
+    \sum_{\substack{
+            i, j \in [n] \\
+            v_i \in A_n, v_j \in B_n}}
+      \mathrm P \left( 
+        \sum_{t \in \mathcal S}
+          \mathbf 1_{E_t} \cdot 
+          \left(
+              G_{\kappa_n, a_n}^{a,t, i} +
+              G_{\kappa_n, C_n^{\text{con}}}^{b,t,j} \right) = y,
+              U_1 = v_i, U_2 = v_j
+          \right) \\
+& \stackrel{\perp \!\! \perp}{=}
+  \frac{1}{|A_n| \cdot |B_n|}
+  \sum_{\substack{
+          i , j \in [n] \\
+          v_i \in A_n, v_j \in B_n}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t, i} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t, j} \right) = y
+        \right) \\ 
+& =
+  \frac{1}{|A_n| \cdot |B_n|}
+  \sum_{\substack{
+          i , j \in [n] \\
+          v_i \in A_n, v_j \in B_n}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right) = y
+      \right)   
+&& \text{identically distributed} \\
+& = 
+  \mathrm{P}
+  \left(  
+    \sum_{t \in \mathcal S}
+      \mathbf 1_{E_t} \cdot
+      \left(
+        G_{\kappa_n, a_n}^{a,t} +
+        G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right) = y
+  \right) \\
+& = 
+  \mathrm{P}
+  \left(  
+    \mathcal H_n^{ab} = y
+  \right).
+\end{align*}
+$$
+
+
+---
+
+Combining the results above, we get
+
+$$
+\begin{align*}
+\mathcal H_n(U_a, U_b)
+& \stackrel{d}{=} \mathcal H_n | U_1 \in A, U_2 \in B \\
+& \stackrel{d}{=} \mathcal H_n^{ab} \implies \\
+\frac{\mathcal H_n(U_a, U_B) - c_n}{d_n}
+& \stackrel{d}{=} \frac{\mathcal H_n - c_n}{d_n} \Bigg| U_1 \in A, U_2 \in B \\
+ &\stackrel{d}{=} \frac{\mathcal H_n^{ab} - c_n}{d_n}
+\xrightarrow[n \to \infty]{d} Z \sim \mathcal N(0, 1).
+\end{align*}
+$$
+
+Note that we use the central limit result from p. 592 in [@kolossvary2015first] in the last line above.
+
+
+
+##### Cost
+
+::: {.callout-tip collapse="false" title="Reminders"}
+
+Recall **Proposition 1.** from [@dreveton2024metric]:
+
+Let $(s, G) \sim \text{wSBM}(n, \pi, p, F)$ with $p_{ab, n} = B_{ab} \rho_n$
+
+For now, we restrict ourselves to the exponential case. That is $F_{ab} \sim \text{Exp}(\lambda_{ab})$.
+
+The following matrix is then defined :
+
+$$
+T \, \colon =
+\left[ \Lambda \odot B \right] 
+\text{diag}(\pi).
+$$
+
+This leads to the definition of the following vector:
+
+$$
+\tau \, \colon = T \mathbf 1_k,
+$$
+
+where $k$ is the number of communities.
+
+The proposition then tells us that:
+
+$$
+\frac{1}{\tau_{\max}}
+\leq
+\frac{n \rho_n}{\ln n} C(u, v)
+\leq
+\frac{1}{\tau_{\min}}
+$$ {#eq-tauu}
+
+------------------------------------------------------------------------
+
+To help understand the vector $\tau$ intuitively, let us make its relationship with the expected degree vector $d$, explicit.
+
+Denote the minimum (respectively maximum) expected degree by $d_{\min}$ (respectively $d_{\max}$. If $\lambda_{ab} = \lambda \; \forall a, b$, we then have:
+
+$$
+d_{\min} = \frac{\tau_{\min} \cdot n \rho_n}{\lambda} 
+\quad \& \quad
+d_{\max} = \frac{\tau_{\max} \cdot n \rho_n}{\lambda}. 
+$$
+
+Recall that $\rho_n = \frac{\ln n}{n} \; \& \; \lambda = 1$ in our ideal framework, so that the equation above becomes:
+
+$$
+d_{\min} = \tau_{\min} \cdot \ln n
+\quad \& \quad
+d_{\max} = \tau_{\max} \cdot \ln n.
+$$
+
+Actually, we even have
+
+$$
+d = \ln n \cdot \tau,
+$$
+
+since
+
+$$
+\tau_a = \sum_b B_{ab} \pi_b
+\quad \& \quad
+d_a = n \sum_b p_{ab} \pi_b.
+$$
+
+------------------------------------------------------------------------
+
+Setting $\rho_n$ as in (@eq-dream), (@eq-tauu) simply becomes:
+
+$$
+\frac{1}{\tau_{\max}}
+\leq
+C(u, v) = \mathcal P_n (u, v)
+\leq
+\frac{1}{\tau_{\min}}.
+$$ {#eq-tau-dream}
+
+------------------------------------------------------------------------
+
+Note that [@dreveton2024metric]'s $\pi$ corresponds to [@kolossvary2015first]'s $\mu$.
+:::
+
+::: {.callout-caution collapse="true" title="Gumbel"}
+$$
+\text{Standard Gumbel}
+\, \iff \,
+\mu = 0 \, \& \, \beta = 1.
+$$
+
+Let us know compare the expected value of a Gumbel distribution to that of a standard Gumbel distribution.
+
+$$
+\begin{align*}
+\mathrm{E} \left[
+  \text{Gumbel}(\mu, \beta)
+\right]
+& = \mu + \beta \gamma 
+& \implies \\
+\mathrm{E} \left[
+  \text{Standard Gumbel}
+\right]
+& = \mathrm{E} \left[
+  \text{Gumbel}(0, 1)
+\right]
+& =  \gamma,
+\end{align*}
+$$
+
+where $\gamma$ is the Euler-Mascheroni constant.
+:::
+
+::: {.callout-important collapse="false" title="Statement"}
+Suppose that $\rho_n = \frac{\ln n}{n}$ within [@dreveton2024metric]'] framework. Then
+
+$$
+C(u, v) = \mathcal P_n(u, v) 
+\xrightarrow[n \to \infty]{p} \frac{1}{\lambda_B + 1},
+$$
+
+were $\lambda_B$ is the Perron-Frobenius eigenvalue of the matrix $B$ in [@dreveton2024metric].
+
+
+:::
+
+
+::: {.callout-note collapse="false" title="Proof using Gumbel"}
+-   Let $\Lambda_1, \Lambda_2, \Lambda_3 \stackrel{\text{i.i.d.}}{\sim} \text{Gumbel}(0, 1)$,
+
+-   Define $c \, \colon = \sum_{s \in \mathcal S} \frac{\tilde\pi(s)^2}{\mu(s)}$,
+
+$$
+\textbf{Ansatz: } \, \mathcal P_n(u, v) 
+\xrightarrow[n \to \infty]{p} \frac{1}{\lambda_B + 1}, 
+$$
+
+
+With this in mind, let $\tilde \varepsilon > 0$. To prove the Ansatz, we want to bound the probability below from above as $n \to \infty$.
+
+$$
+\begin{align*}
+\mathrm{P} \left( 
+  \Big| \mathcal P_n(u, v) - \frac{1}{\lambda_B + 1} \Big|
+  \leq \tilde \varepsilon
+\right)
+& = \mathrm{P} \left( 
+    \frac{1}{\lambda_B + 1} - \tilde \varepsilon
+    \leq \mathcal P_n(u, v)
+    \leq \frac{1}{\lambda_B + 1} + \tilde \varepsilon
+  \right), \\
+\end{align*}
+$$ {#eq-proof-conv-prob}
+
+To this end,
+
+-   let $\varepsilon > 0$.
+
+-   let $L, U \in \mathbf R$ be such that $\mathrm P (L \leq \Lambda_1 + \Lambda_2 + \Lambda_3 - c \leq U) \geq 1 - \frac{\varepsilon}{2}$,
+
+-   let $N \in \mathbf N$ be such that $n \in \mathbf N_{\geq N} \implies$.
+
+    -   $\Bigg| \mathrm P \left( L \leq \tilde \lambda_n \mathcal P_n(u,v) - \ln n \leq U\right) - \mathrm P (L \leq \Lambda_1 + \Lambda_2 + \Lambda_3 - c \leq U) \Bigg| \leq \frac{\varepsilon}{2}$ ([@kolossvary2015first]'s Theorem 1.2. guarantees the existence of such an $N$),
+
+    -   $\left| \frac{C_i}{(\lambda_B + 1) \cdot \ln N} \right| \leq \tilde \varepsilon \, \forall i \in \{1, 2\} \text{ for }C_1 = U, C_2 = L$.
+
+We then have, by the triangle inequality, that
+
+$$
+\begin{align*}
+& \mathrm P \left( L \leq \tilde \lambda_n \mathcal P_n(u,v) - \ln n \leq U\right) + \Bigg| \mathrm P (L \leq \Lambda_1 + \Lambda_2 + \Lambda_3 - c \leq U)  - \mathrm P \left( L \leq \tilde \lambda_n \mathcal P_n(u,v) - \ln n \leq U\right) \Bigg| \\
+& \geq \mathrm P (L \leq \Lambda_1 + \Lambda_2 + \Lambda_3 - c \leq U) \\
+& \geq 1 - \frac{\varepsilon}{2} \\
+& \implies \\
+& \mathrm P \left( L \leq \tilde \lambda_n \mathcal P_n(u,v) - \ln n \leq U\right) \\ 
+&\geq 1 - \frac{\varepsilon}{2} - \Bigg| \mathrm P (L \leq \Lambda_1 + \Lambda_2 + \Lambda_3 - c \leq U)  - \mathrm P \left( L \leq \tilde \lambda_n \mathcal P_n(u,v) - \ln n \leq U\right) \Bigg| \\
+& \geq 1 - \varepsilon.
+\end{align*} 
+$$
+
+
+$$
+\mathrm P \left( L \leq \tilde \lambda_n \mathcal P_n(u,v) - \ln n \leq U\right) \geq 1 - \varepsilon 
+\quad \implies \quad
+\mathrm P \left( \frac{L + \ln n}{\tilde \lambda_n} \leq  \mathcal P_n(u,v) \leq \frac{U + \ln n}{\tilde \lambda_n} \right) \geq 1 - \varepsilon.
+$$ {#eq-proof-conv-prob2}
+
+By (@eq-dream-eigen),
+
+$$
+\tilde \lambda_n = (\lambda_B + 1) \cdot \ln n,
+$$
+
+were $\lambda_B$ is the Perron-Frobenius eigenvalue of the matrix $B$.
+
+Note that
+
+$$
+\begin{align*}
+\frac{L + \ln n}{\tilde \lambda_n}
+& = \frac{L + \ln n}{(\lambda_B + 1) \cdot \ln n} \\
+& = 
+  \frac{\ln n}{\ln n} \cdot 
+  \frac{\frac{L}{\ln n} + 1}{\lambda_B + 1} \\
+& = \frac{\frac{L}{\ln n} + 1}{\lambda_B + 1} \\
+& = \frac{L}{(\lambda_B + 1) \cdot \ln n} + \frac{1}{\lambda_B + 1} \\
+& \geq \frac{1}{\lambda_B + 1} - \tilde \varepsilon\\
+\end{align*}
+$$ {#eq-proof-conv-prob3}
+
+Similarly, we have
+
+$$
+\frac{U + \ln n}{\tilde \lambda_n} \leq \frac{1}{\lambda_B + 1} + \tilde \varepsilon.
+$$ {#eq-proof-conv-prob4}
+
+Looking back to (@eq-proof-conv-prob), we then have
+
+$$
+\begin{align*}
+\mathrm{P} \left( 
+    \frac{1}{\lambda_B + 1} - \tilde \varepsilon
+    \leq \mathcal P_n(u, v)
+    \leq \frac{1}{\lambda_B + 1} + \tilde \varepsilon
+  \right) 
+& \geq
+\mathrm P \left( \frac{L + \ln n}{\tilde \lambda_n} \leq  \mathcal P_n(u,v) \leq \frac{U + \ln n}{\tilde \lambda_n} \right) \\
+& \geq 1 - \varepsilon.
+\end{align*}
+$$
+
+Were the first inequality is a consequence of (@eq-proof-conv-prob3) and (@eq-proof-conv-prob4), while the second inequality is a consequence of (@eq-proof-conv-prob2).
+
+This being true for all $\varepsilon > 0$, we indeed have
+
+$$
+\mathrm{P} \left( 
+  \Big| \mathcal P_n(u, v) - \frac{1}{\lambda_B + 1} \Big|
+  \leq \tilde \varepsilon
+\right)
+\xrightarrow{n \to \infty} 1.
+$$
+
+This concludes the proof that
+
+$$
+\mathcal P_n(u, v)
+\xrightarrow[n \to \infty]{p} \frac{1}{\lambda_B + 1}.
+$$
+:::
+$

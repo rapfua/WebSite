@@ -1,0 +1,55 @@
+# 6
+
+
+## Row {.tabset}
+
+::: {.card title="Abstract"}
+-   Edge weights represent the time it takes to pass through the edge.
+
+-   For each vertex v, we want to find the path with the minimum time to get from the source to v.
+
+-   **First** emphasizes the earliest possible arrival of the fluid with respect to the other available paths from the source.
+
+-   Each vertex has a type from a type space. In our case, the type is given by the node's community.
+
+-   **Edge probabilities** are independent of each other.
+
+    -   Each of their probability distributions is given by an exponential whose parameter is a function of the two end vertices' community memberships.
+
+-   Average \# of neighbors: $\tilde \lambda_n$.
+
+-   Flooding time from a vertex v: $F(v):=\max_w d(v, w)$
+
+-   Diameter $:= \max_v F(v)$
+
+-   **Edge weights** $\overset{iid}{\sim} Exp(1)$
+
+    -   These should be interpreted as the **cost** of transport over each edge.
+
+    -   After all, transport does require **time AND money**.
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

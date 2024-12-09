@@ -1,0 +1,8 @@
+# Research
+
+## Row {.tabset}
+
+{{< include sub_quartos/my_research/lambdas.qmd >}}
+{{< include sub_quartos/my_research/corrections.qmd >}}
+{{< include sub_quartos/my_research/SBM_IHRG.qmd >}}
+{{< include sub_quartos/my_research/SBM_CLT.qmd >}}

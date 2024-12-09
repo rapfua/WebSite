@@ -3,28 +3,23 @@
 ## Row {.tabset}
 
 ::: {.card title="Abstract"}
-- $\e$
+-   $\varepsilon$
 
 -   Edge weights represent the time it takes to pass through the edge.
 
--   For each vertex v, we want to find the path with the minimum time to
-    get from the source to v.
+-   For each vertex v, we want to find the path with the minimum time to get from the source to v.
 
--   **First** emphasizes the earliest possible arrival of the fluid with
-    respect to the other available paths from the source.
+-   **First** emphasizes the earliest possible arrival of the fluid with respect to the other available paths from the source.
 
 <!-- #### The Model -->
 
--   Each vertex has a type from a type space. In our case, the type is
-    given by the node's community.
+-   Each vertex has a type from a type space. In our case, the type is given by the node's community.
 
 -   **Edge probabilities** are independent of each other.
 
-    -   Each of their probability distributions is given by an
-        exponential whose parameter is a function of the two end
-        vertices' community memberships.
+    -   Each of their probability distributions is given by an exponential whose parameter is a function of the two end vertices' community memberships.
 
--   Average \# of neighbors: $\tilde\lambda_n$.
+-   Average \# of neighbors: $\tilde \lambda_n$.
 
 -   Flooding time from a vertex v: $F(v):=\max_w d(v, w)$
 
@@ -32,173 +27,154 @@
 
 -   **Edge weights** $\overset{iid}{\sim} Exp(1)$
 
-    -   These should be interpreted as the **cost** of transport over
-        each edge.
+    -   These should be interpreted as the **cost** of transport over each edge.
 
     -   After all, transport does require **time AND money**.
 :::
 
 ::: {.card title="convergence"}
--   $(X_n) \xrightarrow{a.s.} X \iff$ for almost all
-    $\omega \in \Omega, X_n(w) \rightarrow X(\omega)$.
+-   $(X_n) \xrightarrow{a.s.} X \iff$ for almost all $\omega \in \Omega, X_n(w) \rightarrow X(\omega)$.
 
 -   $(X_n) \xrightarrow{p} X \iff \forall \varepsilon > 0, \lim_{n \to \infty} P(|X_n - X| > \varepsilon) = 0.$
 
--   For
-    $p > 0, (X_n) \xrightarrow{L_p} X \iff \lim_{n \to \infty} E(|X_n - X|^p) = 0.$
+-   For $p > 0, (X_n) \xrightarrow{L_p} X \iff \lim_{n \to \infty} E(|X_n - X|^p) = 0.$
 
--   $(X_n) \xrightarrow{d} X \iff \forall x$ for which $F_X$ is
-    continuous, we have $\lim_{n \to \infty} F_{X_n}(x) = F_X(x).$
+-   $(X_n) \xrightarrow{d} X \iff \forall x$ for which $F_X$ is continuous, we have $\lim_{n \to \infty} F_{X_n}(x) = F_X(x).$
 
 -   $L_p \implies p \implies d.$
 
 -   $a.s. \implies p.$
 
--   $p \implies \exists \varphi: \mathbf{N} \to \mathbf{N}$ strictly
-    increasing $\: s.t. (X_{\varphi(n)}) \xrightarrow{a.s.} X.$
+-   $p \implies \exists \varphi: \mathbf{N} \to \mathbf{N}$ strictly increasing $\: s.t. (X_{\varphi(n)}) \xrightarrow{a.s.} X.$
 
--   $c$ constant $+$
-    $X_n \xrightarrow{d} c \implies X_n \xrightarrow{p} X.$
+-   $c$ constant $+$ $X_n \xrightarrow{d} c \implies X_n \xrightarrow{p} X.$
 
--   **Weak Law of Large Numbers:**
-    $\overline{X}_n \xrightarrow{p} E(X_i)$ if the $X_i$s are i.i.d. &
-    $E(X_i) < \infty$.
+-   **Weak Law of Large Numbers:** $\overline{X}_n \xrightarrow{p} E(X_i)$ if the $X_i$s are i.i.d. & $E(X_i) < \infty$.
 
--   **Continuous mapping theorem:** $\forall g$ continuous,
-    $X_n \xrightarrow{p} X \implies g(X_n) \xrightarrow{p} g(X).$
+-   **Continuous mapping theorem:** $\forall g$ continuous, $X_n \xrightarrow{p} X \implies g(X_n) \xrightarrow{p} g(X).$
 :::
 
-
 ::: {.card title="definitions"}
-### 1.1 The $G(n, \k)$ Model {.tabset}
--   A **spanning tree** is a sub-graph that contains all original nodes
-    and is a tree.
+### 1.1 The $G(n, \kappa)$ Model {.tabset}
 
--   $X$ **Separable metric space** $\iff \exists D \subset X$ dense s.t.
-    $\forall x \in X, \forall \varepsilon > 0, \exists d \in D$ for
-    which $d(x, d) < \varepsilon.$
+-   A **spanning tree** is a sub-graph that contains all original nodes and is a tree.
+
+-   $X$ **Separable metric space** $\iff \exists D \subset X$ dense s.t. $\forall x \in X, \forall \varepsilon > 0, \exists d \in D$ for which $d(x, d) < \varepsilon.$
 
     -   E.g. $\mathbf{Q}$ is dense in $\mathbf{R}.$
 
-    -   At the heart of the proof is the archimedean property of
-        $\mathbf{R}$, by which one can always empty a bathtub using a
-        glass.
+    -   At the heart of the proof is the archimedean property of $\mathbf{R}$, by which one can always empty a bathtub using a glass.
 
--   $\mathcal{B} (X)$, the **Borel σ-algebra** on a topological space
-    $X$ is the smallest σ-algebra that contains all the open sets of
-    $X$.
+-   $\mathcal{B} (X)$, the **Borel σ-algebra** on a topological space $X$ is the smallest σ-algebra that contains all the open sets of $X$.
 
 -   Let $\mu$ be a measure on a Borel σ-algebra. For each Borel set $B$:
 
     -   B is a $\mu$**-continuity set** $\iff \mu(\partial B) = 0.$
 
--   $\s$ separable metric space & equipped with a Borel probability
-    measure $\mu \implies (\s, \mu)$ is called a **ground space**.
+-   $\mathcal{S}$ separable metric space & equipped with a Borel probability measure $\mu \implies (\mathcal{S}, \mu)$ is called a **ground space**.
 
--   The natural of the symmetric measurable **kernel**
-    $\k: \s \times \s \to \mathbf{R}_{\geq 0}$ measures the density of
-    edges.
+-   The natural of the symmetric measurable **kernel** $\kappa: \mathcal{S} \times \mathcal{S} \to \mathbf{R}_{\geq 0}$ measures the density of edges.
 
-    -   In this case, "symmetric" simply means that
-        $\forall u, v \in \s: \k(u, v) = \k(v, u).$
+    -   In this case, "symmetric" simply means that $\forall u, v \in \mathcal{S}: \kappa(u, v) = \kappa(v, u).$
+    -   Note the $\kappa$ can take values greater than $1$, unlike the probability measure $\mu$.
 
--   A kernel $\k$ on a ground space $(\s, \mu)$ is **irreducible** if:
+-   A kernel $\kappa$ on a ground space $(\mathcal{S}, \mu)$ is **irreducible** if:
 
-    -   $A \subset \s$ & $\k \equiv 0$ a.e on
-        $A \times (\s \setminus A) \implies \mu(A) = 0$ or
-        $\mu(\s \setminus A) = 0.$
+    -   $A \subset \mathcal{S}$ & $\kappa \equiv 0$ a.e on $A \times (\mathcal{S} \setminus A) \implies \mu(A) = 0$ or $\mu(\mathcal{S} \setminus A) = 0.$
 
--   A kernel $\k$ on a ground space $(\s, \mu)$ is **quasi-irreducible**
-    if:
+-   A kernel $\kappa$ on a ground space $(\mathcal{S}, \mu)$ is **quasi-irreducible** if:
 
-    -   $\exists$ a $\mu$-continuity set $\s' \subset \s$ s.t.
+    -   $\exists$ a $\mu$-continuity set $\mathcal{S}' \subset \mathcal{S}$ s.t.
 
-        -   $\mu(\s') > 0,$
+        -   $\mu(\mathcal{S}') > 0,$
 
-        -   $\k|_{\s' \times \s'}$ is irreducible,
+        -   $\kappa|_{\mathcal{S}' \times \mathcal{S}'}$ is irreducible,
 
-        -   $\k|_{\overline{\s' \times \s'}} \equiv 0.$
+        -   $\kappa|_{\overline{\mathcal{S}' \times \mathcal{S}'}} \equiv 0.$
 
--   Irreducibility of kernels insures that $\exists$ a **unique** giant
-    cluster in the supercritical regime.
+-   Irreducibility of kernels insures that $\exists$ a **unique** giant cluster in the supercritical regime.
 :::
 
 ::: {.card title="description"}
--   type of each vertex $\in \s$ separable metric space equipped with a
-    Borel probability measure $\mu.$
+-   type of each vertex $\in \mathcal{S}$ separable metric space equipped with a Borel probability measure $\mu.$
 
--   $\nu_n(S) := \frac{\#\{i: \: x_i \in \s\}}{n} \xrightarrow{p} \mu(\s), \forall \: \mu\text{-continuity } S \subset \s.$
+-   $\nu_n(S) := \frac{\#\{i: \: x_i \in \mathcal{S}\}}{n} \xrightarrow{p} \mu(\mathcal{S}), \forall \: \mu\text{-continuity } S \subset \mathcal{S}.$
 
--   When all conditions are met, we get the **vertex space**
-    $\nu := (\s, \mu, (x_n)).$
+-   When all conditions are met, we get the **vertex space** $\nu := (\mathcal{S}, \mu, (x_n)).$
+
+-   Setting $S = \{ t \},$ we get $\nu_n(\{t\}) = \text{proportion of t-type vertices in graph with } n \text{ nodes}\xrightarrow{p} \mu_t \,\colon = \mu(\{t\}) = \text{target proportion of t-type vertices in graph with infinite number of nodes}.$
 :::
 
 ::: {.card title="graphical"}
--   A sequence of kernels $(\k_n)$ on a vertex space $(\s, \mu, (x_n))$
-    is **graphical** **with limit** $\boldsymbol{\k}$ s.t.
+-   A sequence of kernels $(\kappa_n)$ on a vertex space $(\mathcal{S}, \mu, (x_n))$ is **graphical** **with limit** $\boldsymbol{\kappa}$ s.t.
 
-    -   $\k \in L^1(\s \times \s, \mu \times \mu),$
+    -   $\kappa \in L^1(\mathcal{S} \times \mathcal{S}, \mu \times \mu),$
 
-    -   $\k$ is continuous a.e.,
+    -   $\kappa$ is continuous a.e.,
 
 -   if:
 
-    -   For a.e. $(y, z) \in \s^2$: $y_n \to y$ &
-        $z_n \to z \implies \k(y_n, z_n) \to \k(y, z),$
+    -   For a.e. $(y, z) \in \mathcal{S}^2$: $y_n \to y$ & $z_n \to z \implies \kappa(y_n, z_n) \to \kappa(y, z),$
 
-    -   $\frac{1}{n} E_{\mu}[e(G(n, \k))] \to \int_{\s^2} \k(x, y) \text{ } d \mu(x) \text{ } d \mu(y).$
+    -   $\frac{1}{n} E_{\mu}[e(G(n, \kappa))] \to \int_{\mathcal{S}^2} \kappa(x, y) \text{ } d \mu(x) \text{ } d \mu(y).$
 
--   Note: if $\k_n \equiv \k,$ we simply say that $\k$ is graphical.
+-   Note: if $\kappa_n \equiv \kappa,$ we simply say that $\kappa$ is graphical.
 :::
 
 ::: {.card title="1.3 motivation"}
 $\begin{align}
-E[e(G(n, \k))|v_1, \cdots v_n]
+E[e(G(n, \kappa))|v_1, \cdots v_n]
 &= \frac{1}{2} \sum_{i=1}^n E[\deg(v_i)|v_1, \cdots, v_n] \\
-&= \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \frac{\k(v_i, v_j)}{n} \\
-&= \frac{1}{2n} \sum_{(i,j) \in [n]^2} \k(v_i, v_j)
+&= \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \frac{\kappa(v_i, v_j)}{n} \\
+&= \frac{1}{2n} \sum_{(i,j) \in [n]^2} \kappa(v_i, v_j)
 \end{align}$
 
 $\begin{align}
-\frac{1}{n} E[e(G(n, \k))]
-&= \frac{1}{n} E[E[e(G(n, \k))|v_1, \cdots v_n]] \\
-&= \frac{1}{2n^2} \sum_{(i,j) \in [n]^2} \int_{\s^2} \k(u, v) \text{ } d\mu(u) \text{ } d\mu(v) \\
-&= \frac{1}{2} \int_{\s^2} \k(u, v) \text{ } d\mu(u) \text{ } d\mu(v)
+\frac{1}{n} E[e(G(n, \kappa))]
+&= \frac{1}{n} E[E[e(G(n, \kappa))|v_1, \cdots v_n]] \\
+&= \frac{1}{2n^2} \sum_{(i,j) \in [n]^2} \int_{\mathcal{S}^2} \kappa(u, v) \text{ } d\mu(u) \text{ } d\mu(v) \\
+&= \frac{1}{2} \int_{\mathcal{S}^2} \kappa(u, v) \text{ } d\mu(u) \text{ } d\mu(v)
 \end{align}$
 :::
 
+::: {.card title="PPP"}
+![Durrett](images/durrett.jpeg)
+
+![Characterization via sums of exponentials](images/PPP.png)
+
+$$
+P(N_t = k) = \frac{e^{-\lambda t} (\lambda t)^k}{k!} \implies N_t \sim \text{Poisson}(\lambda t).
+$$ In our
+:::
+
 ::: {.card title="Regular"}
--   We call a kernel **regular finitary** if $\exists$ a finite
-    $\mu$-continuity set partition $\s_1, \cdots, \s_n$ of $\s$ for
-    which:
+-   We call a kernel **regular finitary** if $\exists$ a finite $\mu$-continuity set partition $\mathcal{S}_1, \cdots, \mathcal{S}_n$ of $\mathcal{S}$ for which:
 
-    -   $\forall i, j \in [n]:\k|_{\s_i \times \s_j}$ is constant.
+    -   $\forall i, j \in [n]:\kappa|_{\mathcal{S}_i \times \mathcal{S}_j}$ is constant.
 
--   It is easy to make the link between regular finitary kernels and
-    finite-type kernels.
+-   It is easy to make the link between regular finitary kernels and finite-type kernels.
 :::
 
 ::: {.card title="λ_st"}
--   $\forall s, t \in \s^2, \lambda_{\boxed{s} \: t} := k(s, t) \mu_t.$
+-   $\forall s, t \in \mathcal{S}^2, \lambda_{\boxed{s} \: t} := k(s, t) \mu_t.$
+
+-   The intuition behind $\lambda_{\boxed{s} t}$ is that as the graph becomes bigger, it gives the average number of $t-$type neighbors that $s-$type vertices have.
 
 -   Recall that $\frac{n_t}{n} \xrightarrow{p} \mu_t$.
 
--   Number of type t neighbors of a type s vertex
-    $\sim B(\tilde{n} = n_t - \mathbf{1}_{\{s = t\}}, \: \tilde{p} = \k(s, t) /n) \implies E[X] = \tilde{n} \tilde{p} = \k(s, t) (n_t - \mathbf{1}_{\{s = t\}}) / n \xrightarrow{p} \k(s, t) \mu_t = \lambda_{\boxed{s} t}.$
+-   Number of type t neighbors of a type s vertex $\sim B(\tilde{n} = n_t - \mathbf{1}_{\{s = t\}}, \: \tilde{p} = \kappa(s, t) /n) \implies E[X] = \tilde{n} \tilde{p} = \kappa(s, t) (n_t - \mathbf{1}_{\{s = t\}}) / n \xrightarrow{p} \kappa(s, t) \mu_t = \lambda_{\boxed{s} t}.$
 :::
 
 ::: {.card title="eigenfunction"}
 -   Let $v := \begin{pmatrix} \pi(s) \\ \vdots \\ \pi(s) \end{pmatrix}$,
 
--   let
-    $\Lambda := \begin{pmatrix} \lambda_{\boxed{s} \: t} \end{pmatrix}_{s, t \in \s}$,
+-   let $\Lambda := \begin{pmatrix} \lambda_{\boxed{s} \: t} \end{pmatrix}_{s, t \in \mathcal{S}}$,
 
 -   let $a^T := v^T \Lambda = a^T \Lambda$,
 
 -   let $b^T := (1 + \tilde{\lambda}) v^T$.
 
--   Clearly,
-    $a(t) = \sum_{s \in \s} \pi(s) \lambda_{\boxed{s} t} = \sum_{s \in \s} \pi(s) \k(s, t) \mu_t = \int_{\s} \k(s, t) \mu_t \text{ } d\pi(s)$.
+-   Clearly, $a(t) = \sum_{s \in \mathcal{S}} \pi(s) \lambda_{\boxed{s} t} = \sum_{s \in \mathcal{S}} \pi(s) \kappa(s, t) \mu_t = \int_{\mathcal{S}} \kappa(s, t) \mu_t \text{ } d\pi(s)$.
 
 -   Since $a = b$, this explains the second to last equation of page
 
@@ -206,12 +182,11 @@ $\begin{align}
 :::
 
 ::: {.card title="Λ matrix"}
--   $(T_{\k} f)(s_i) = \int_{\s} \k(s_i, t) f(t) \text{ } d\mu(t) = \sum_{t \in \s} \k(s_i, t) \mu(t) f(t) = \sum_{t \in \s} \lambda_{\boxed{s_i} \: t} f(t)$.
+-   $(T_{\kappa} f)(s_i) = \int_{\mathcal{S}} \kappa(s_i, t) f(t) \text{ } d\mu(t) = \sum_{t \in \mathcal{S}} \kappa(s_i, t) \mu(t) f(t) = \sum_{t \in \mathcal{S}} \lambda_{\boxed{s_i} \: t} f(t)$.
 
--   In other words,
-    $\begin{pmatrix} (T_{\k} f)(s_1) \\ \vdots \\ (T_{\k} f)(s_n) \end{pmatrix} = \Lambda \begin{pmatrix} f(t_1) \\ \vdots \\ f(t_n) \end{pmatrix}$
+-   In other words, $\begin{pmatrix} (T_{\kappa} f)(s_1) \\ \vdots \\ (T_{\kappa} f)(s_n) \end{pmatrix} = \Lambda \begin{pmatrix} f(t_1) \\ \vdots \\ f(t_n) \end{pmatrix}$
 
--   Equivalently, $\vec{T_{\k}f} = \Lambda \vec{f}$.
+-   Equivalently, $\vec{T_{\kappa}f} = \Lambda \vec{f}$.
 :::
 
 ::: {.card title="stationary"}
@@ -219,104 +194,91 @@ We suppose:
 
 -   $f \geq 0,$
 
--   $\k$ quasi-irreducible.
+-   $\kappa$ quasi-irreducible.
 
 Then $\exists! \pi$ nontrivial left eigenfunction s.t.:
 
 -   $\int \pi(dt) = 1$, which in turn implies:
 
-    -   $\int_{\s} \pi(ds) \k(s, t) \mu_t = (1 + \tilde{\lambda}) \pi(t)$
+    -   $\int_{\mathcal{S}} \pi(ds) \kappa(s, t) \mu_t = (1 + \tilde{\lambda}) \pi(t)$
 
 We call $\pi$ the **stationary type-distribution**.
 
-In addition, we will suppose that
-$\int_{\s} \frac{\pi}{\mu} d\mu < \infty$
+In addition, we will suppose that $\int_{\mathcal{S}} \frac{\pi}{\mu} d\mu < \infty$
 :::
 
 ::: {.card title="Why is κ = μ?"}
--   $(\tilde{\lambda} + 1) \pi_t = \int_{\s} \k(s, t) \mu_t \text{ } d\pi(s) = \mu_t \int_{\s} \k(s, t) \text{ } d\pi(s) \stackrel{\k \text{ sym}}{=} \mu_t \int_{\s} \k(t, s) \text{ } d\pi(s) = \mu_t \int_{\s} \k(s, t) \text{ } d\pi(s) = \mu_t (\tilde{\lambda} + 1)$.
+-   $(\tilde{\lambda} + 1) \pi_t = \int_{\mathcal{S}} \kappa(s, t) \mu_t \text{ } d\pi(s) = \mu_t \int_{\mathcal{S}} \kappa(s, t) \text{ } d\pi(s) \stackrel{\kappa \text{ sym}}{=} \mu_t \int_{\mathcal{S}} \kappa(t, s) \text{ } d\pi(s) = \mu_t \int_{\mathcal{S}} \kappa(s, t) \text{ } d\pi(s) = \mu_t (\tilde{\lambda} + 1)$.
 
 $\begin{align}
 \mu_s (1 + \tilde{\lambda})
-&\stackrel{\text{1.6}}{=} \mu_s \int_{\s} \k(s, t) \text{ } d\mu(t) \\
-&= \sum_{t \in \s} \k(s, t) \mu_t \mu_s\\
-&\stackrel{\k \text{ sym}}{=} \sum_{t \in \s} \k(t, s) \mu_t \mu_s\\
-&= \int_{\s} \k(t, s) \mu_s \text{ } d\mu(t)\\
+&\stackrel{\text{1.6}}{=} \mu_s \int_{\mathcal{S}} \kappa(s, t) \text{ } d\mu(t) \\
+&= \sum_{t \in \mathcal{S}} \kappa(s, t) \mu_t \mu_s\\
+&\stackrel{\kappa \text{ sym}}{=} \sum_{t \in \mathcal{S}} \kappa(t, s) \mu_t \mu_s\\
+&= \int_{\mathcal{S}} \kappa(t, s) \mu_s \text{ } d\mu(t)\\
 &= (\vec{\mu}^T \Lambda)_s.
 \end{align}$
 
-This shows that $\vec{\mu}$ is a none trivial eigenvector. By uniqueness
-we thus have $\vec{\mu} = \vec{\pi}$.
+This shows that $\vec{\mu}$ is a none trivial eigenvector. By uniqueness we thus have $\vec{\mu} = \vec{\pi}$.
 :::
 
 ::: {.card title="homogeneous kernel"}
--   $\k$ is **homogeneous** if
-    $\int_{\s} k(s, t) d\mu(t) = 1 + \tilde{\lambda}$ for a.e.
-    $s \in \s$.
+-   $\kappa$ is **homogeneous** if $\int_{\mathcal{S}} k(s, t) d\mu(t) = 1 + \tilde{\lambda}$ for a.e. $s \in \mathcal{S}$.
 
--   Intuitively, this means that asymptotically, the average degree of
-    vertices does not depend on the type of the vertices.
+-   Intuitively, this means that asymptotically, the average degree of vertices does not depend on the type of the vertices.
 :::
 
 ::: {.card title="Miscellaneous"}
--   **Markov property**: next state depends only on the current state,
-    not on how the process arrived there.
+-   **Markov property**: next state depends only on the current state, not on how the process arrived there.
 -   stochastic domination
 :::
 
 ::: {.card title="Questions"}
--   Why is separability of $\s$ important?
+-   Why is separability of $\mathcal{S}$ important?
 
 -   What is the **main** eigenvalue?
 
 -   What is the intuition of something that is **stationary**?
 
--   What is meant by the **Poissonian property** in remark 2.2. and on
-    Wikipedia's poisson point process page?
+-   What is meant by the **Poissonian property** in remark 2.2. and on Wikipedia's poisson point process page?
 :::
 
-
 ::: {.card title="Theorem 1.1"}
-
 ### 1.2 Main results {.tabset}
 
-**Reminders:** - The function $f: X \to Y$ is said to be uniformly
-continuous if:
+**Reminders:** - The function $f: X \to Y$ is said to be uniformly continuous if:
 
--   $\forall \e > 0, \exists \delta > 0$ s.t. $\forall x_1, x_2 \in X$:
+-   $\forall \varepsilon > 0, \exists \delta > 0$ s.t. $\forall x_1, x_2 \in X$:
 
-    -   $d_X(x_1, x_2) < \delta \implies d_Y(f(x_1), f(x_2)) < \e.$
+    -   $d_X(x_1, x_2) < \delta \implies d_Y(f(x_1), f(x_2)) < \varepsilon.$
 
-**Statement:** - Let $(\s, \mu)$ be a ground space,
+**Statement:** - Let $(\mathcal{S}, \mu)$ be a ground space,
 
--   let $(\k_n)$ be a sequence of uniformly continuous graphical kernels
-    with $\sup_{n \in \mathbf{N}, \: x, y \in \s} \k_n(x, y) < \infty,$
+-   let $(\kappa_n)$ be a sequence of uniformly continuous graphical kernels with $\sup_{n \in \mathbf{N}, \: x, y \in \mathcal{S}} \kappa_n(x, y) < \infty,$
 
--   $\tilde{\l}_n \to \tilde{\l} < \infty$ (d'où "sparse"),
+-   $\tilde{\lambda}_n \to \tilde{\lambda} < \infty$ (d'où "sparse"),
 
 -   assumption 1.1. satisfied:
 
-    -   $\k$ quasi-irreducible,
+    -   $\kappa$ quasi-irreducible,
 
-    -   $1 + \tilde{\l} > 1,$
+    -   $1 + \tilde{\lambda} > 1,$
 
-    -   $\int_{\s} \frac{\pi}{\mu} d\mu = 1.$
+    -   $\int_{\mathcal{S}} \frac{\pi}{\mu} d\mu = 1.$
 
 -   $u, v \in V$ chosen uniformly at random,
 
 -   conditional on the $u$ being connected to $v$:
 
 $$
-\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\l}) \log n}{\tilde{\l}}}{\sqrt{\frac{(1 + \tilde{\l}) \log n}{\tilde{\l}}}}, \mathcal{P}_n(u, v) - \frac{\log n}{\tilde{\l}}  \right) \xrightarrow{d} (Z, L),
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\lambda}) \log n}{\tilde{\lambda}}}{\sqrt{\frac{(1 + \tilde{\lambda}) \log n}{\tilde{\lambda}}}}, \mathcal{P}_n(u, v) - \frac{\log n}{\tilde{\lambda}}  \right) \xrightarrow{d} (Z, L),
 $$
 
 where
 
 -   $Z \sim \mathcal{N}(0, 1),$
 
--   $L$ is a non-degenerate real random variable whose distribution can
-    be computed using ideas from branching process theory during the
-    exploration phase of the components of $G(n, \k).$
+-   $L$ is a non-degenerate real random variable whose distribution can be computed using ideas from branching process theory during the exploration phase of the components of $G(n, \kappa).$
 :::
 
 ::: {.card title="Theorem 1.2"}
@@ -324,62 +286,51 @@ If:
 
 -   Theorem 1.1 (sparse setting) hypotheses,
 
--   $\k_n$s and $\k$ are homogeneous kernels,
+-   $\kappa_n$s and $\kappa$ are homogeneous kernels,
 
--   $\tilde{\l}_n \to +\infty$
+-   $\tilde{\lambda}_n \to +\infty$
 
 OR
 
--   $\k$ satisfies theorem 1.1 hypotheses,
+-   $\kappa$ satisfies theorem 1.1 hypotheses,
 
--   $\forall n \in \mathbf{N}, \k_n = (1 + \tilde{\l}_n) \k,$
+-   $\forall n \in \mathbf{N}, \kappa_n = (1 + \tilde{\lambda}_n) \kappa,$
 
--   $\tilde{\l}_n \to +\infty$
+-   $\tilde{\lambda}_n \to +\infty$
 
 Then:
 
 $$
-\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\l}_n) \log n}{\tilde{\l}_n}}{\sqrt{\log n}}, \tilde{\l}_n \mathcal{P}_n(u, v) - \log n\right) \xrightarrow{d} (Z, \tilde{L})
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\lambda}_n) \log n}{\tilde{\lambda}_n}}{\sqrt{\log n}}, \tilde{\lambda}_n \mathcal{P}_n(u, v) - \log n\right) \xrightarrow{d} (Z, \tilde{L})
 $$
 
 where
 
 -   $Z \sim \mathcal{N}(0, 1),$
 
--   $\tilde{L} \stackrel{d}{=} \Lambda_1 + \Lambda_2 - \Lambda_3 - c$
-    with $\Lambda_i \stackrel{\textit{i.i.d.}}{\sim} \text{Gumbel}$.
+-   $\tilde{L} \stackrel{d}{=} \Lambda_1 + \Lambda_2 - \Lambda_3 - c$ with $\Lambda_i \stackrel{\textit{i.i.d.}}{\sim} \text{Gumbel}$.
 
-    -   $c$ known and different for each of the two possible sets of
-        hypotheses.
+    -   $c$ known and different for each of the two possible sets of hypotheses.
 :::
 
 ::: {.card title="2. Multitype branching process"}
--   $|\{$children of $x$ in
-    $S \subset \s\}| \sim \text{Poisson}(\l = \text{mean} = \int_{\s} k(x, y) d\mu(y)).$
+-   $|\{$children of $x$ in $S \subset \mathcal{S}\}| \sim \text{Poisson}(\lambda = \text{mean} = \int_{\mathcal{S}} k(x, y) d\mu(y)).$
 
--   Time each offspring lives
-    $\stackrel{\textit{i.i.d.}}{\sim} \text{Exp}(\lambda = \frac{1}{\text{mean}} = 1).$
+-   Time each offspring lives $\stackrel{\textit{i.i.d.}}{\sim} \text{Exp}(\lambda = \frac{1}{\text{mean}} = 1).$
 :::
-
 
 ::: {.card title="Proposition 2.1"}
 ### Proposition 2.1 {.tabset}
 
-**Hypotheses:**
--   finite-type continuous-time BP
+**Hypotheses:** - finite-type continuous-time BP
 
 -   on the nonextinction sets
 
-
-**Statement:**
--   $\frac{(S_m^1, \dots, S_m^r)}{\tilde{\l} m} \xrightarrow{a.s.} \pi$
+**Statement:** - $\frac{(S_m^1, \dots, S_m^r)}{\tilde{\lambda} m} \xrightarrow{a.s.} \pi$
 
 -   $\frac{(N_m^1, \dots, N_m^r)}{m} \xrightarrow{a.s.} \pi$
 
--   $\frac{S_m}{m} \xrightarrow{a.s.} \tilde{\l}$
-
-
-
+-   $\frac{S_m}{m} \xrightarrow{a.s.} \tilde{\lambda}$
 
 -   $\frac{S_m^i}{S_m} \xrightarrow{a.s.} \pi_s$
 :::
@@ -387,188 +338,62 @@ where
 ::: {.card title="Remark 2.2."}
 \![Durrett](images/durrett.jpeg)
 
-Let us make the link between the image above from
-[@durrett2019probability] p147 and this remark from the paper.
+Let us make the link between the image above from [@durrett2019probability] p147 and this remark from the paper.
 
 **Def:**
 
 $$
 \begin{align*}
-\tilde{\mu}\colon \mathcal B(\s) &\rightarrow \bf R\\
-S&\mapsto \int_S \k(s, u) \dif \mu(u).
+\tilde{\mu}\colon \mathcal B(\mathcal{S}) &\rightarrow \bf R\\
+S&\mapsto \int_S \kappa(s, u) \dif \mu(u).
 \end{align*}
 $$
 
-**Note:** in particular
-$\tilde{\mu}(\{u_i\}) =\k(s, u_i) \mu(u_i), \forall i \in [n].$
-:::
-
-::: {.card title="tableau"}
-+---------------------------------+---------------------------------+
-| Probability: theory and         | FPP on IHRGs                    |
-| examples                        |                                 |
-+:===============================:+:===============================:+
-| Measure space $(S, \s, \mu)$    | \$(\s ,                         |
-|                                 |                                 |
-|                                 | \mathcal{B}(\s), \tilde{\mu})\$ |
-+---------------------------------+---------------------------------+
-| $A_i$ disjoint                  | $\{u_i\}$ disjoint              |
-+---------------------------------+---------------------------------+
-| $m: \s \to \bf N$, or:          | $\x                             |
-|                                 | i                               |
-| $m: \Omega \                    | ^                               |
-| t                               | s: \mathcal B(\s) \to \bf N$,   |
-| i                               | or:                             |
-| mes \mathcal B(\s) \to \bf N$   |                                 |
-|                                 | $\xi^s: \Omega \                |
-|                                 | t                               |
-|                                 | i                               |
-|                                 | mes \mathcal B(\s) \to \bf N$   |
-+---------------------------------+---------------------------------+
-| $\mu$ mean-measure of the       | $\tilde{\mu}$ mean-measure of   |
-| process, *i.e.*, $m             | the process, *i.e.*,$\xi^s(     |
-| (                               | \{                              |
-| A                               | u                               |
-| _i) \stackrel{\mathrel{\unico   | _                               |
-| d                               | i\}) \stackrel{\mathrel{\unic   |
-| e                               | o                               |
-| {x2AEB}}}{\sim} P(\mu(A_i)).$   | d                               |
-|                                 | e{x2AEB}}}{\sim} P(\tilde{\mu   |
-| Here $A_i$ is fixed so $m(A_i)$ | }                               |
-| is a random variable.           | (                               |
-|                                 | \                               |
-| We refer to this as the         | {u_i\} =\k(s, u_i) \mu(u_i))$   |
-| **Poissonian property**.        |                                 |
-|                                 | Here $u_i$ is fixed so $\xi^s(  |
-|                                 | \{u_i\})$ is a random variable. |
-+---------------------------------+---------------------------------+
-| $\mu(A_i) < \infty \implies$    | \$ \tilde{\mu}({u_i}) =\k(s, u  |
-|                                 | \_ i ) \mu(u_i) \<              |
-|                                 | \infty \implies\$               |
-+---------------------------------+---------------------------------+
-| $\forall \omega \in \Omega$ ,   | $\forall \omega \in \Omega$ ,   |
-| the map below is a measure on   | the map below is a measure on   |
-| $\s$.                           | $\s$.                           |
-|                                 |                                 |
-| $$                              | $$                              |
-| \begin{align*}                  | \begin{align*}                  |
-| m_{\omega                       | \xi_\omega^s\colon \mat         |
-| }                               | h                               |
-| \                               | c                               |
-| colon \s &\rightarrow \bf N\\   | al B(\s) &\rightarrow \bf N\\   |
-| S&\mapsto m(\omega, S).         | S&\mapsto \xi_(\omega, s).      |
-| \end{align*}                    | \end{align*}                    |
-| $$                              | $$                              |
-|                                 |                                 |
-| Here $\omega$ is fixed, so      | Here $\omega$ is fixed, so      |
-| $m_{\omega}$ is a measure.      | $\xi_\omega^s$ is a measure.    |
-+---------------------------------+---------------------------------+
-| Let us now describe how one can | Let us now describe how one can |
-| construct such a map $m$.       | construct such a map $\xi$.     |
-|                                 |                                 |
-| Since $\mu(S) < \infty,$ we can | Since \$\tilde{                 |
-| define the following            | \                               |
-| probability measure             | mu}mu}mu}mu}mu}mu}(\mathcal S)  |
-| $\nu := \frac{\mu}{\mu(S)}.$    | = \sum\_{i=1}\^n                |
-|                                 |                                 |
-| We sample $N \sim P(\mu(S))$    | \k(s, u_i) \mu(u_i) \<          |
-| independently of everything     | \infty\$, we can define the     |
-| else.                           | following probability measure   |
-|                                 | $\nu := \f                      |
-| We then sample $X_1, X_2, \do   | r                               |
-| t                               | a                               |
-| s                               | c{\tilde\mu}{\tilde\mu(\s)}.$   |
-|  \stackrel{i.i.d}{\sim} \nu$.   |                                 |
-|                                 | We also sample                  |
-| All this allows us to finally   | $N \sim P(\tilde\mu(\s))$       |
-| define $m$ via                  | independently of everything     |
-|                                 | else.                           |
-| \$\$ \begin{align*}             |                                 |
-| m\colon \Omega                  | We then sample $X_1, X_2, \do   |
-|                                 | t                               |
-| \                               | s                               |
-| times \s &\rightarrow \bf N\\   |  \stackrel{i.i.d}{\sim} \nu.$   |
-| (                               |                                 |
-| \                               | All this allows us to finally   |
-| omega, A)&\mapsto |\{j \leq N   | define $\xi$ via                |
-| (                               |                                 |
-| \                               | $$                              |
-| omega): X_j(\omega) \in A\}|.   | \begin{align*}                  |
-| \end{align*}\                   | \xi\colon \Omega \times \mat    |
-| omega): X_j(\omega) \in A}\|.   | h                               |
-| \\end{align\*}\                 | c                               |
-| omega): X_j(\omega) \in A}\|.   | al B(\s) &\rightarrow \bf N\\   |
-| \\end{align\*}\                 | (                               |
-| omega): X_j(\omega) \in A}\|.   | \                               |
-| \\end{align\*}\                 | omega, S)&\mapsto |\{j \leq N   |
-| omega): X_j(\omega) \in A}\|.   | (                               |
-| \\end{align\*} \$\$             | \                               |
-|                                 | omega): X_j(\omega) \in S\}|.   |
-|                                 | \end{align*}                    |
-|                                 | $$                              |
-+---------------------------------+---------------------------------+
-|                                 | All this now allows us to make  |
-|                                 | sense of the stochastic         |
-|                                 | equation from Remark 2.2.:      |
-|                                 |                                 |
-|                                 | \$\$ A_w\^{root=s}(t) =         |
-|                                 | \int\_\s\                       |
-|                                 | l eft( A_w\^{root=u}(t - E_i)   |
-|                                 | \bf                             |
-|                                 | 1_{E_i < t} + \bf 1_{E_i > t}   |
-|                                 |                                 |
-|                                 | \right) \dif \xi\_\omega\^s(u)  |
-|                                 | = \$\$                          |
-+---------------------------------+---------------------------------+
+**Note:** in particular $\tilde{\mu}(\{u_i\}) =\kappa(s, u_i) \mu(u_i), \forall i \in [n].$
 :::
 
 ::: {.card title="Conclusion"}
-All{.card title="Coupling"} this now allows us to make sense of the
-stochastic equation from Remark 2.2.:
+All{.card title="Coupling"} this now allows us to make sense of the stochastic equation from Remark 2.2.:
 
 $$
-A_w^{root=s}(t) = \int_\s \left( A_w^{root=u}(t - E_i) \bf 1_{E_i < t} + \bf 1_{E_i > t} \right) \dif \xi_\omega^s(u) = \sum_{u \in \s} \left( A_w^{root=u}(t - E_i) \bf 1_{E_i < t} + \bf 1_{E_i > t} \right) \xi_\omega^s(\{u\}).
+A_w^{root=s}(t) = \int_\mathcal{S} \left( A_w^{root=u}(t - E_i) \bf 1_{E_i < t} + \bf 1_{E_i > t} \right) \dif \xi_\omega^s(u) = \sum_{u \in \mathcal{S}} \left( A_w^{root=u}(t - E_i) \bf 1_{E_i < t} + \bf 1_{E_i > t} \right) \xi_\omega^s(\{u\}).
 $$
 
-$\begin{align*}                                                     W^s(t) &= e^{-\tilde{\lambda} t} A^s(t) \\                            &= \int_\s e^{-\tilde{\lambda} t} e^{\tilde{\lambda} E_i}e^{-\tilde{\lambda} E_i}[A^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + \mathbf{ 1}_{\{E_i>t\}}] \dif \xi_s(u) \\                                             &= \int_\s e^{-\tilde{\lambda} E_i} e^{-\tilde{\lambda} (t - E_i)}[A^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + \mathbf{1}_{\{E_i>t\}}] \dif \xi_s(u) \\ &= \int_\s e^{-\tilde{\lambda} E_i} [W^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + e^{-\tilde{\lambda} (t - E_i)} \mathbf{1}_{\{E_i>t\}}] \dif \xi_s(u)\end{align*}$
+$\begin{align*}                                                     W^s(t) &= e^{-\tilde{\lambda} t} A^s(t) \\                            &= \int_\mathcal{S} e^{-\tilde{\lambda} t} e^{\tilde{\lambda} E_i}e^{-\tilde{\lambda} E_i}[A^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + \mathbf{ 1}_{\{E_i>t\}}] \dif \xi_s(u) \\                                             &= \int_\mathcal{S} e^{-\tilde{\lambda} E_i} e^{-\tilde{\lambda} (t - E_i)}[A^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + \mathbf{1}_{\{E_i>t\}}] \dif \xi_s(u) \\ &= \int_\mathcal{S} e^{-\tilde{\lambda} E_i} [W^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + e^{-\tilde{\lambda} (t - E_i)} \mathbf{1}_{\{E_i>t\}}] \dif \xi_s(u)\end{align*}$
 
--   Campbell's THM $\implies$ result for Laplace functional applied to a
-    Poisson point process.
+-   Campbell's THM $\implies$ result for Laplace functional applied to a Poisson point process.
 :::
-
 
 ::: {.card title="Coupling"}
 <!-- 3. Embedding the BP into the IHRG {.tabset} -->
+
 $$\text{exploration process of the neighborhood of a vertex} \stackrel{\text{relate}}{\iff} \text{branching process}$$
 
-**Goal of section:** **Definition of**
-$\Psi_k^{\text{binomial}}(t)$**:**
+**Goal of section:** **Definition of** $\Psi_k^{\text{binomial}}(t)$**:**
 
 **Definition of the offspring distribution** $D^{\text{binomial}}$**:**
 
-$D^{\text{bin}|\text{type}(v)=s} \mathrel{\vcenter{:}}= \sum_{j \in [r]} \eta_{sj}, \quad \eta_{sj} \stackrel{\unicode{x2AEB}}{\sim} B(n_j - \mathbf{1}_{s=j}, \k(s, j) / n)$.
+$D^{\text{bin}|\text{type}(v)=s} \mathrel{\vcenter{:}}= \sum_{j \in [r]} \eta_{sj}, \quad \eta_{sj} \stackrel{\unicode{x2AEB}}{\sim} B(n_j - \mathbf{1}_{s=j}, \kappa(s, j) / n)$.
 
 $$
-\eta_{st}^n \sim \text{Bin}(n_t, \k(s, t) / n) \implies \eta_{st}^n = \sum_{i=1}^{n_t} b_{st}^i, \text{ where } \forall i: b_{st}^i \stackrel{iid}{\sim} \text{Bern}(\k(s, t) / n)
+\eta_{st}^n \sim \text{Bin}(n_t, \kappa(s, t) / n) \implies \eta_{st}^n = \sum_{i=1}^{n_t} b_{st}^i, \text{ where } \forall i: b_{st}^i \stackrel{iid}{\sim} \text{Bern}(\kappa(s, t) / n)
 $$
 
-Let $\xi_{st}^n \sim \text{Poi}(\frac{n_t}{n} \k(s, t))$ be the poisson
-random variable coupled to $\eta_{st}^n$ ($= Y_m'$ in
-[@den2012probability]).
+Let $\xi_{st}^n \sim \text{Poi}(\frac{n_t}{n} \kappa(s, t))$ be the poisson random variable coupled to $\eta_{st}^n$ ($= Y_m'$ in [@den2012probability]).
 
 Using the result from p.9. of [@den2012probability], we get:
 
 $$
-P(\eta_{st}^n \neq \xi_{st}^n) \leq \sum_{i=1}^{n_t} \frac{\k(s,t)^2}{n^2}= \frac{n_t \, \k(s,t)^2}{n^2} = \frac{n_t}{n} \frac{\k(s,t)^2}{n}.
+P(\eta_{st}^n \neq \xi_{st}^n) \leq \sum_{i=1}^{n_t} \frac{\kappa(s,t)^2}{n^2}= \frac{n_t \, \kappa(s,t)^2}{n^2} = \frac{n_t}{n} \frac{\kappa(s,t)^2}{n}.
 $$
 
 Let $\varepsilon > 0$,
 
 $$
 \begin{align*}
-P\left( \left|\frac{n_t}{n} \frac{\k(s,t)^2}{n} - \lambda_{st} \frac{\k(s,t)}{n}\right| > \varepsilon \right) &= P\left( \left|\frac{n_t}{n} \frac{\k(s,t)^2}{n} - \mu_{t} \frac{\k(s,t)^2}{n}\right| > \varepsilon \right) \\
-&= P\left( \left|\frac{n_t}{n} - \mu_{t}\right| > \frac{\varepsilon n}{\k(s,t)^2} \right) \\
-&\leq P\left( \left|\frac{n_t}{n} - \mu_{t}\right| > \frac{\varepsilon}{\k(s,t)^2} \right)
+P\left( \left|\frac{n_t}{n} \frac{\kappa(s,t)^2}{n} - \lambda_{st} \frac{\kappa(s,t)}{n}\right| > \varepsilon \right) &= P\left( \left|\frac{n_t}{n} \frac{\kappa(s,t)^2}{n} - \mu_{t} \frac{\kappa(s,t)^2}{n}\right| > \varepsilon \right) \\
+&= P\left( \left|\frac{n_t}{n} - \mu_{t}\right| > \frac{\varepsilon n}{\kappa(s,t)^2} \right) \\
+&\leq P\left( \left|\frac{n_t}{n} - \mu_{t}\right| > \frac{\varepsilon}{\kappa(s,t)^2} \right)
 \end{align*}
 $$
 
@@ -581,33 +406,33 @@ $$
 In other words:
 
 $$
-\frac{n_t \, \k(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\k(s,t)}{n}
+\frac{n_t \, \kappa(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\kappa(s,t)}{n}
 $$
 
 $$
-\frac{n_t \, \k(s,t)^2}{n^2}  - \lambda_{st} \frac{\k(s,t)}{n} = o_p(1)
+\frac{n_t \, \kappa(s,t)^2}{n^2}  - \lambda_{st} \frac{\kappa(s,t)}{n} = o_p(1)
 $$
 
 $$
-\frac{n_t \, \k(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\k(s,t)}{n} (1 + o_p(1)).
+\frac{n_t \, \kappa(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\kappa(s,t)}{n} (1 + o_p(1)).
 $$
 
 $$
 \begin{align*}
-P\left( \left|\frac{n_t}{n} \frac{\k(s,t)^2}{n} - \lambda_{st} \frac{\k(s,t)}{n} (1 + o(1))\right| > \varepsilon \right) &= P\left( \left|\frac{n_t}{n} \frac{\k(s,t)^2}{n} - \mu_{t} \frac{\k(s,t)^2}{n} (1 + o(1)) \right| > \varepsilon \right) \\
-&= P\left( \left|\frac{n_t}{n} - \mu_{t} (1 + o(1))\right| > \frac{\varepsilon n}{\k(s,t)^2} \right) \\
-&\stackrel{\mu_t \leq1}{\leq} P\left( \left|\frac{n_t}{n} - \mu_{t} \right| + |o(1)| > \frac{\varepsilon n}{\k(s,t)^2} \right) \\
-&\leq P\left( \left|\frac{n_t}{n} - \mu_{t}\right| + |o(1)| > \frac{\varepsilon}{\k(s,t)^2} \right)
+P\left( \left|\frac{n_t}{n} \frac{\kappa(s,t)^2}{n} - \lambda_{st} \frac{\kappa(s,t)}{n} (1 + o(1))\right| > \varepsilon \right) &= P\left( \left|\frac{n_t}{n} \frac{\kappa(s,t)^2}{n} - \mu_{t} \frac{\kappa(s,t)^2}{n} (1 + o(1)) \right| > \varepsilon \right) \\
+&= P\left( \left|\frac{n_t}{n} - \mu_{t} (1 + o(1))\right| > \frac{\varepsilon n}{\kappa(s,t)^2} \right) \\
+&\stackrel{\mu_t \leq1}{\leq} P\left( \left|\frac{n_t}{n} - \mu_{t} \right| + |o(1)| > \frac{\varepsilon n}{\kappa(s,t)^2} \right) \\
+&\leq P\left( \left|\frac{n_t}{n} - \mu_{t}\right| + |o(1)| > \frac{\varepsilon}{\kappa(s,t)^2} \right)
 \end{align*}
 $$
 
 $$
-\implies\frac{n_t \, \k(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\k(s,t)}{n} (1 + o(1)).
+\implies\frac{n_t \, \kappa(s,t)^2}{n^2}  \xrightarrow{p} \lambda_{st} \frac{\kappa(s,t)}{n} (1 + o(1)).
 $$
 
 $$
 \begin{align*}
-\sum_{s\in[r]} N_m^s \sum_{t\in[r]} \frac{\l_{st}\k(s,t)}{n}
+\sum_{s\in[r]} N_m^s \sum_{t\in[r]} \frac{\lambda_{st}\kappa(s,t)}{n}
 \end{align*} 
 $$
 :::
@@ -617,28 +442,27 @@ Cher Maximilien,
 
 They first write:
 
-$\eta_{st} \sim \text{Binomial}(n_t, \k(s,t) /n)$,
+$\eta_{st} \sim \text{Binomial}(n_t, \kappa(s,t) /n)$,
 
-$\xi_{st} \sim \text{Poisson}(\lambda_{st} = \mu_t\k(s,t))$.
+$\xi_{st} \sim \text{Poisson}(\lambda_{st} = \mu_t\kappa(s,t))$.
 
 They then state:
 
-We couple $\eta_{st}$ to $\xi_{st}$ with error probability
-$n_t (\k(s,t)^2 / n^2) = \lambda_{st} \k(s,t) / n(1+o(1))$.
+We couple $\eta_{st}$ to $\xi_{st}$ with error probability $n_t (\kappa(s,t)^2 / n^2) = \lambda_{st} \kappa(s,t) / n(1+o(1))$.
 
 Yesterday, you explained to me that they probably meant $o_p(1).$
 
 However, I do not understand how they get more than:
 
 $$
-n_t (\k(s,t)^2 / n^2) =\lambda_{st} \k(s,t) / n + o_p(1)
+n_t (\kappa(s,t)^2 / n^2) =\lambda_{st} \kappa(s,t) / n + o_p(1)
 $$
 
 $\frac{n_t}{n} \xrightarrow{p} \mu_t < \infty \implies \frac{n_t}{n} - \mu_t = o_p(1) \implies \frac{n_t}{n} - \mu_t \stackrel{\mu_t \text{ constant}}{=} \mu_t o_p(1) \implies \frac{n_t}{n} = \mu_t(1 +  o_p(1)).$
 
 This leads to:
 
-$n_t \frac{\k(s,t)^2}{n^2} = \frac{n_t}{n}\frac{\k(s,t)^2}{n} = \mu_t(1 +  o_p(1))\frac{\k(s,t)^2}{n}= \mu_t \k(s,t) \frac{\k(s,t)}{n}(1+o_p(1)) = \frac{\l_{st}\k(s,t)}{n}(1+o_p(1)),$
+$n_t \frac{\kappa(s,t)^2}{n^2} = \frac{n_t}{n}\frac{\kappa(s,t)^2}{n} = \mu_t(1 +  o_p(1))\frac{\kappa(s,t)^2}{n}= \mu_t \kappa(s,t) \frac{\kappa(s,t)}{n}(1+o_p(1)) = \frac{\lambda_{st}\kappa(s,t)}{n}(1+o_p(1)),$
 
 as claimed in the article.
 
@@ -650,26 +474,356 @@ P(\exists j \leq m, D_j^{\text{bin}} \neq D_j^{\text{Poi}}) &\leq \sum_{s=1}^{n_
 &\leq\sum_{s=1}^{n_t} \sum_{v\in\text{set of vertices of type }s\text{ at which a split occured}}P(\text{split at }v\text{ did not yield the same result for } D^{\text{bin}} \text{ & } D^{\text{Poi}}) \\
 &=\sum_{s=1}^{n_t} N_m^s \:P(\text{split at }v\text{ did not yield the same result for } D^{\text{bin}} \text{ & } D^{\text{Poi}}) \\
 &\leq\sum_{s=1}^{n_t} N_m^s \: \sum_{t=1}^{n_t} P(\eta_{st} \neq\xi_{st}) \\
-&\leq\sum_{s=1}^{n_t} N_m^s \: \sum_{t=1}^{n_t} \frac{\l_{st}\k(s,t)}{n}(1+o_p(1)) \\
-&=\frac{m}{n}\sum_{s,t} \frac{N_m^s}{m}\l_{st}\k(s,t)(1+o_p(1)) \\
-&\leq\frac{m}{n} \max \k\sum_{s,t} \frac{N_m^s}{m}\l_{st}(1+o_p(1)) \\
-&=\frac{m}{n} \max \k\sum_{s,t} \pi_s\l_{st}(1+o_p(1))^2 \\
-&\stackrel{\text{Slutsky}}{=}\frac{m}{n} \max \k\sum_{s,t} \pi_s\l_{st}(1+o_p(1)) \\
+&\leq\sum_{s=1}^{n_t} N_m^s \: \sum_{t=1}^{n_t} \frac{\lambda_{st}\kappa(s,t)}{n}(1+o_p(1)) \\
+&=\frac{m}{n}\sum_{s,t} \frac{N_m^s}{m}\lambda_{st}\kappa(s,t)(1+o_p(1)) \\
+&\leq\frac{m}{n} \max \kappa\sum_{s,t} \frac{N_m^s}{m}\lambda_{st}(1+o_p(1)) \\
+&=\frac{m}{n} \max \kappa\sum_{s,t} \pi_s\lambda_{st}(1+o_p(1))^2 \\
+&\stackrel{\text{Slutsky}}{=}\frac{m}{n} \max \kappa\sum_{s,t} \pi_s\lambda_{st}(1+o_p(1)) \\
 \end{align*}
 $$
 
-since we know if
-$E_u > t \:\:(\iff \text{node }u\text{ is still alive})$ for $t$ fixed.
+since we know if $E_u > t \:\:(\iff \text{node }u\text{ is still alive})$ for $t$ fixed.
 :::
 
 ::: {.card title="thinning"}
-In $G(m, \k)$: $\mathcal H_n(i_0, j)$.
+In $G(m, \kappa)$: $\mathcal H_n(i_0, j)$.
 
-Equivalent w.r.t. distribution to the **generation** of the first
-**individual** in $th(\Psi_k^{i_0})$ to have label $j.$
+Equivalent w.r.t. distribution to the **generation** of the first **individual** in $th(\Psi_k^{i_0})$ to have label $j.$
 
-In $G(m, \k)$: $\mathcal P_n(i_0, j)$.
+In $G(m, \kappa)$: $\mathcal P_n(i_0, j)$.
 
-Equivalent w.r.t. distribution to the **splitting time** of that same
-individual's parent, i.e., the moment his parent died and he was born.
+Equivalent w.r.t. distribution to the **splitting time** of that same individual's parent, i.e., the moment his parent died and he was born.
+:::
+
+::: {.card title="Lemma 3.4."}
+Note: The number of distinct labels among the alive vertices of type $t$ as split time $\tau_k$ ($|A^t(k)|$) is given by the number of alive vertices of type $t$ at time $\tau_k$ ($S_k^t$) minus the labels that are repeated.
+:::
+
+::: {.card title="Proposition 4.1."}
+$$
+\hat\lambda \, \colon = \tilde \lambda \sum_{s \in \mathcal{S}} \frac{\pi_s^2}{\mu_s}.
+$$ Note that under Assumption 1.1
+
+$$
+\hat\lambda < \infty.
+$$ Conditioned on the event that the continuous time branching processes starting from $x$ and $y$ survive, the **point process**
+
+$$
+\frac{C_n^{(i)} a_n}{n} \xrightarrow{d} \text{PPP}(\hat\lambda)
+\text{ , as } n \to \infty.
+$$
+:::
+
+::: {.card title="Point Process"}
+<h2>Definition of a point process:</h2>
+
+<h3>Assumptions:</h3>
+
+-   Let $(\Omega, \mathcal{F}, P)$ be a probability space.
+
+-   Let $(S, \mathcal{S})$ be a measurable space with some conditions on $S$ and $\mathcal{S}$.
+
+<h3>Construction:</h3>
+
+A point process on $S$ is an integer-valued **random measure** $\xi$ constructed in the following way:
+
+$$
+\xi \, \colon \Omega \times \mathcal{S}  \to \mathbf{N}
+$$
+
+$$
+\xi(\cdot, B) \text{ is a random variable for each } B \in \mathcal{S}.
+$$
+
+$$
+\forall \omega \in \Omega, \xi(\omega, \cdot) \text{ is a measure on } \mathcal{S}.
+$$
+:::
+
+::: {.card title="Gamma Function and Distribution"}
+<h2>Gamma Function:</h2>
+
+The Gamma function is an extension of the factorial function to complex numbers.
+
+<h3>Definition:</h3>
+
+$$
+\Gamma(z) = \int_0^\infty t^{z-1} e^{-t} \text{ } dt \text{ , for complex numbers } z \text{ with positive real part}.
+$$
+
+<h3>Properties:</h3>
+
+$$
+\Gamma(n) = (n-1)!.
+$$
+
+More generally:
+
+$$
+\Gamma(z+1) = z \, \Gamma(z)
+$$
+
+$$
+\Gamma \text{ has no zeros} \implies \frac{1}{\Gamma} \text{ is well defined}. 
+$$
+
+We also have Euler's reflection formula:
+
+$$
+\Gamma(z) \Gamma(1-z) =  \frac{\pi} {\sin(\pi z)} \text{ , for } z \text{ not an integer}.
+$$
+
+Euler's reflection formula $\implies$ the Legendre duplication formula.
+
+<h2>Gamma Distribution:</h2>
+
+<h3>Parameters:</h3>
+
+-   $k > 0$ shape
+-   $\theta > 0$ scale
+
+<h3>Suport:</h3>
+
+-   $x \in ]0, \infty[$
+
+<h3>PDF:</h3>
+
+$$
+f(x) = \frac{x^{k-1} e^{-\frac{x}{\theta}}}{\Gamma(z) \, \theta^k}.
+$$
+
+<h3>Properties:</h3>
+
+$$
+E[X] = k \, \theta.
+$$
+
+$$
+Var[X] = k \, \theta^2.
+$$
+:::
+
+::: {.card title="Proof of Proposition 4.1."}
+\$\$ \begin{align*}
+P(C > N) &= P(\{C > 1\} \cap \{C > 2\} \cap \cdots \cap \{C > N\}) \\
+& \stackrel{ \text{chain rule} }{=} P(C > 1)P(C > 2|C > 1) \cdots P(C > N|C > N-1) \\
+& = E[\mathbf{1}_{\{C > 1\}}]E[\mathbf{1}_{\{C > 2\}}|\mathbf{1}_{\{C > 1\}}] \cdots E[\mathbf{1}_{\{C > N\}}|\mathbf{1}_{\{C > N-1\}}] \\
+& \stackrel{ \text{law of iterated expectation} }{=} 
+
+
+\end{align*}
+
+\$\$
+
+$$
+\begin{align*}
+\Pi_{i=1}^N E \left[ P(C>j \, | \, C>j-1, \mathcal{F}_{j-1})\right] &= \Pi_{i=1}^N E \left[ \frac{P(\{C>j\} \cap \{C>j-1\} \, | \, \mathcal{F}_{j-1})}{P(C > j-1|\mathcal{F}_{j-1})}  \right] \\
+&= \Pi_{i=1}^N E \left[ \frac{P(C>j|\mathcal{F}_{j-1})}{P(C > j-1)}  \right] \\
+&= \Pi_{i=1}^N \frac{1}{P(C > j-1)} E \left[ P(C>j| \mathcal{F}_{j-1})  \right] \\
+& \stackrel{ \text{law of total expectation} }{=} \Pi_{i=1}^N \frac{P(C > j)}{P(C > j-1)}  \\
+&= \frac{P(C > N)}{P(C > 0)} \\
+&= P(C>N).
+\end{align*}
+$$
+
+\$\$
+
+\left ( 1 + \frac{r}{n} \right)\^n \to e\^r, \text{ for all } r \> 0.
+
+\$\$
+
+$$
+\begin{align*}
+\prod_{j=1}^{\frac{x \cdot n}{a_n}} \left[ \sum_{t \in \mathcal{S}} \frac {S_{j - 1}^{y,t}} {S_{j-1} ^ y} \left( 1 - \frac { S_{a_n}^{x,t} } {n_t}  \right) \right]
+&= \prod_{j=1}^{\frac{x \cdot n}{a_n}} \left[ 1 - \sum_{t \in \mathcal{S}} \frac {S_{j - 1}^{y,t}} {S_{j-1} ^ y} \frac { S_{a_n}^{x,t} } {n_t} \right] \\ 
+&= \exp(\ln(\prod)) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \ln \left[ 1 - \sum_{t \in \mathcal{S}} \frac {S_{j - 1}^{y,t}} {S_{j-1} ^ y} \frac { S_{a_n}^{x,t} } {n_t} \right] \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \ln \left[ 1 + x_j \right] \right) \\
+&\stackrel{\text{Taylor}}{=} \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \left[ x_j + x_j \cdot\varepsilon(x_j) \right] \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} x_j \right) \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} x_j \cdot\varepsilon(x_j) \right) \\
+\end{align*}
+$$
+
+Let us show that
+
+$$
+\exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} x_j \cdot\varepsilon(x_j) \right) \to 1, \text{ as } n \to \infty.
+$$ Using the Lagrange form for of the remainder $\varepsilon$, which is decreasing, we have:
+
+$$
+\begin{align*}
+\exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} x_j \cdot\varepsilon(x_j) \right) 
+&\leq \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{n_t} \right) 
+\cdot\varepsilon \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{n_t} \right) \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{n_t} \frac{n}{n} \right) 
+\cdot\varepsilon \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{n_t} \frac{n}{n} \right) \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{\mu_t} \frac{1}{n} \right) 
+\cdot\varepsilon \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{\mu_t} \frac{1}{n} \right) \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \frac{1}{n} \cdot \left( \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{\mu_t}  \right) 
+\cdot\varepsilon \left( \frac{1}{n} \sum_{t \in \mathcal{S} } \frac{S_{a_n}^{x,t}}{\mu_t}  \right) \right) \\
+&= \exp \left( \sum_{j=1}^{\frac{x \cdot n}{a_n}} \frac{c}{n} \cdot\varepsilon \left( \frac{c}{n} \right) \right) \\
+&= \exp \left( \frac{x \cdot n}{a_n} \frac{c}{n} \cdot\varepsilon \left( \frac{c}{n} \right) \right) \\
+&= \exp \left( \frac{x \cdot c \cdot \varepsilon \left( \frac{c}{n} \right)}{a_n}  \right)
+\end{align*}
+$$
+
+Since
+
+$$
+\varepsilon \left( \frac{c}{n} \right)\to 0, \text{ as } n \to \infty,
+$$ and since $x$ and $c$ are constants, and since $a_n \to \infty$, we have:
+
+$$
+\exp \left( \frac{x \cdot c \cdot \varepsilon \left( \frac{c}{n} \right)}{a_n}  \right) \to 1, \text{ as } n \to \infty.
+$$
+
+$$
+\exp \left( e^{\tilde \lambda z} \left( \frac{\tilde \lambda}{\tilde \lambda + 1} - 1   \right) \right)
+$$
+:::
+
+::: {.card title="Lemma 4.2."}
+<h2>Statements:</h2>
+
+The probability that the shortest-weight path is not among the first $k$ collision edges decays exponentially in $k$. More specifically:
+
+$$
+\DeclareMathOperator*{\argmin}{arg\,min}
+P(\argmin_i(C_n^i = C_n^{\text{con}}) > k) \leq \left( \frac{\tilde \lambda}{\tilde \lambda + 1} \right) ^ k.
+$$
+
+<h2>Definition of Stochastic Domination:</h2>
+
+Let $X$ and $Y$ be two random variables. We say that $X$ stochastically dominates $Y$ if:
+
+$$
+P(X \geq x) > P(Y \geq x) \text{ for all } x.
+$$ We then have:
+
+$$
+X \text{ stochastically dominates } Y \implies \exists \text{ a coupling of } X \text{ and } Y \text{ such that } X \geq Y \text{ almost surely}.
+$$
+
+<h2>Proof:</h2>
+
+$$
+\begin{align*}
+& \text{Distribution of the rescaled connection time is stochastically dominated by the Geo} \left( \frac{1}{\tilde \lambda + 1} \right) \implies \\
+& I \, \colon= \argmin_i(C_n^i = C_n^{\text{con}}) \leq N \text{ , for some coupling of } I \text{ and } N. \\
+& \text{Since } \frac{a_n C_n^{(i)}}{n} \stackrel{\text{Proposition 4.1.}}{\approx} \sum_{j=1}^I \tilde E_i \quad \text{ , and } \tilde E_i \geq 0 \text{ , we have:} \\
+& \frac{a_n C_n^{\text{con}}}{n} \leq \sum_{j=1}^N \tilde E_i.
+\end{align*}
+$$
+
+As explained at the beginning of the 4th section "Connection time", the shortest-weight path goes through the collision edge that minimizes:
+
+$$
+\begin{align*}
+& f(i) = \tau_{C_n^{(i)}} + E_i \implies \\
+& C_n^{\text{con}} = \argmin_i f(i).
+\end{align*}
+$$
+
+\$\$
+
+\begin{align*}
+E \left[ P \left( \forall i \leq k, \, E_i > z - X_i | X_{k + 1} = c, \, \min = z \right) \right] &= 
+E \left[ E \left[ \prod_{i=1}^k \mathbf 1_{ \{ E_i > z - X_i\} }  | X_{k + 1} = c, \, \min = z \right] \right]\\
+&=  E \left[ E \left[ \prod_{i=1}^k \mathbf 1_{ \{ E_i > z - X_i\} }  | X_1, \dots, X_k, X_{k + 1} = c, \, \min = z \right] \Bigg | X_{k + 1} = c, \, \min = z \right]
+&&\text{total law of expectation} \\
+&=  E \left[ \prod_{i=1}^k \mathbf e^{- (z - X_i)} \Bigg | X_{k + 1} = c, \, \min = z \right]
+&&\text{independance} \\
+\end{align*} \$\$ Note that $z - X_i \geq 0$, else:
+
+$$
+z - X_i < 0 \implies z < X_i \leq X_j \leq X_j + E_j, \quad \forall j \geq k + 1 \implies \min_{j \geq k + 1} X_j + E_j > z = \min_{j \geq k + 1} X_j + E_j, \text{ a contradiction}.
+$$ $$
+\begin{align*}
+E \left[ U^{\frac{1}{\lambda}} \right] &=
+\int_0^{e^{\lambda c}} x^{\frac{1}{\lambda}} e^{-\lambda c} \text{ } dx \\
+&= \frac{\lambda}{\lambda + 1} \left[ x^{\frac{\lambda + 1}{\lambda}} \right]_0^{e^{\lambda c}} e^{-\lambda c} \\
+&= \frac{\lambda}{\lambda + 1} e^{(\lambda + 1) c} e^{-\lambda c} \\
+&= \frac{\lambda}{\lambda + 1} e^{c} \\
+\end{align*}
+$$
+
+$$
+\begin{align*}
+E[E[\Pi | c, z] | c] &= E[\Pi | c] && \text{law of total expectation} \\
+\end{align*}
+$$ $$
+\begin{align*}
+E(E[E[\Pi | c, z] | c]) &= E(E[\Pi | c]) \\
+&= E(E[\Pi | c, z])  && E(E(X|\mathcal{H})) = E(X) \\
+\end{align*}
+$$
+
+\$\$ \begin{align*}
+E[E[\Pi | c, z]] = E[E[\Pi | c, z] | c] =
+
+E[E[\Pi|c]]
+\end{align*} \$\$
+:::
+
+::: {.card title="Memorylessness"}
+$$
+P(\text{Exp} > t + s | \text{ Exp} > s) = P(\text{Exp} > t).
+$$
+:::
+
+::: {.card title="Law of Total Expectation"}
+$$
+\mathcal{F}_{ \text{ ext} } \subset \mathcal{F}_{ \text{ int} } \implies E[E[X|\mathcal{F}_{ \text{ int} } ] | \mathcal{F}_{ \text{ ext} } ] = E[X|\mathcal{F}_{ \text{ ext} }].
+$$
+:::
+
+::: {.card title="Tail Sum for Expectation"}
+$X \geq 0$
+
+**Discrete**
+
+$$
+E[X] = \sum_{k=0}^\infty P(X > k)
+$$
+
+**Continuous** $$
+E[X] = \int_{0}^\infty P(X > x) \text{ } dx
+$$
+:::
+
+::: {.card title="5.1 proof"}
+$$
+\begin{align*}
+P(v \in \text{th}^C A^{y,t} (C_n^{i})) &= E \left[ \frac{\text{th}^C A^{y,t} (C_n^{i})}{A^{y,t} (C_n^{i})}\right] \\
+&= E \left[ f(C_n^{i}) \right] \\
+&= E \left[ f \left( \frac{n \cdot \Gamma(i, \lambda)}{a_n} \right) \right] \\
+&= E \left[ f \left( \Gamma \cdot n^{\frac{3}{5}} \right) \right] && a_n = n^{\frac{2}{5}} \implies \beta = \frac{3}{5}\\
+&= E \left[ E \left[ f \left( \Gamma \cdot n^{\frac{3}{5}} \right) \Big| \, \Gamma\right] \right] \\
+&\leq E \left[ \sum_{j=1}^{\Gamma \cdot n^\alpha} \frac{c \cdot j}{n} + \sum_{j=\Gamma \cdot n^\alpha}^{\Gamma \cdot n^\beta } \frac{c \cdot n^{\beta - \alpha}}{n} \right]
+&& \eta_{su} \leq \pi_u \frac{\Gamma \cdot n^\beta}{\Gamma \cdot n^\alpha} \text{ , the number of } u \text{ type vertices in the whole subtree of } i_j\\ 
+& \leq E \left[ \Gamma^2 \cdot n^{2 \alpha - 1} \right] + E \left[ \Gamma \cdot n^{2\beta - \alpha - 1} \right] \\
+& = o(1) \left( E \left[ \Gamma^2 \right] + E \left[ \Gamma \right] \right) \\
+& = o(1) \left( \frac{i \cdot (i + 1)}{\lambda^2} + \frac{i}{\lambda} \right) \\
+\end{align*}
+$$
+
+------------------------------------------------------------------------
+
+$$
+\begin{align*}
+P(v \in \text{th}^C A^{y,t} (C_n^{\text{con}})) &=
+\sum_i P(v \in \text{th}^C A^{y,t} (C_n^{i})) \cdot P(\argmin_j \{ C_n^j = C_n^{\text{con} } \} = i ) \\
+&\leq \sum_i P(v \in \text{th}^C A^{y,t} (C_n^{i})) \cdot \left( \frac{\lambda}{\lambda + 1} \right) ^ i \cdot \left( \frac{1}{\lambda + 1} \right) 
+&& \text{Lemma } 4.2. \, (\argmin \& \text{Geom})\\
+&
+\end{align*}
+$$ ---
+
+$$
+\begin{align*}
+o(1) \cdot E \left( \frac{\argmin \cdot (\argmin + 1)}{\lambda^2} + \frac{\argmin}{\lambda} \right) &= 
+o(1) \cdot \sum_{k=0}^\infty P(f(\argmin) > k) \\
+&= o(1) \cdot \
+\end{align*}
+$$
 :::

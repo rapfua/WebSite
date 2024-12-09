@@ -1,0 +1,382 @@
+# Quarto Tutorial
+
+## Row {.tabset}
+
+### \| Plan of Attack \|
+
+
+- Corporate pitch,
+- Quarto Editor: Video Demo,
+- Quarto introductory examples, in particular an important C++ example,
+- Reactive Programming with Shiny to investigat ideas from the paper,
+- MNIST simulation that accesses Python and C++ from within quarto,
+- Reactive Hello World example to get **you** started.
+
+### \| Corporate pitch \|
+
+- Quarto enables seamless, **multi-language support** (e.g., Python, R, Julia) within the **same document**, making it ideal for data science, research, and reporting workflows. Its powerful features for rendering high-quality outputs across **multiple formats** (PDF, HTML, Word) offer flexibility for **sharing and publishing**.
+
+\n
+
+- Quarto is **user-friendly** and doesn’t require HTML knowledge, allowing you to create beautifully formatted documents, websites, and presentations with Markdown and **simple syntax** alone. It handles complex formatting and layout tasks **behind the scenes**, making it accessible to anyone, even **without web development experience**.
+
+
+### \| Introductory examples \|
+
+::: {.card title="Inline Code"}
+```{{python}}
+radius = 5
+```
+
+```{{r}}
+radius <- 6
+```
+
+| Markdown input                | HTML output |
+|-------------------------------|-------------|
+| Radius: \``{python} radius`\` | Radius: 5   |
+| Radius: \``r radius`\`        | Radius: 6   |
+:::
+
+::: {.card title="Accessing C++ code from Python"}
+```{python}
+#| label: rcpp_python
+#| echo: true
+#| code-fold: false
+# from rpy2 import robjects
+# from rpy2.robjects.packages import importr
+
+# Load the Rcpp package
+Rcpp = importr('Rcpp')
+
+# Define the Rcpp function
+robjects.r('''
+    library(Rcpp)
+    cppFunction('
+        int add_numbers(int x, int y) {
+            return x + y;
+        }
+    ')
+''')
+
+# Access the Rcpp function from Python
+add_numbers = robjects.r['add_numbers']
+
+# Call the function
+result = add_numbers(5, 10)
+print("Result from Rcpp function:", 5, '+', 10, '=', result[0])
+```
+:::
+
+### \| Reactive Percolation \|
+
+####  {.sidebar width="300px"}
+
+```{python}
+#| label: input_selects_percolation_demo_presentation
+#| cache: true
+
+ui.markdown("## Percolation Demo")
+
+ui.input_select("p_presentation", "Probability:",
+                choices=[x / 100 for x in range(1, 100)],
+                selected=0.5,
+                width=10
+)
+ui.input_select("grid_size_presentation", "Number of nodes in each dimension:",
+                choices=[x for x in range(2, 101)],
+                selected=10
+)
+
+```
+
+
+
+
+
+#### Column
+
+```{python}
+#| label: def_shiny_percolation_plot_presentation
+#| height: 80%
+@render.plot
+def shiny_percolation_plot_presentation_PLOT():
+  
+    p = float(input.p_presentation())
+    grid_size = int(input.grid_size_presentation())
+    G = nx.grid_2d_graph(grid_size, grid_size)
+    pos = {(x, y): (x, y) for x, y in G.nodes()}
+    
+    # needs to be this high in code
+    plt.figure(figsize=(6, 6))  
+    
+    for (u, v) in G.edges():
+        edge_color = 'red' if random.random() < p else 'black'
+        edge_width = 3 if edge_color == 'red' else 1  # Thicker for red edges
+        nx.draw_networkx_edges(G, pos, edgelist=[(u, v)], edge_color=edge_color, width=edge_width)
+    
+    nx.draw_networkx_nodes(G, pos, node_size=0)
+    
+    legend_elements = [
+        Line2D([0], [0], color='red', lw=3, label  ='open   & w(e) = 1'),
+        Line2D([0], [0], color='black', lw=1, label='closed & w(e) = 0'),
+    ]
+    
+    
+    plt.legend(handles=legend_elements, bbox_to_anchor=(1.4, 0.96))
+    plt.gca().set_aspect('equal')
+    plt.axis('off')
+    plt.title(f"{grid_size}x{grid_size} Grid with p = {p:.2f}", fontsize=14)
+    plt.text(
+      0.5,
+      -0.05, 
+      'Figure 1: each edge is open with probability p.',
+      fontsize=12,
+      ha='center',
+      va='center', 
+      transform=plt.gca().transAxes
+    )
+
+    # Adjust layout to ensure the caption fits within the figure area
+    plt.tight_layout()
+
+```
+
+::: card
+<h2>Bernoulli Bond Percolation on $\mathbb{Z}^d$</h2>
+
+<h3>Setup:</h3>
+
+-   $G = (\mathbb{Z}^d, E)$
+-   $E = \{(x, y) \in \mathbb{Z}^d \times \mathbb{Z}^d : ||x - y||_1 = 1\}$
+
+<h3>Probabilistic framework $(\Omega, \mathcal{F}, \mathbb{P_p})$</h3>
+
+-   $\mathbb{P}_p(\omega) = p^{\sum_{e \in E} \omega(e)} (1 - p)^{\sum_{e \in E} (1 - \omega(e))}$
+
+-   $\Omega = \{0, 1\}^E$
+
+-   $\mathcal{F}=$ product $\sigma$-algebra
+
+-   $\mathbb{P}_p = \text{Bernoulli}(p)^{\bigotimes E}$
+:::
+
+### \| Reactive Spectral Clustering: Python & Shiny \|
+
+####  {.sidebar width="300px"}
+
+```{python}
+#| label: input_selects_spectral_clustering_1
+
+input_select_width = 10
+
+L = list(range(100, 501, 100))
+L.insert(0, 50)
+
+ui.input_select("n_spectral_clustering_1", "Number of nodes in each cluster:",
+                choices=L,
+                selected=100,
+                width=input_select_width
+)
+
+# for graph creation (& spectral clustering)
+ui.input_select("n_neighbors_spectral_clustering_1", "Number of nearest neighbors ",
+                choices=list(range(5, 21)),
+                selected=10,
+                width=input_select_width
+)
+
+
+ui.input_select("mu_x2_spectral_clustering_1", "Mean of the second Gaussian with respect to the x-axis:",
+                choices=list(range(1, 21)),
+                selected=3,
+                width=input_select_width
+)
+
+
+ui.input_select("R_1_spectral_clustering_1", "Big radius for intra-community edges:",
+                choices=[round(i * 0.01, 2) for i in range(1, 201)],
+                selected= 1,
+                width=input_select_width
+)
+
+ui.input_select("R_2_spectral_clustering_1", "Small radius for inter-community edges:",
+                choices=[round(i * 0.01, 2) for i in range(1, 101)],
+                selected=0.5,
+                width=input_select_width
+)
+
+```
+
+#### Column
+
+```{python}
+#| label: shiny_hybrid_presentation
+#| cache: True
+@render.plot
+def shiny_hybrid_presentation():
+
+
+    n           = int(input.n_spectral_clustering_1())
+    d           = 2
+    n_clusters  = d
+    n_neighbors = int(input.n_neighbors_spectral_clustering_1())
+    mu_x      = float(input.mu_x2_spectral_clustering_1())
+    λ           = 1
+
+    F = make_F(f(φ(float(input.R_1_spectral_clustering_1()))), f(φ(float(input.R_2_spectral_clustering_1()))))
+
+    # Generate samples separately
+    samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x)
+
+    # Update G_distance separately
+    G = produce_distance_graph(samples, n, d, framework='hybrid', F=F)
+
+    col_slice = slice(1, samples.shape[1] + 1)
+
+    W = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+
+    edges = list(G.edges())
+    weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
+    nx.set_edge_attributes(G, weights, 'weight')
+
+    mb_igraph = get_metric_backbone_igraph(G)
+
+    fig, axs = plt.subplots(2, 2, figsize=(12, 12))
+
+    similarity_original, similarity_mb = draw(
+      G,
+      mb_igraph,
+      samples,
+      n_neighbors,
+      axs,
+      n_clusters,
+      L_idx=[0, 1]
+    )
+
+
+    for i in range(2):
+        for j in range(2):
+            ax = axs[i, j]
+            ax.set_xlabel('X-axis')
+            ax.set_ylabel('Y-axis')
+            ax.axis('equal')
+            ax.axis('on')
+            ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+            ax.legend(
+              handles=[produce_patch(color='red', framework='gaussian', mu_x2=0),
+                       produce_patch(color='blue', framework='gaussian', mu_x2=mu_x)]
+             )
+
+
+    axs[0, 0].set_title(f'Gaussian Samples with {n} nodes in each cluster, inter-proportion: {get_inter_proportion(G) * 100:.2f}')
+    axs[0, 1].set_title(f'Metric Backbone, inter-proportion: {get_inter_proportion(mb_igraph) * 100:.2f}')
+
+    axs[1, 0].set_title(f'SC: Gaussian Samples with {n} nodes in each cluster, ARI: {similarity_original * 100:.2f}')
+    axs[1, 1].set_title(f'SC: Metric Backbone, ARI: {similarity_mb * 100:.2}%')
+
+```
+
+### \| Spectral Clustering: Rcpp & Python \|
+
+::: {style="text-align:center;"}
+![The python script that produces this graph calls a custom Rcpp function to perform Dijkstra's algorithm and return the metric backbone.](images/ARI.png){width="70%"}
+:::
+
+### \| Reactive Hello World \|
+
+####  {.sidebar width="400px"}
+
+
+```{python}
+#| eval: false
+#| label: reactive_hello_world_user_interface_code_to_display
+#| code-fold: false
+#| echo: true
+#| height: 50%
+# import shiny as s
+# import s.express as e
+# from e import render, ui
+ui.input_select(
+  id="x",
+  label="Variable:",
+  choices=[
+    "flipper_length_mm"
+    "bill_length_mm",
+  ]
+)
+
+ui.input_select(
+  "dist", 
+  "Distribution:", 
+  choices=["hist", "kde"]
+)
+
+ui.input_checkbox(
+  id="rug", 
+  label="Show rug marks", 
+  value = False
+)
+```
+
+```{python}
+#| label: reactive_hello_world_user_interface
+ui.input_select(
+  id="x",
+  label="Variable:",
+  choices=["flipper_length_mm", "bill_length_mm"]
+)
+
+ui.input_select(
+  "dist", 
+  "Distribution:", 
+  choices=["hist", "kde"]
+)
+
+ui.input_checkbox(
+  "rug", 
+  "Show rug marks", 
+  value = False
+)
+```
+
+#### Column {width="60%"}
+
+```{python}
+#| label: reactive_hello_world_user_server
+@render.plot
+def hello_world_PLOT():
+  
+    # import seaborn as sns
+    penguins = sns.load_dataset("penguins")
+    
+    sns.displot(
+        data=penguins, hue="species", multiple="stack",
+        x=input.x(), rug=input.rug(), kind=input.dist())
+```
+
+#### Column
+
+```{python}
+#| label: reactive_hello_world_server_code_code_to_display
+#| eval: false
+#| echo: true
+#| code-fold: false
+
+@render.plot
+def hello_world_PLOT():
+  
+    # import seaborn as sns
+    penguins = sns.load_dataset(
+      "penguins"
+    )
+    
+    sns.displot(
+        data=penguins, 
+        hue="species", 
+        multiple="stack",
+        x=input.x(), 
+        rug=input.rug(), 
+        kind=input.dist()
+    )
+```

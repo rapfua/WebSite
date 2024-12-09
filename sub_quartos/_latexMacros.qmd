@@ -4,4 +4,8 @@
 \newcommand*{\e}{\varepsilon}
 \newcommand*{\l}{\lambda}
 \newcommand*{\dif}{\mathop{}\!\mathrm{d}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand*{\E}{\mathrm{E}}
+\newcommand*{\Var}{\mathrm{Var}}
+
 :::

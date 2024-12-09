@@ -1,0 +1,102 @@
+### Corrections
+
+#### Row {.tabset}
+
+##### Page 606 in the «FPP on IHRG» paper
+
+:::{.callout-note collapse="true" title="Lemma 4.2."}
+
+$$
+\begin{align*}
+\mathrm{P} \left( 
+  {\arg \min}_i \{ C_n^i = C_n^{\text{con}} \}
+  > k
+\right)
+\leq
+\left( \frac{\tilde \lambda}{\tilde \lambda + 1} \right) ^ k
+\end{align*}
+$$
+
+:::
+
+:::{.callout-note collapse="true" title="Equation 4.3."}
+
+$$
+\begin{align*}
+\frac{a_n C_n^{\text{con}}}{n}
+\leq
+\sum_{i=1}^{N \sim \text{Geometric} \left( \frac{1}{\tilde \lambda + 1}
+\right)}
+  \tilde E_i \sim \text{Exp} \left (
+    \tilde \lambda \sum_{s \in \mathcal S} \frac{\pi_s^2}{\mu_s}
+  \right)
+\end{align*}
+$$
+
+
+
+:::
+
+
+:::{.callout-important collapse="false" title="Correction of page 606"}
+
+$$
+\begin{align*}
+&\frac{\ln C_n^{\text{con}}}{\ln n}
+&& = \frac
+      {\ln \frac{a_n C_n^{\text{con}}}{n} + 
+       \ln \frac{n}{a_n}}
+      {\ln n} \\
+&&& = \frac{\ln \frac{a_n C_n^{\text{con}}}{n}}{\ln n} + 
+    \frac{\ln \frac{n}{a_n}}{\ln n} \\
+& \frac{\ln \frac{n}{a_n}}{\ln n}
+&& = \frac{\ln \frac{n}{\sqrt n}}{\ln n} \\
+&&& = \frac{\ln \sqrt n}{\ln n} \\
+&&& = \frac{1}{2} \quad (\ast) \\
+& \frac{\ln \frac{a_n C_n^{\text{con}}}{n}}{\ln n}
+&& \stackrel{(4.3)}{\leq} 
+  \frac{\ln \left[ \sum_{i=1}^N \tilde E_i \right]}{\ln n}
+& N \sim \text{Geometric} \left( \frac{1}{\tilde \lambda + 1} \right) , \quad \tilde E_i \stackrel{i.i.d}\sim \text{Exp} \left( \hat \lambda  \right) \\
+&&& = \frac{\sum_{i=1}^N \ln \tilde E_i}{\ln n} \\
+&&& \xrightarrow[n \to \infty]{\text{a.s.}} 0 \quad (\ast \ast) \\
+& (\ast) \text{ and } (\ast \ast)
+&& \implies \frac{\ln C_n^{\text{con}}}{\ln n} \xrightarrow[n \to \infty]{\text{a.s.}} \frac{1}{2}.
+\end{align*}
+$$
+
+Conclusion: there is indeed a typo in page 606, where it should instead read:
+
+$$
+\mathcal N \left(0, \frac{\ln a_n}{\ln n} \right) + 
+\mathcal N \left(0, \frac{\ln C_n^{\text{con}}}{\ln n} \right)
+\to \mathcal N(0, 1).
+$$
+
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+### 2. Multitype branching processes {.tabset}
+
+::: {.card title="2. Multitype branching process"}
+-   $|\{$children of $x$ in $S \subset \mathcal{S}\}| \sim \text{Poisson}(\lambda = \text{mean} = \int_{\mathcal{S}} k(x, y) d\mu(y)).$
+
+-   Time each offspring lives $\stackrel{\textit{i.i.d.}}{\sim} \text{Exp}(\lambda = \frac{1}{\text{mean}} = 1).$
+:::
+
+::: {.card title="Proposition 2.1"}
+### Proposition 2.1 {.tabset}
+
+**Hypotheses:** - finite-type continuous-time BP
+
+-   on the nonextinction sets
+
+**Statement:** - $\frac{(S_m^1, \dots, S_m^r)}{\tilde{\lambda} m} \xrightarrow{a.s.} \pi$
+
+-   $\frac{(N_m^1, \dots, N_m^r)}{m} \xrightarrow{a.s.} \pi$
+
+-   $\frac{S_m}{m} \xrightarrow{a.s.} \tilde{\lambda}$
+
+-   $\frac{S_m^i}{S_m} \xrightarrow{a.s.} \pi_s$
+:::
+
+::: {.card title="Remark 2.2."}
+\![Durrett](images/durrett.jpeg)
+
+Let us make the link between the image above from [@durrett2019probability] p147 and this remark from the paper.
+
+**Def:**
+
+$$
+\begin{align*}
+\tilde{\mu}\colon \mathcal B(\mathcal{S}) &\rightarrow \bf R\\
+S&\mapsto \int_S \kappa(s, u) \dif \mu(u).
+\end{align*}
+$$
+
+**Note:** in particular $\tilde{\mu}(\{u_i\}) =\kappa(s, u_i) \mu(u_i), \forall i \in [n].$
+:::
+
+
+::: {.card title="Conclusion"}
+All{.card title="Coupling"} this now allows us to make sense of the stochastic equation from Remark 2.2.:
+
+$$
+A_w^{root=s}(t) = \int_\mathcal{S} \left( A_w^{root=u}(t - E_i) \bf 1_{E_i < t} + \bf 1_{E_i > t} \right) \dif \xi_\omega^s(u) = \sum_{u \in \mathcal{S}} \left( A_w^{root=u}(t - E_i) \bf 1_{E_i < t} + \bf 1_{E_i > t} \right) \xi_\omega^s(\{u\}).
+$$
+
+$\begin{align*}                                                     W^s(t) &= e^{-\tilde{\lambda} t} A^s(t) \\                            &= \int_\mathcal{S} e^{-\tilde{\lambda} t} e^{\tilde{\lambda} E_i}e^{-\tilde{\lambda} E_i}[A^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + \mathbf{ 1}_{\{E_i>t\}}] \dif \xi_s(u) \\                                             &= \int_\mathcal{S} e^{-\tilde{\lambda} E_i} e^{-\tilde{\lambda} (t - E_i)}[A^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + \mathbf{1}_{\{E_i>t\}}] \dif \xi_s(u) \\ &= \int_\mathcal{S} e^{-\tilde{\lambda} E_i} [W^u(t - E_i) \mathbf{1}_{\{E_i < t\}} + e^{-\tilde{\lambda} (t - E_i)} \mathbf{1}_{\{E_i>t\}}] \dif \xi_s(u)\end{align*}$
+
+-   Campbell's THM $\implies$ result for Laplace functional applied to a Poisson point process.
+
+$$
+\mathrm{E} \left[ \exp \int_\mathcal{S} f(u) \, \mathrm{d}\xi_{s}(u) \right]
+= \exp \int_\mathcal{S} \int_0^\infty \left( e^{f(u)} - 1 \right) \kappa(s, u) \, \mathrm{d}\mu(u).
+$$
+:::
+
+
+

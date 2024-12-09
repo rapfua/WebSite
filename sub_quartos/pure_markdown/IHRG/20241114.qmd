@@ -1,0 +1,181 @@
+### 20241114 {.tabset}
+
+:::{.card title="Martingale"}
+
+
+Source: [CTBP](https://www.randomservices.org/random/markov/Branching2.html)
+
+$$
+\begin{align*}
+\text{Average number of offspring from one individual}
+&= \mathrm{E}[N] \\
+&= \mathrm{E}[\mathrm{E} [N|s]] && \text{where }s \text{ is the vertex type of the source} \\
+&= \mathrm{E}_\pi \left[ \sum_{t\in\mathcal S} \kappa(s,t) \mu_t\right] \\
+&= \int_\mathcal{S} \sum_{t\in\mathcal S} \kappa(s,t) \mu_t \text{ } \mathrm{d}\pi(s) \\
+&= \sum_{t\in\mathcal S} \int_\mathcal{S} \kappa(s,t) \mu_t \text{ } \mathrm{d}\pi(s) \\
+&= \sum_{t\in\mathcal S} (\tilde\lambda+1) \pi_t && \text{p. } 591 \\
+&= \tilde\lambda+1.
+\end{align*}
+$$
+From here, we can use point 12 of [CTBP](https://www.randomservices.org/random/markov/Branching2.html) to conclude:
+
+$$
+E_{\text{source type} \sim \pi}[S_t] = e^{\tilde\lambda t}.
+$$
+
+We now have enough to prove that:
+
+
+$$
+M_t \,\colon= e ^ {-\tilde\lambda t} S_t^\pi
+$$
+is a martingale, where the source vertex of the process is distributed according to $\pi$.
+
+$$
+\begin{align*}
+\mathrm{E} [ M_{t+s}|\mathcal F_s ]
+& = \mathrm{E} [ e^{ -\tilde\lambda(t+s) } S_{t+s}^\pi | \mathcal F_s ] \\
+& = e^{-\tilde\lambda s} \cdot e^{-\tilde\lambda t}  \mathrm{E} [ S_{t+s}^\pi | \mathcal F_s ] \\
+& = e^{-\tilde\lambda s} \cdot e^{-\tilde\lambda t}\sum_{i=1}^{S_s} \mathrm{E}_{\text{source type} \sim \pi}[S_t]
+&& \text{memorylessness of exponential waiting times & sationarity of }\pi \\
+& = e^{-\tilde\lambda s} \cdot e^{-\tilde\lambda t} S_s^\pi e^{\tilde\lambda t} 
+&& \text{CTBP} \\
+& = e^{\tilde\lambda t}S_s^\pi \\
+& = M_s.
+
+
+\end{align*}
+$$
+:::
+
+
+
+:::{.card title="(5.2)"}
+$$
+\begin{align*}
+- \frac{1}{\tilde\lambda} \log \frac{M_{\tau_k}}{\tilde\lambda}
++ \frac{1}{\tilde\lambda} \log \frac{S_k}{\tilde\lambda k} + \frac{1}{\tilde\lambda} \log k &=
+- \frac{1}{\tilde\lambda} \left( - \tilde\lambda \tau_k + \log \frac{S_k}{\tilde\lambda} 
+- \log \frac{S_k}{\tilde\lambda} \right) \\
+& = \tau_k.
+
+\end{align*}
+$$
+
+When applying (5.2) to the minimum in (5.1), we subtract
+
+$$
+\frac{1}{\tilde\lambda} \log \hat \lambda
+$$
+
+to the first element and add it to the third one.
+:::
+
+:::{.card title="(5.3)"}
+$$
+\begin{align*}
+P_i \, \colon= \frac{C_n^ia_n}{n} \sim \text{PPP}(\hat\lambda) 
+& \implies P_i \to \infty \\
+& \implies C_n^i \to \infty \\
+& \implies \tau_{C_n^i} \to \infty 
+&& \tau_{C_n^i} \sim \sum_{j=1}^{C_n^i} \text{Exp}(\hat\lambda)
+\implies \mathrm{E} \left[ \tau_{C_n^i} \right] = \frac{C_n^i}{\hat{\lambda}} \to \infty.\\
+\end{align*}
+$$
+
+$$
+\begin{align*}
+S_k 
+& = \tilde \lambda k (1 + o(1)) \\
+& \implies \frac{S_k}{\tilde\lambda k} = 1 + o(1) \\
+& \implies \frac{S_{C_n^i}}{\tilde\lambda C_n^i} = 1 + o(1)
+&& C_n^i \to \infty.\\ 
+\end{align*}
+$$
+
+:::
+
+
+:::{.card title="PPP(1)"}
+
+
+$$
+\begin{align*}
+\mathrm P \left( \hat \lambda C_n^i > x \right) 
+& = \mathrm P \left(  \frac{C_n^i a_n}{n} > \frac{a_n x} {n\hat \lambda}\right) \\
+& = \mathrm P \left(  \text{PPP}(\hat \lambda_n) > \frac{a_n x} {n\hat \lambda}\right) \\
+& = \mathrm P \left(  \text{Gamma}(i, \hat \lambda_n) > \frac{a_n x} {n\hat \lambda}\right) \\
+$$
+
+$$
+\begin{align*}
+\mathrm P \left( \hat \lambda C_n^i > x \right) 
+& = \mathrm P \left(  \frac{C_n^i a_n}{n} > \frac{a_nx} {n\hat \lambda}\right) \\
+& = \mathrm P \left(  \text{PPP}(\hat \lambda_n) > \frac{a_nx} {n\hat \lambda}\right) \\
+& = \mathrm P \left(  \text{Gamma}(i, \hat \lambda_n) > \frac{a_nx} {n\hat \lambda}\right) \\
+& = \int_{\frac{a_n x} {n\hat \lambda_n}}^\infty \frac{(\hat \lambda_n)^i}{\Gamma(i)} z^{i-1} e^{-\hat \lambda_n z} \text{d}z \\
+& = \frac{n \hat\lambda_n}{a_n} \int_{x}^\infty \frac{(\hat \lambda_n)^i}{\Gamma(i)} \left(\frac{n \hat \lambda_n b}{a_n} \right)^{i-1} e^{-\left(\frac{a_n b}{n} \right)} \text{d}z
+&& z = \frac{n \hat \lambda_n b}{a_n} \\
+& = \int_{x}^\infty \frac{\left(\frac{a_n}{n}\right)^i}{\Gamma(i)} b^{i-1} e^{-\left(\frac{a_n b}{n} \right)} \text{d}z \\
+& = \mathrm P \left(  \text{Gamma}\left(i, \frac{a_n}{n}\right) > x \right) \\
+\end{align*}
+$$
+$$
+\begin{align*}
+\mathrm P \left( \hat \lambda C_n^i > x \right) 
+& = \mathrm P \left(  \frac{C_n^i a_n}{n} > \frac{a_nx} {n\hat \lambda}\right) \\
+& = \mathrm P \left(  \text{PPP}(\hat \lambda_n) > \frac{a_nx} {n\hat \lambda}\right) \\
+& = \mathrm P \left(  \text{Gamma}(i, \hat \lambda_n) > \frac{a_nx} {n\hat \lambda}\right) \\
+& = \int_{\frac{a_n x} {n\hat \lambda_n}}^\infty \frac{(\hat \lambda_n)^i}{\Gamma(i)} z^{i-1} e^{-\hat \lambda_n z} \text{d}z \\
+& =\int_{\frac{a_n x}{n}}^\infty \frac{1}{\Gamma(i)} b^{i-1} e^{-b} \text{d}b
+&& z = \frac{b}{\hat\lambda_n} \\
+& = \mathrm P \left(  \text{Gamma}(i, 1) > \frac{a_nx} {n}\right) \\
+& = \mathrm P \left(  \text{PPP}(1) > \frac{a_nx} {n}\right) \\
+\end{align*}
+$$
+
+
+
+$$
+P_i \sim \text{PPP}(1)
+$$
+
+$$
+\begin{align*}
+\mathrm E \left[ \text{time till first split of } \hat \lambda C_n^i \right ]
+& = \hat\lambda E \left[ \text{time till first split in } C_n^i \right ] \\
+& = \hat\lambda E \left[ \text{time till first split in } C_n^i \right ] \\
+\end{align*}
+$$
+:::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

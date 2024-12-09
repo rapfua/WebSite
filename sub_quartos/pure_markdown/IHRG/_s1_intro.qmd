@@ -1,0 +1,243 @@
+### 1. Introduction and the main results {.tabset}
+
+::: {.card title="definitions"}
+#### 1.1 The $G(n, \kappa)$ Model {.tabset}
+
+-   A **spanning tree** is a sub-graph that contains all original nodes and is a tree.
+
+-   $X$ **Separable metric space** $\iff \exists D \subset X$ dense s.t. $\forall x \in X, \forall \varepsilon > 0, \exists d \in D$ for which $d(x, d) < \varepsilon.$
+
+    -   E.g. $\mathbf{Q}$ is dense in $\mathbf{R}.$
+
+    -   At the heart of the proof is the archimedean property of $\mathbf{R}$, by which one can always empty a bathtub using a glass.
+
+-   $\mathcal{B} (X)$, the **Borel σ-algebra** on a topological space $X$ is the smallest σ-algebra that contains all the open sets of $X$.
+
+-   Let $\mu$ be a measure on a Borel σ-algebra. For each Borel set $B$:
+
+    -   B is a $\mu$**-continuity set** $\iff \mu(\partial B) = 0.$
+
+-   $\mathcal{S}$ separable metric space & equipped with a Borel probability measure $\mu \implies (\mathcal{S}, \mu)$ is called a **ground space**.
+
+-   The natural of the symmetric measurable **kernel** $\kappa: \mathcal{S} \times \mathcal{S} \to \mathbf{R}_{\geq 0}$ measures the density of edges.
+
+    -   In this case, "symmetric" simply means that $\forall u, v \in \mathcal{S}: \kappa(u, v) = \kappa(v, u).$
+    -   Note the $\kappa$ can take values greater than $1$, unlike the probability measure $\mu$.
+
+-   A kernel $\kappa$ on a ground space $(\mathcal{S}, \mu)$ is **irreducible** if:
+
+    -   $A \subset \mathcal{S}$ & $\kappa \equiv 0$ a.e on $A \times (\mathcal{S} \setminus A) \implies \mu(A) = 0$ or $\mu(\mathcal{S} \setminus A) = 0.$
+
+-   A kernel $\kappa$ on a ground space $(\mathcal{S}, \mu)$ is **quasi-irreducible** if:
+
+    -   $\exists$ a $\mu$-continuity set $\mathcal{S}' \subset \mathcal{S}$ s.t.
+
+        -   $\mu(\mathcal{S}') > 0,$
+
+        -   $\kappa|_{\mathcal{S}' \times \mathcal{S}'}$ is irreducible,
+
+        -   $\kappa|_{\overline{\mathcal{S}' \times \mathcal{S}'}} \equiv 0.$
+
+-   Irreducibility of kernels insures that $\exists$ a **unique** giant cluster in the supercritical regime.
+:::
+
+::: {.card title="description"}
+-   type of each vertex $\in \mathcal{S}$ separable metric space equipped with a Borel probability measure $\mu.$
+
+-   $\nu_n(S) := \frac{\#\{i: \: x_i \in \mathcal{S}\}}{n} \xrightarrow{p} \mu(\mathcal{S}), \forall \: \mu\text{-continuity } S \subset \mathcal{S}.$
+
+-   When all conditions are met, we get the **vertex space** $\nu := (\mathcal{S}, \mu, (x_n)).$
+
+-   Setting $S = \{ t \},$ we get $\nu_n(\{t\}) = \text{proportion of t-type vertices in graph with } n \text{ nodes}\xrightarrow{p} \mu_t \,\colon = \mu(\{t\}) = \text{target proportion of t-type vertices in graph with infinite number of nodes}.$
+:::
+
+::: {.card title="graphical"}
+-   A sequence of kernels $(\kappa_n)$ on a vertex space $(\mathcal{S}, \mu, (x_n))$ is **graphical** **with limit** $\boldsymbol{\kappa}$ s.t.
+
+    -   $\kappa \in L^1(\mathcal{S} \times \mathcal{S}, \mu \times \mu),$
+
+    -   $\kappa$ is continuous a.e.,
+
+-   if:
+
+    -   For a.e. $(y, z) \in \mathcal{S}^2$: $y_n \to y$ & $z_n \to z \implies \kappa(y_n, z_n) \to \kappa(y, z),$
+
+    -   $\frac{1}{n} E_{\mu}[e(G(n, \kappa))] \to \int_{\mathcal{S}^2} \kappa(x, y) \text{ } d \mu(x) \text{ } d \mu(y).$
+
+-   Note: if $\kappa_n \equiv \kappa,$ we simply say that $\kappa$ is graphical.
+:::
+
+::: {.card title="1.3 motivation"}
+$$
+\begin{align}
+E[e(G(n, \kappa))|v_1, \cdots v_n]
+&= \frac{1}{2} \sum_{i=1}^n E[\deg(v_i)|v_1, \cdots, v_n] \\
+&= \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \frac{\kappa(v_i, v_j)}{n} \\
+&= \frac{1}{2n} \sum_{(i,j) \in [n]^2} \kappa(v_i, v_j)
+\end{align}
+$$
+
+$$
+\begin{align}
+\frac{1}{n} E[e(G(n, \kappa))]
+&= \frac{1}{n} E[E[e(G(n, \kappa))|v_1, \cdots v_n]] \\
+&= \frac{1}{2n^2} \sum_{(i,j) \in [n]^2} \int_{\mathcal{S}^2} \kappa(u, v) \text{ } d\mu(u) \text{ } d\mu(v) \\
+&= \frac{1}{2} \int_{\mathcal{S}^2} \kappa(u, v) \text{ } d\mu(u) \text{ } d\mu(v)
+\end{align}
+$$
+:::
+
+
+::: {.card title="Regular"}
+-   We call a kernel **regular finitary** if $\exists$ a finite $\mu$-continuity set partition $\mathcal{S}_1, \cdots, \mathcal{S}_n$ of $\mathcal{S}$ for which:
+
+    -   $\forall i, j \in [n]:\kappa|_{\mathcal{S}_i \times \mathcal{S}_j}$ is constant.
+
+-   It is easy to make the link between regular finitary kernels and finite-type kernels.
+:::
+
+::: {.card title="λ_st"}
+-   $\forall s, t \in \mathcal{S}^2, \lambda_{\boxed{s} \: t} := k(s, t) \mu_t.$
+
+-   The intuition behind $\lambda_{\boxed{s} t}$ is that as the graph becomes bigger, it gives the average number of $t-$type neighbors that $s-$type vertices have.
+
+-   Recall that $\frac{n_t}{n} \xrightarrow{p} \mu_t$.
+
+-   Number of type t neighbors of a type s vertex $\sim B(\tilde{n} = n_t - \mathbf{1}_{\{s = t\}}, \: \tilde{p} = \kappa(s, t) /n) \implies E[X] = \tilde{n} \tilde{p} = \kappa(s, t) (n_t - \mathbf{1}_{\{s = t\}}) / n \xrightarrow{p} \kappa(s, t) \mu_t = \lambda_{\boxed{s} t}.$
+:::
+
+::: {.card title="eigenfunction"}
+-   Let $v := \begin{pmatrix} \pi(s) \\ \vdots \\ \pi(s) \end{pmatrix}$,
+
+-   let $\Lambda := \begin{pmatrix} \lambda_{\boxed{s} \: t} \end{pmatrix}_{s, t \in \mathcal{S}}$,
+
+-   let $a^T := v^T \Lambda = a^T \Lambda$,
+
+-   let $b^T := (1 + \tilde{\lambda}) v^T$.
+
+-   Clearly, $a(t) = \sum_{s \in \mathcal{S}} \pi(s) \lambda_{\boxed{s} t} = \sum_{s \in \mathcal{S}} \pi(s) \kappa(s, t) \mu_t = \int_{\mathcal{S}} \kappa(s, t) \mu_t \text{ } d\pi(s)$.
+
+-   Since $a = b$, this explains the second to last equation of page
+
+    591. 
+:::
+
+::: {.card title="Λ matrix"}
+-   $(T_{\kappa} f)(s_i) = \int_{\mathcal{S}} \kappa(s_i, t) f(t) \text{ } d\mu(t) = \sum_{t \in \mathcal{S}} \kappa(s_i, t) \mu(t) f(t) = \sum_{t \in \mathcal{S}} \lambda_{\boxed{s_i} \: t} f(t)$.
+
+-   In other words, $\begin{pmatrix} (T_{\kappa} f)(s_1) \\ \vdots \\ (T_{\kappa} f)(s_n) \end{pmatrix} = \Lambda \begin{pmatrix} f(t_1) \\ \vdots \\ f(t_n) \end{pmatrix}$
+
+-   Equivalently, $\vec{T_{\kappa}f} = \Lambda \vec{f}$.
+:::
+
+::: {.card title="stationary"}
+We suppose:
+
+-   $f \geq 0,$
+
+-   $\kappa$ quasi-irreducible.
+
+Then $\exists! \pi$ nontrivial left eigenfunction s.t.:
+
+-   $\int \pi(dt) = 1$, which in turn implies:
+
+    -   $\int_{\mathcal{S}} \pi(ds) \kappa(s, t) \mu_t = (1 + \tilde{\lambda}) \pi(t)$
+
+We call $\pi$ the **stationary type-distribution**.
+
+In addition, we will suppose that $\int_{\mathcal{S}} \frac{\pi}{\mu} d\mu < \infty$
+:::
+
+::: {.card title="Why is κ = μ?"}
+-   $(\tilde{\lambda} + 1) \pi_t = \int_{\mathcal{S}} \kappa(s, t) \mu_t \text{ } d\pi(s) = \mu_t \int_{\mathcal{S}} \kappa(s, t) \text{ } d\pi(s) \stackrel{\kappa \text{ sym}}{=} \mu_t \int_{\mathcal{S}} \kappa(t, s) \text{ } d\pi(s) = \mu_t \int_{\mathcal{S}} \kappa(s, t) \text{ } d\pi(s) = \mu_t (\tilde{\lambda} + 1)$.
+
+$\begin{align}
+\mu_s (1 + \tilde{\lambda})
+&\stackrel{\text{1.6}}{=} \mu_s \int_{\mathcal{S}} \kappa(s, t) \text{ } d\mu(t) \\
+&= \sum_{t \in \mathcal{S}} \kappa(s, t) \mu_t \mu_s\\
+&\stackrel{\kappa \text{ sym}}{=} \sum_{t \in \mathcal{S}} \kappa(t, s) \mu_t \mu_s\\
+&= \int_{\mathcal{S}} \kappa(t, s) \mu_s \text{ } d\mu(t)\\
+&= (\vec{\mu}^T \Lambda)_s.
+\end{align}$
+
+This shows that $\vec{\mu}$ is a none trivial eigenvector. By uniqueness we thus have $\vec{\mu} = \vec{\pi}$.
+:::
+
+::: {.card title="homogeneous kernel"}
+-   $\kappa$ is **homogeneous** if $\int_{\mathcal{S}} k(s, t) d\mu(t) = 1 + \tilde{\lambda}$ for a.e. $s \in \mathcal{S}$.
+
+-   Intuitively, this means that asymptotically, the average degree of vertices does not depend on the type of the vertices.
+:::
+
+
+
+::: {.card title="Theorem 1.1"}
+#### 1.2 Main results {.tabset}
+
+**Reminders:** - The function $f: X \to Y$ is said to be uniformly continuous if:
+
+-   $\forall \varepsilon > 0, \exists \delta > 0$ s.t. $\forall x_1, x_2 \in X$:
+
+    -   $d_X(x_1, x_2) < \delta \implies d_Y(f(x_1), f(x_2)) < \varepsilon.$
+
+**Statement:** - Let $(\mathcal{S}, \mu)$ be a ground space,
+
+-   let $(\kappa_n)$ be a sequence of uniformly continuous graphical kernels with $\sup_{n \in \mathbf{N}, \: x, y \in \mathcal{S}} \kappa_n(x, y) < \infty,$
+
+-   $\tilde{\lambda}_n \to \tilde{\lambda} < \infty$ (d'où "sparse"),
+
+-   assumption 1.1. satisfied:
+
+    -   $\kappa$ quasi-irreducible,
+
+    -   $1 + \tilde{\lambda} > 1,$
+
+    -   $\int_{\mathcal{S}} \frac{\pi}{\mu} d\mu = 1.$
+
+-   $u, v \in V$ chosen uniformly at random,
+
+-   conditional on the $u$ being connected to $v$:
+
+$$
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\lambda}) \log n}{\tilde{\lambda}}}{\sqrt{\frac{(1 + \tilde{\lambda}) \log n}{\tilde{\lambda}}}}, \mathcal{P}_n(u, v) - \frac{\log n}{\tilde{\lambda}}  \right) \xrightarrow{d} (Z, L),
+$$
+
+where
+
+-   $Z \sim \mathcal{N}(0, 1),$
+
+-   $L$ is a non-degenerate real random variable whose distribution can be computed using ideas from branching process theory during the exploration phase of the components of $G(n, \kappa).$
+:::
+
+::: {.card title="Theorem 1.2"}
+If:
+
+-   Theorem 1.1 (sparse setting) hypotheses,
+
+-   $\kappa_n$s and $\kappa$ are homogeneous kernels,
+
+-   $\tilde{\lambda}_n \to +\infty$
+
+OR
+
+-   $\kappa$ satisfies theorem 1.1 hypotheses,
+
+-   $\forall n \in \mathbf{N}, \kappa_n = (1 + \tilde{\lambda}_n) \kappa,$
+
+-   $\tilde{\lambda}_n \to +\infty$
+
+Then:
+
+$$
+\left( \frac{\mathcal{H}_n(u, v) - \frac{(1 + \tilde{\lambda}_n) \log n}{\tilde{\lambda}_n}}{\sqrt{\log n}}, \tilde{\lambda}_n \mathcal{P}_n(u, v) - \log n\right) \xrightarrow{d} (Z, \tilde{L})
+$$
+
+where
+
+-   $Z \sim \mathcal{N}(0, 1),$
+
+-   $\tilde{L} \stackrel{d}{=} \Lambda_1 + \Lambda_2 - \Lambda_3 - c$ with $\Lambda_i \stackrel{\textit{i.i.d.}}{\sim} \text{Gumbel}$.
+
+    -   $c$ known and different for each of the two possible sets of hypotheses.
+:::
+

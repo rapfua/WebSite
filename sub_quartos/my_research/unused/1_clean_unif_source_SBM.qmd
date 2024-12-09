@@ -1,0 +1,227 @@
+# Uniform choice of source among community A and B
+
+## Row {.tabset}
+
+### First try
+
+
+:::{.callout-note collapse="false" title="Assumptions: Promotions"}
+
+
+$$
+\begin{align*}
+\Psi_{\kappa_n, v_i} \equiv \Psi_{\kappa_n, i}
+& \, \colon = \sum_{s \in \mathcal S}
+  \mathbf 1_{\{ \text{type}(v_i) = s \}}
+  \Psi_{\kappa_n}^{s, i}
+&& i \in [n], \Psi_{\kappa_n}^s \stackrel{\perp \!\! \perp}{\sim} 
+                  \text{PPP}(\kappa_n(s, t) \mathop{}\!\mathrm{d} \mu(t)) \\
+& = \Psi_{\kappa}^{\text{type}(v_i), i}
+\end{align*}
+
+$$
+
+$$
+\begin{align*}
+\Psi_{\kappa_n, v_i} &= \Psi_{\kappa_n}^{\text{type}(v_i), i}
+\qquad i \in [n], \Psi_{\kappa_n}^{\text{type}(v_i), i} \stackrel{\perp \!\! \perp}{\sim} 
+\text{PPP}(\kappa_n(\text{type}(v_i), t) \mathop{}\!\mathrm{d} \mu(t)) \\
+G_{\kappa_n, v_i, k}^t & \, \colon = 
+  \text{generation of uniformly picked alive individual of type } t 
+  \text{ in } A_{\kappa_n, v_i}(k) \\
+& \; = G_{\kappa_n, k}^{\text{type}(v_i),t, i}
+
+\end{align*} 
+$$
+
+
+
+
+$$
+\begin{align*}
+E_t & \, \colon = \text{collision on shortest path happens at a type }t\text{ vertex event} \\
+\mathcal H_n
+& = \sum_{i , j \in [n]} 
+      \mathbf 1_{\{ \text{sources at } v_i \& v_j  \}} \cdot
+      \mathcal H_n(v_i, v_j) \\ 
+& = \sum_{i , j \in [n]} 
+      \mathbf 1_{\{ \text{sources at } v_i \& v_j  \}} \cdot
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        (G_{\kappa_n, v_i, a_n}^t +
+        G_{\kappa_n, v_j, C_n^{\text{con}}}^t) \\
+& = \sum_{i , j \in [n]} 
+      \mathbf 1_{\{ \text{sources at } v_i \& v_j  \}} \cdot
+      \sum_{t \in \mathcal S}
+      \mathbf 1_{E_t} \cdot 
+      \left(
+        G_{\kappa_n, a_n}^{\text{type}(v_i),t, i} +
+        G_{\kappa_n, C_n^{\text{con}}}^{\text{type}(v_j),t, i} \right)
+    \implies
+\end{align*}
+$$
+
+From p. 605 of [@kolossvary2015first], we define
+
+$$
+\mathcal H_n^{ab} \, \colon = \sum_{t \in \mathcal S}
+  \mathbf 1_{E_t} \cdot 
+  \left(
+    G_{\kappa_n, a_n}^{a,t} +
+    G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right)
+$$
+
+
+
+Let us study the probability mass function of $\mathcal H_n(U_a, U_b)$.
+
+$$
+\begin{align*}
+p_{\mathcal H_n(U_a, U_b)}(y)
+& = \mathrm{P} \left( \mathcal H_n(U_a, U_b) = y \right) \\
+& = \sum_{\substack{
+          i , j \in [n] \\
+          v_i \in A, v_j \in B}}
+    \mathrm{P} \left( \mathcal H_n(v_i, v_j) = y, U_a = v_i, U_b = v_j\right) \\
+& =     
+  \sum_{\substack{
+            i, j \in [n] \\
+            v_i \in A, v_j \in B}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t, i} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t, j} \right) = y,
+          U_a = v_i, U_b = v_j
+        \right) \\
+& \stackrel{\perp \!\! \perp}{=}      
+  \frac{1}{|A| \cdot |B|}
+  \sum_{\substack{
+            i, j \in [n] \\
+            v_i \in A, v_j \in B}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t, i} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t, j} \right) = y
+        \right) \\
+& =
+  \frac{1}{|A| \cdot |B|}
+  \sum_{\substack{
+            i, j \in [n] \\
+            v_i \in A, v_j \in B}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right) = y
+        \right) 
+&& \text{identically distributed} \\
+& =
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right) = y
+        \right) \\
+& = 
+    \mathrm P \left( 
+      \mathcal H_n^{ab} = y
+    \right)
+\end{align*}
+$$
+
+
+Let us study the probability mass function of $\mathcal H_n$ conditional on the type of the sources.
+
+$$
+\begin{align*}
+p_{\mathcal H_n | U_1 \in A, U_2 \in B}(y) 
+& = \frac
+      {\mathrm{P} \left( \mathcal H_n = y, U_1 \in A, U_2 \in B  \right)}
+      {\mathrm{P} \left( U_1 \in A, U_2 \in B \right)} \\
+& = 
+  \frac{\left( |A| + |B| \right)^2}{|A| \cdot |B|}
+  \sum_{\substack{
+          i, j \in [n] \\
+          v_i \in A, v_j \in B}}
+\mathrm{P} \left( \mathcal H_n = y, U_1 = v_i, U_2 = v_j  \right) \\
+& = \frac{\left( |A| + |B| \right)^2}{|A| \cdot |B|}
+    \sum_{\substack{
+            i, j \in [n] \\
+            v_i \in A, v_j \in B}}
+      \mathrm P \left( 
+        \sum_{t \in \mathcal S}
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t, i} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t,j} \right) = y,
+          U_1 = v_i, U_2 = v_j
+      \right) \\
+& \stackrel{\perp \!\! \perp}{=}
+  \frac{1}{|A| \cdot |B|}
+  \sum_{\substack{
+          i , j \in [n] \\
+          v_i \in A, v_j \in B}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+      
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t, i} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t, j} \right) = y
+      \right) \\ 
+& =
+  \frac{1}{|A| \cdot |B|}
+  \sum_{\substack{
+          i , j \in [n] \\
+          v_i \in A, v_j \in B}}
+    \mathrm P \left( 
+      \sum_{t \in \mathcal S}
+      
+        \mathbf 1_{E_t} \cdot 
+        \left(
+          G_{\kappa_n, a_n}^{a,t} +
+          G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right) = y
+      \right)   
+&& \text{identically distributed} \\
+& = 
+  \mathrm{P}
+  \left(  
+    \sum_{t \in \mathcal S}
+      \mathbf 1_{E_t} \cdot
+      \left(
+        G_{\kappa_n, a_n}^{a,t} +
+        G_{\kappa_n, C_n^{\text{con}}}^{b,t} \right) = y
+  \right) \\
+& = 
+  \mathrm{P}
+  \left(  
+    \mathcal H_n^{ab} = y
+  \right) \implies
+&& \text{p. 605 in FPP paper}
+\end{align*}
+$$
+
+
+$$
+\begin{align*}
+\mathcal H_n(U_a, U_b)
+& \stackrel{d}{=} \mathcal H_n | U_1 \in A, U_2 \in B \\
+& \stackrel{d}{=} \mathcal H_n^{ab} \implies \\
+\frac{\mathcal H_n(U_a, U_B) - c_n}{d_n}
+& \stackrel{d}{=} \frac{\mathcal H_n^{ab} - c_n}{d_n}
+\xrightarrow[n \to \infty]{d} Z \sim \mathcal N(0, 1)
+\end{align*}
+$$
+
+
+
+
+:::
+
+
