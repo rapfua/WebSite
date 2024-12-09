@@ -78,7 +78,6 @@ public:
   // Adds an edge between two nodes
   void add_edge(int u, int v, double w) {
     nodes[u].edges.emplace_back(u, v, w);
-    nodes[v].edges.emplace_back(v, u, w);
   }
   
   // Displays the graph structure

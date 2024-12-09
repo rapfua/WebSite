@@ -10,7 +10,7 @@ Rcpp::DataFrame add_edges(const arma::mat& W) {
   std::vector<double> weights;
   
   for (int i = 0; i < n; ++i) {
-    if (i % 10 == 0) {
+    if (i % 100 == 0) {
       Rcpp::Rcout << "Processing node " << i << std::endl;
     }
     

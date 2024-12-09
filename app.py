@@ -28,6 +28,10 @@ import networkx as nx       # for get_metric_backbone_igraph
 import graphlearning as gl  # for get_Gaussian_weight_matrix
 import igraph as ig         # for get_metric_backbone_igraph
 
+from rpy2 import robjects
+from rpy2.robjects.packages import importr
+import seaborn as sns
+
 # ========================================================================
 
 
@@ -365,6 +369,269 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
+    # from rpy2 import robjects
+    # from rpy2.robjects.packages import importr
+
+    # Load the Rcpp package
+    Rcpp = importr('Rcpp')
+
+    # Define the Rcpp function
+    robjects.r('''
+        library(Rcpp)
+        cppFunction('
+            int add_numbers(int x, int y) {
+                return x + y;
+            }
+        ')
+    ''')
+
+    # Access the Rcpp function from Python
+    add_numbers = robjects.r['add_numbers']
+
+    # Call the function
+    result = add_numbers(5, 10)
+    print("Result from Rcpp function:", 5, '+', 10, '=', result[0])
+
+    # ========================================================================
+
+    ui.markdown("## Percolation Demo")
+
+    ui.input_select("p_presentation", "Probability:",
+                    choices=[x / 100 for x in range(1, 100)],
+                    selected=0.5,
+                    width=10
+    )
+    ui.input_select("grid_size_presentation", "Number of nodes in each dimension:",
+                    choices=[x for x in range(2, 101)],
+                    selected=10
+    )
+
+    # ========================================================================
+
+    @render.plot
+    def shiny_percolation_plot_presentation_PLOT():
+  
+        p = float(input.p_presentation())
+        grid_size = int(input.grid_size_presentation())
+        G = nx.grid_2d_graph(grid_size, grid_size)
+        pos = {(x, y): (x, y) for x, y in G.nodes()}
+    
+        # needs to be this high in code
+        plt.figure(figsize=(6, 6))  
+    
+        for (u, v) in G.edges():
+            edge_color = 'red' if random.random() < p else 'black'
+            edge_width = 3 if edge_color == 'red' else 1  # Thicker for red edges
+            nx.draw_networkx_edges(G, pos, edgelist=[(u, v)], edge_color=edge_color, width=edge_width)
+    
+        nx.draw_networkx_nodes(G, pos, node_size=0)
+    
+        legend_elements = [
+            Line2D([0], [0], color='red', lw=3, label  ='open   & w(e) = 1'),
+            Line2D([0], [0], color='black', lw=1, label='closed & w(e) = 0'),
+        ]
+    
+    
+        plt.legend(handles=legend_elements, bbox_to_anchor=(1.4, 0.96))
+        plt.gca().set_aspect('equal')
+        plt.axis('off')
+        plt.title(f"{grid_size}x{grid_size} Grid with p = {p:.2f}", fontsize=14)
+        plt.text(
+          0.5,
+          -0.05, 
+          'Figure 1: each edge is open with probability p.',
+          fontsize=12,
+          ha='center',
+          va='center', 
+          transform=plt.gca().transAxes
+        )
+
+        # Adjust layout to ensure the caption fits within the figure area
+        plt.tight_layout()
+
+    # ========================================================================
+
+    input_select_width = 10
+
+    L = list(range(100, 501, 100))
+    L.insert(0, 50)
+
+    ui.input_select("n_spectral_clustering_1", "Number of nodes in each cluster:",
+                    choices=L,
+                    selected=100,
+                    width=input_select_width
+    )
+
+    # for graph creation (& spectral clustering)
+    ui.input_select("n_neighbors_spectral_clustering_1", "Number of nearest neighbors ",
+                    choices=list(range(5, 21)),
+                    selected=10,
+                    width=input_select_width
+    )
+
+
+    ui.input_select("mu_x2_spectral_clustering_1", "Mean of the second Gaussian with respect to the x-axis:",
+                    choices=list(range(1, 21)),
+                    selected=3,
+                    width=input_select_width
+    )
+
+
+    ui.input_select("R_1_spectral_clustering_1", "Big radius for intra-community edges:",
+                    choices=[round(i * 0.01, 2) for i in range(1, 201)],
+                    selected= 1,
+                    width=input_select_width
+    )
+
+    ui.input_select("R_2_spectral_clustering_1", "Small radius for inter-community edges:",
+                    choices=[round(i * 0.01, 2) for i in range(1, 101)],
+                    selected=0.5,
+                    width=input_select_width
+    )
+
+    # ========================================================================
+
+    @render.plot
+    def shiny_hybrid_presentation():
+
+
+        n           = int(input.n_spectral_clustering_1())
+        d           = 2
+        n_clusters  = d
+        n_neighbors = int(input.n_neighbors_spectral_clustering_1())
+        mu_x      = float(input.mu_x2_spectral_clustering_1())
+        λ           = 1
+
+        F = make_F(f(φ(float(input.R_1_spectral_clustering_1()))), f(φ(float(input.R_2_spectral_clustering_1()))))
+
+        # Generate samples separately
+        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x)
+
+        # Update G_distance separately
+        G = produce_distance_graph(samples, n, d, framework='hybrid', F=F)
+
+        col_slice = slice(1, samples.shape[1] + 1)
+
+        W = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
+
+        edges = list(G.edges())
+        weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
+        nx.set_edge_attributes(G, weights, 'weight')
+
+        mb_igraph = get_metric_backbone_igraph(G)
+
+        fig, axs = plt.subplots(2, 2, figsize=(12, 12))
+
+        similarity_original, similarity_mb = draw(
+          G,
+          mb_igraph,
+          samples,
+          n_neighbors,
+          axs,
+          n_clusters,
+          L_idx=[0, 1]
+        )
+
+
+        for i in range(2):
+            for j in range(2):
+                ax = axs[i, j]
+                ax.set_xlabel('X-axis')
+                ax.set_ylabel('Y-axis')
+                ax.axis('equal')
+                ax.axis('on')
+                ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+                ax.legend(
+                  handles=[produce_patch(color='red', framework='gaussian', mu_x2=0),
+                           produce_patch(color='blue', framework='gaussian', mu_x2=mu_x)]
+                 )
+
+
+        axs[0, 0].set_title(f'Gaussian Samples with {n} nodes in each cluster, inter-proportion: {get_inter_proportion(G) * 100:.2f}')
+        axs[0, 1].set_title(f'Metric Backbone, inter-proportion: {get_inter_proportion(mb_igraph) * 100:.2f}')
+
+        axs[1, 0].set_title(f'SC: Gaussian Samples with {n} nodes in each cluster, ARI: {similarity_original * 100:.2f}')
+        axs[1, 1].set_title(f'SC: Metric Backbone, ARI: {similarity_mb * 100:.2}%')
+
+    # ========================================================================
+
+    # import shiny as s
+    # import s.express as e
+    # from e import render, ui
+    ui.input_select(
+      id="x",
+      label="Variable:",
+      choices=[
+        "flipper_length_mm"
+        "bill_length_mm",
+      ]
+    )
+
+    ui.input_select(
+      "dist", 
+      "Distribution:", 
+      choices=["hist", "kde"]
+    )
+
+    ui.input_checkbox(
+      id="rug", 
+      label="Show rug marks", 
+      value = False
+    )
+
+    # ========================================================================
+
+    ui.input_select(
+      id="x",
+      label="Variable:",
+      choices=["flipper_length_mm", "bill_length_mm"]
+    )
+
+    ui.input_select(
+      "dist", 
+      "Distribution:", 
+      choices=["hist", "kde"]
+    )
+
+    ui.input_checkbox(
+      "rug", 
+      "Show rug marks", 
+      value = False
+    )
+
+    # ========================================================================
+
+    @render.plot
+    def hello_world_PLOT():
+  
+        # import seaborn as sns
+        penguins = sns.load_dataset("penguins")
+    
+        sns.displot(
+            data=penguins, hue="species", multiple="stack",
+            x=input.x(), rug=input.rug(), kind=input.dist())
+
+    # ========================================================================
+
+    @render.plot
+    def hello_world_PLOT():
+  
+        # import seaborn as sns
+        penguins = sns.load_dataset(
+          "penguins"
+        )
+    
+        sns.displot(
+            data=penguins, 
+            hue="species", 
+            multiple="stack",
+            x=input.x(), 
+            rug=input.rug(), 
+            kind=input.dist()
+        )
+
+    # ========================================================================
+
     ui.markdown("## Percolation Demo")
 
     ui.input_select("p", "Probability:",
@@ -422,413 +689,12 @@ def server(input: Inputs, output: Outputs, session: Session) -> None:
 
     # ========================================================================
 
-    input_select_width = 10
-
-    L = list(range(100, 501, 100))
-    L.insert(0, 50)
-
-    ui.input_select("n", "Number of nodes in each cluster:",
-                    choices=L,
-                    selected=50,
-                    width=input_select_width
-    )
-
-    ui.input_select("d", "Number of dimensions & communities:",
-                    choices=list((2, 3, 4)),
-                    selected=2,
-                    width=input_select_width
-    )
-
-    # for graph creation (& spectral clustering)
-    ui.input_select("n_neighbors", "Number of nearest neighbors ",
-                    choices=list(range(5, 21)),
-                    selected=10,
-                    width=input_select_width
-    )
-
-    ui.input_select("mu_x2", "Mean of the second Gaussian with respect to the x-axis:",
-                    choices=list(range(1, 21)),
-                    selected=3,
-                    width=input_select_width
-    )
-
-
-    ui.input_select("λ", "Intensity parameter (N_n ~ Poisson(λ * n)):",
-                    choices=[1],
-                    selected=1,
-                    width=input_select_width
-    )
-
-    ui.input_select("R_1", "Big radius for intra-community edges:",
-                    choices=list(range(1, 11)),
-                    selected=3,
-                    width=input_select_width
-    )
-
-    ui.input_select("R_2", "Small radius for inter-community edges:",
-                    choices=[1, 1.5, 2, 2.5, 3],
-                    selected=[1.5],
-                    width=input_select_width
-    )
-
-    # ========================================================================
-
-    @render.plot
-    def normals_nNodes_dDimensions_PLOT():
-    
-        n           = int(input.n())
-        d           = int(input.d())
-        n_clusters  = d
-        n_neighbors           = int(input.n_neighbors())
-        mu_x2       = float(input.mu_x2())
-        #n_neighbors = int(input.n_neighbors())
-        # n_neighbors = k
-        λ           = int(input.λ())
-
-        R_1         = float(input.R_1())  
-        R_2         = float(input.R_2())
-        R_1, R_2 = max(R_1, R_2), min(R_1, R_2)
-        f_in_r  = φ(R_1)
-        f_out_r = φ(R_2)
-        f_in  = f(f_in_r)
-        f_out = f(f_out_r)
-    
-        F = make_F(f_in, f_out)
-
-
-        # Generate samples separately
-        samples_gaussian = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2)
-
-        # Update G_distance separately
-        G_distance = produce_distance_graph(samples_gaussian, n, d, n_neighbors)
-        mb_igraph = get_metric_backbone_igraph(G_distance)
-
-        # Now handle plotting
-        fig, axs = plt.subplots(4, 2, figsize=(24, 12))
-    
-        similarity_original, similarity_mb = draw(G_distance, mb_igraph, samples_gaussian, n_neighbors, axs, n_clusters)
-
-        ############## ABBE ################
-    
-        SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
-
-        samples_uniform = produce_samples(n, d, type_samples="uniform")
-        G_distance_ABBE = produce_distance_graph(samples_uniform, n, d, framework='ABBE', F=F)
-
-        col_slice = slice(1, samples_uniform.shape[1] + 1)
-
-        W = get_Gaussian_weight_matrix(samples_uniform[:, col_slice], n_neighbors)
-
-        edges = list(G_distance_ABBE.edges())
-        weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
-        nx.set_edge_attributes(G_distance_ABBE, weights, 'weight')
-
-        mb_igraph_ABBE = get_metric_backbone_igraph(G_distance_ABBE)
-
-        similarity_original_ABBE, similarity_mb_ABBE = draw(G_distance_ABBE, mb_igraph_ABBE, samples_uniform, n_neighbors, axs, n_clusters, L_idx=[2, 3])
-
-        for i in range(4):
-            for j in range(2):
-                ax = axs[i, j]
-                ax.set_xlabel('X-axis')
-                ax.set_ylabel('Y-axis')
-                ax.axis('equal')
-                ax.axis('on')
-                ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
-                if i < 2:
-                    ax.legend(handles=[produce_patch(color='red', framework='gaussian', mu_x2=0), produce_patch(color='blue', framework='gaussian', mu_x2=mu_x2)])
-                else:
-                    ax.legend(handles=[produce_patch(color='red', framework='ABBE',  plus_or_minus_one=1), produce_patch(color='blue', framework='ABBE', plus_or_minus_one=-1)])
-
-
-        axs[0, 0].set_title(f'Gaussian Samples with {n} nodes in each cluster, inter-proportion: {get_inter_proportion(G_distance) * 100:.2f}%')
-        axs[0, 1].set_title(f'Metric Backbone, inter-proportion: {get_inter_proportion(mb_igraph) * 100:.2f}%')
-    
-        axs[1, 0].set_title(f'SC: Gaussian Samples with {n} nodes in each cluster, ARI: {similarity_original * 100:.2f}%')
-        axs[1, 1].set_title(f'SC: Metric Backbone, ARI: {similarity_mb * 100:.2f}%')
-    
-    
-        axs[2, 0].set_title(f'ABBE original {G_distance_ABBE.number_of_edges()} edges, inter-proportion: {get_inter_proportion(G_distance_ABBE) * 100:.2f}%')
-        axs[2, 1].set_title(f'ABBE MB {mb_igraph_ABBE.number_of_edges()} edges, inter-proportion: {get_inter_proportion(mb_igraph_ABBE) * 100:.2f}%')
-        axs[3, 0].set_title(f'SC: ABBE original, ARI: {similarity_original_ABBE * 100:.2f}%')
-        axs[3, 1].set_title(f'SC: ABBE MB, ARI: {similarity_mb_ABBE * 100:.2f}%')
-
-
-    # ========================================================================
-
-    input_select_width = 10
-
-    L = list(range(100, 501, 100))
-    L.insert(0, 50)
-
-    ui.input_select("n100", "Number of nodes in each cluster:",
-                    choices=L,
-                    selected=50,
-                    width=input_select_width
-    )
-
-    ui.input_select("d100", "Number of dimensions & communities:",
-                    choices=list((2, 3, 4)),
-                    selected=2,
-                    width=input_select_width
-    )
-
-    # for graph creation (& spectral clustering)
-    ui.input_select("n_neighbors100", "Number of nearest neighbors ",
-                    choices=list(range(5, 21)),
-                    selected=10,
-                    width=input_select_width
-    )
-
-    # ui.input_select("n_neighbors", "Number of nearest neighbors for spectral clustering:",
-    #                 choices=list(range(3, 16)),
-    #                 selected=4,
-    #                 width=input_select_width
-    # )
-
-    ui.input_select("mu_x2100", "Mean of the second Gaussian with respect to the x-axis:",
-                    choices=list(range(1, 21)),
-                    selected=3,
-                    width=input_select_width
-    )
-
-
-    ui.input_select("λ100", "Intensity parameter (N_n ~ Poisson(λ * n)):",
-                    choices=[1],
-                    selected=1,
-                    width=input_select_width
-    )
-
-    ui.input_select("R_1100", "Big radius for intra-community edges:",
-                    choices=[round(i * 0.01, 2) for i in range(1, 201)],
-                    selected= 1,
-                    width=input_select_width
-    )
-
-    ui.input_select("R_2100", "Small radius for inter-community edges:",
-                    choices=[round(i * 0.01, 2) for i in range(1, 101)],
-                    selected=0.5,
-                    width=input_select_width
-    )
-
-    # ========================================================================
-
-    @render.plot
-    def graph_gaussian_clusters_ABBE_prediction_PLOT():
-  
-    
-        n           = int(input.n100())
-        d           = int(input.d100())
-        n_clusters  = d
-        n_neighbors = int(input.n_neighbors100())
-        mu_x100       = float(input.mu_x2100())
-        λ           = int(input.λ100())
-
-        F = make_F(f(φ(float(input.R_1100()))), f(φ(float(input.R_2100()))))
-    
-        # Generate samples separately
-        samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x100)
-    
-        # Update G_distance separately
-        G = produce_distance_graph(samples, n, d, framework='hybrid', F=F)
-
-        col_slice = slice(1, samples.shape[1] + 1)
-
-        W = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-
-        edges = list(G.edges())
-        weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
-        nx.set_edge_attributes(G, weights, 'weight')
-    
-        mb_igraph = get_metric_backbone_igraph(G)
-    
-        fig, axs = plt.subplots(2, 2, figsize=(12, 12))
-    
-        similarity_original, similarity_mb = draw(
-          G,
-          mb_igraph,
-          samples,
-          n_neighbors,
-          axs,
-          n_clusters,
-          L_idx=[0, 1]
-        )
-
-
-        for i in range(2):
-            for j in range(2):
-                ax = axs[i, j]
-                ax.set_xlabel('X-axis')
-                ax.set_ylabel('Y-axis')
-                ax.axis('equal')
-                ax.axis('on')
-                ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
-                ax.legend(
-                  handles=[produce_patch(color='red', framework='gaussian', mu_x2=0),
-                           produce_patch(color='blue', framework='gaussian', mu_x2=mu_x100)]
-                 )
-
-
-        axs[0, 0].set_title(f'Gaussian Samples with {n} nodes in each cluster, inter-proportion: {get_inter_proportion(G) * 100:.2f}%')
-        axs[0, 1].set_title(f'Metric Backbone, inter-proportion: {get_inter_proportion(mb_igraph) * 100:.2f}%')
-    
-        axs[1, 0].set_title(f'SC: Gaussian Samples with {n} nodes in each cluster, ARI: {similarity_original * 100:.2f}%')
-        axs[1, 1].set_title(f'SC: Metric Backbone, ARI: {similarity_mb * 100:.2f}%')
-
-
-    # ========================================================================
-
-    input_select_width = 10
-
-    L = list(range(100, 501, 100))
-    L.insert(0, 50)
-
-    ui.input_select('n_simulations4', 'Number of simulations:',
-                    choices=[1, 3] + list(range(10, 101, 10)),
-                    selected=3,
-                    width=input_select_width
-    )
-
-    ui.input_select("n4", "Number of nodes in each cluster:",
-                    choices=L,
-                    selected=100,
-                    width=input_select_width
-    )
-
-    ui.input_select("d4", "Number of dimensions & communities:",
-                    choices=list((2, 3, 4)),
-                    selected=2,
-                    width=input_select_width
-    )
-
-
-    ui.input_select("mu_x24", "Mean of the second Gaussian with respect to the x-axis:",
-                    choices=list(range(1, 21)),
-                    selected=3,
-                    width=input_select_width
-    )
-
-
-
-
-
-    ui.input_select("R_14", "Big radius for intra-community edges:",
-                    choices=[round(i * 0.01, 2) for i in range(1, 201)],
-                    selected= 1,
-                    width=input_select_width
-    )
-
-    ui.input_select("R_24", "Small radius for inter-community edges:",
-                    choices=[round(i * 0.01, 2) for i in range(1, 101)],
-                    selected=0.5,
-                    width=input_select_width
-    )
-
-
-    # ========================================================================
-
-    @render.plot
-    def graph_mu_fixed_n_neighbors_varying_PLOT_HYBRID():
-  
-        λ           = 1
-
-        F = make_F(f(φ(float(input.R_14()))), f(φ(float(input.R_24()))))
-    
-  
-        n_simulations = int(input.n_simulations4())
-    
-        n           = int(input.n4())
-        d           = int(input.d4())
-        n_clusters  = d
-        mu_x2       = float(input.mu_x24())
-    
-        n_neighbors_LIST = list(range(3, 51))
-
-        fig, axs = plt.subplots(2, 1, figsize=(6, 12))
-    
-        dim3_labels = [f'similarity_{i}' for i in range(n_simulations)]
-    
-        array_3d = StringIndexed3DArray(array=np.zeros((len(n_neighbors_LIST), 2, n_simulations)), dim1_labels=n_neighbors_LIST, dim2_labels=['ARI_original', 'ARI_MB'], dim3_labels=dim3_labels)
-    
-        for i in range(n_simulations):
-            print()
-            print('Simulation:', i + 1, 'out of', n_simulations, 'started')
-            print()
-        
-            samples = produce_samples(n, d, type_samples="gaussian", mu_x2=mu_x2, SEED=i)
-            col_slice = slice(1, samples.shape[1] + 1)
-        
-        
-        
-            for j, n_neighbors in enumerate(n_neighbors_LIST):
-                # Update G_distance separately
-                G = produce_distance_graph(samples, n, d, framework='hybrid', F=F)
-        
-                W = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-        
-                edges = list(G.edges())
-                weights = {(u, v): 1 / W[u, v] - 1 if W[u, v] > 0 else float('inf') for u, v in edges}
-                nx.set_edge_attributes(G, weights, 'weight')
-            
-                MB = get_metric_backbone_igraph(G)
-            
-            
-                true_labels = list(nx.get_node_attributes(G, 'community').values())
-                true_colors = ['red' if label == true_labels[0] else 'blue' for label in true_labels]
-
-                SC = SpectralClustering(n_clusters=n_clusters, affinity='precomputed')
-
-                A = get_Gaussian_weight_matrix(samples[:, col_slice], n_neighbors)
-
-                pred_labels = SC.fit_predict(A)
-                pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            
-                array_3d[n_neighbors, 'ARI_original', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
-            
-            
-                A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
-                A = scipy.sparse.csr_matrix(A)
-
-                pred_labels = SC.fit_predict(A)
-                pred_colors = ['red' if label == pred_labels[0] else 'blue' for label in pred_labels]
-            
-                array_3d[n_neighbors, 'ARI_MB', f'similarity_{i}'] = adjusted_rand_score(true_labels, pred_labels)
-            
-    
-    
-        axs[0].set_ylim(bottom=0, top=1)
-        axs[0].plot(n_neighbors_LIST, array_3d.AVG_ARI_LIST(n_neighbors_LIST, 'ARI_original'))
-        axs[0].errorbar(n_neighbors_LIST,  array_3d.AVG_ARI_LIST( n_neighbors_LIST, 'ARI_original'), yerr= array_3d.STD_ARI_LIST( n_neighbors_LIST, 'ARI_original'), fmt='o', label="Mean with Std Dev", alpha=0.5)
-        axs[0].set_title('Original Graph')
-    
-        print(array_3d.STD_ARI_LIST(n_neighbors_LIST, 'ARI_MB'))
-        print(array_3d)
-    
-        axs[1].set_ylim(0, 1)
-        axs[1].plot(n_neighbors_LIST, array_3d.AVG_ARI_LIST(n_neighbors_LIST, 'ARI_MB'))
-        axs[1].errorbar(n_neighbors_LIST,  array_3d.AVG_ARI_LIST( n_neighbors_LIST, 'ARI_MB'), yerr= array_3d.STD_ARI_LIST( n_neighbors_LIST, 'ARI_MB'), fmt='o', label="Mean with Std Dev", alpha=0.5)
-        axs[1].set_title('Metric Backbone')
-    
-        for i in range(2):
-            ax = axs[i]
-            ax.set_xlabel('Number of nearest neighbors')
-            ax.set_ylabel('ARI')
-            ax.axis('on')
-            ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
-            if i < 2:
-                ax.legend(handles=[produce_patch(color='red', framework='gaussian', mu_x2=0), produce_patch(color='blue', framework='gaussian', mu_x2=mu_x2)])
-            else:
-                ax.legend(handles=[produce_patch(color='red', framework='ABBE',  plus_or_minus_one=1), produce_patch(color='blue', framework='ABBE', plus_or_minus_one=-1)])
-
-
-    # ========================================================================
-
 
 
     return None
 
 
-_static_assets = ["script_files","images/durrett.jpeg"]
+_static_assets = ["script_files","images/durrett.jpeg","images/PPP.png","images/ARI.png","script_files/libs/quarto-html/tippy.css","script_files/libs/quarto-html/quarto-syntax-highlighting.css","script_files/libs/bootstrap/bootstrap-icons.css","script_files/libs/bootstrap/bootstrap.min.css","script_files/libs/quarto-dashboard/datatables.min.css","script_files/libs/clipboard/clipboard.min.js","script_files/libs/quarto-html/quarto.js","script_files/libs/quarto-html/popper.min.js","script_files/libs/quarto-html/tippy.umd.min.js","script_files/libs/quarto-html/anchor.min.js","script_files/libs/bootstrap/bootstrap.min.js","script_files/libs/quarto-dashboard/quarto-dashboard.js","script_files/libs/quarto-dashboard/stickythead.js","script_files/libs/quarto-dashboard/datatables.min.js","script_files/libs/quarto-dashboard/pdfmake.min.js","script_files/libs/quarto-dashboard/vfs_fonts.js","script_files/libs/quarto-dashboard/web-components.js","script_files/libs/quarto-dashboard/components.js"]
 _static_assets = {"/" + sa: Path(__file__).parent / sa for sa in _static_assets}
 
 app = App(

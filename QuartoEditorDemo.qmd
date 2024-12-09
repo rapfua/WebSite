@@ -1,0 +1,31 @@
+---
+title: "QuartoEditorDemo"
+format: html
+editor: source
+---
+
+# Markdown
+
+The name of the document ends with .qmd which stands for quarto markdown document. As such, anything that can be done in markdown can also be done in quarto.
+
+**This is bold**
+
+-   first element of a list
+-   second element of a list
+
+# Latex
+
+## Inline
+
+One can also insert inline math latex code within the markdown text. For instance, the equation $y = x^2$ is a parabola.
+
+## Display
+
+One can also use latex display mode as follows:
+
+$$
+\begin{align}
+A &= \frac{\pi r^2}{2} \\
+  & \frac{1}{2} \pi r^2,
+\end{align}
+$$

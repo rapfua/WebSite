@@ -1,0 +1,588 @@
+---
+title: "rcpp_version"
+format:
+  html:
+    code-fold: true
+editor: visual
+---
+
+```{python}
+#| label: imports
+#| output: false
+#| warning: false
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
+
+from tensorflow.keras.datasets import mnist
+import numpy as np
+
+import graphlearning as gl  # for get_Gaussian_weight_matrix
+from sklearn.cluster import SpectralClustering
+import scipy.sparse
+import numpy as np
+from matplotlib import pyplot as plt
+
+import rpy2.robjects as ro
+from rpy2.robjects import pandas2ri
+from rpy2.robjects.conversion import localconverter
+import pandas as pd
+import time
+
+```
+
+```{r}
+#| label: mclust_R_library
+#| output: false
+#| warning: false
+library(mclust)
+```
+
+```{Rcpp}
+#| label: rcpp_code
+#include <RcppArmadillo.h>
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <queue>
+#include <unordered_map>
+#include <vector>
+#include <algorithm>
+#include <random>
+#include <fstream>
+#include <cmath>
+#include <cassert>
+
+using namespace Rcpp;
+
+// Structure to represent an edge in the graph
+struct edge {
+  int u, v; 
+  double w; 
+  edge() {}
+  edge(int _u, int _v, double _w) : u(_u), v(_v), w(_w) {}
+};
+
+// Structure to represent a node containing edges
+struct node {
+  std::vector<edge> edges;
+};
+
+// Helper for hashing pairs
+struct pair_hash {
+  inline std::size_t operator()(const std::pair<int,int>& v) const {
+    return v.first * 31 + v.second;
+  }
+};
+
+// Graph structure
+class graph {
+public:
+  int n, m;
+  std::vector<node> nodes;
+  
+  //std::unordered_map<int, int, double, pair_hash> edgesMB;
+  std::unordered_map<std::pair<int, int>, double, pair_hash> edgesMB;
+
+  
+  // Constructor: Create a graph from a DataFrame of edges
+  graph(Rcpp::DataFrame df) {
+
+    Rcpp::Rcout << "Constructing graph" << std::endl;
+
+    Rcpp::IntegerVector from = df["from"];
+    Rcpp::IntegerVector to = df["to"];
+    Rcpp::NumericVector weight = df["weight"];
+    
+
+     
+    m = from.size();
+    n = std::max(*std::max_element(from.begin(), from.end()), *std::max_element(to.begin(), to.end())) + 1;  // Number of nodes
+    nodes.resize(n);
+    
+    for (int i = 0; i < m; i++) {
+      int u = from[i];
+      int v = to[i];
+      double w = weight[i];
+      add_edge(u, v, w);
+    }
+
+
+    getMB();
+  }
+  
+  // Returns the adjacency matrix of the metric backbone
+  arma::mat get_MB_adjacency_matrix() {
+    // Initialize an n x n matrix with zeros
+    arma::mat A = arma::zeros<arma::mat>(n, n);
+    
+    // Fill the adjacency matrix using the edgesMB map
+    for (const auto& [edge_pair, weight] : edgesMB) {
+
+      // std::cout << weight << std::endl;
+      int u = edge_pair.first;
+      int v = edge_pair.second;
+      A(u, v) = weight;
+      A(v, u) = weight;  // Since the graph is undirected
+    }
+    
+    return A;
+  }
+  
+  
+  // Adds an edge between two nodes
+  void add_edge(int u, int v, double w) {
+    nodes[u].edges.emplace_back(u, v, w);
+		nodes[v].edges.emplace_back(v, u, w);
+
+  }
+  
+  
+  // Builds the metric backbone
+  void getMB() {
+
+    Rcpp::Rcout << "Constructing its MB" << std::endl << std::endl;
+    std::vector<int> nodesToTry(n);
+    std::iota(nodesToTry.begin(), nodesToTry.end(), 0);
+    
+    for (int s : nodesToTry) {
+      std::vector<std::pair<int, double>> parent(n, {-1, -1});
+      getSPT(s, parent);
+      for (int u = 0; u < n; ++u) {
+        auto [v, w] = parent[u];
+        if (v != -1) {
+          edgesMB[{u, v}] = w;
+        }
+      }
+    }
+  }
+  
+  // Builds a shortest path tree (SPT) using Dijkstra's algorithm
+  void getSPT(int s, std::vector<std::pair<int, double>>& parent) {
+    std::vector<double> dist(n, 1e15);
+    std::vector<bool> visited(n, false);
+    std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<>> pq;
+    dist[s] = 0.0;
+    pq.emplace(0.0, s);
+    
+    while (!pq.empty()) {
+      int cur = pq.top().second;
+      pq.pop();
+      if (visited[cur]) continue;
+      visited[cur] = true;
+      
+      for (const auto& e : nodes[cur].edges) {
+        if (dist[e.v] > dist[cur] + e.w) {
+          dist[e.v] = dist[cur] + e.w;
+          parent[e.v] = {e.u, e.w};
+          pq.emplace(dist[e.v], e.v);
+        }
+      }
+    }
+  }
+  
+
+};
+
+
+
+
+// [[Rcpp::export]]
+arma::mat get_metric_backbone_adjacency_matrix(Rcpp::DataFrame df) {
+  // Create a graph instance from the DataFrame
+  graph G(df);
+  
+  // Return the adjacency matrix of the metric backbone
+  return G.get_MB_adjacency_matrix();
+}
+
+
+
+// Part 1: Add Edges Based on Gaussian Weight Matrix
+// [[Rcpp::export]]
+Rcpp::DataFrame add_edges(const arma::mat& W) {
+  Rcpp::Rcout << "Adding edges to a df that will be passed to a graph constructor" << std::endl;
+  int n = W.n_rows;
+  std::vector<int> from;
+  std::vector<int> to;
+  std::vector<double> weights;
+  
+  for (int i = 0; i < n; ++i) {
+    if (i % (n / 5) == 0) {
+      Rcpp::Rcout << "Processing node " << i << " / " << n << std::endl;
+    }
+    
+    for (int j = i + 1; j < n; ++j) {
+      double w = W(i, j);
+      if (w > 0) {
+        from.push_back(i);
+        to.push_back(j);
+        weights.push_back(1.0 / w - 1.0);
+      }
+    }
+  }
+
+  Rcpp::Rcout << std::endl;
+  
+  return Rcpp::DataFrame::create(Rcpp::Named("from") = from,
+                                 Rcpp::Named("to") = to,
+                                 Rcpp::Named("weight") = weights);
+}
+
+
+// Part 2: Compute Adjusted Rand Index (ARI)
+// [[Rcpp::export]]
+double compute_ARI(Rcpp::IntegerVector true_labels, Rcpp::IntegerVector pred_labels) {
+  Rcpp::Environment mclust("package:mclust");
+  Rcpp::Function adjustedRandIndex = mclust["adjustedRandIndex"];
+  
+  // Call R's adjustedRandIndex function
+  Rcpp::NumericVector result = adjustedRandIndex(true_labels, pred_labels);
+  
+  // Return the result as a double
+  return Rcpp::as<double>(result);
+}
+
+```
+
+```{python}
+#| label: activate_pandas2ri
+
+pandas2ri.activate()
+
+
+# Define the function to call Rcpp
+add_edges = ro.globalenv['add_edges']
+compute_ARI = ro.globalenv['compute_ARI']
+get_metric_backbone_adjacency_matrix = ro.globalenv['get_metric_backbone_adjacency_matrix']
+```
+
+```{python}
+#| label: def_get_Gaussian_weight_matrix
+
+
+def get_Gaussian_weight_matrix(X, n_neighbors):
+    Z = gl.weightmatrix.knn(data=X, k=n_neighbors)  # Gaussian similarity measure
+    A = (Z + Z.T) / 2
+    return A
+```
+
+```{python}
+#| label: def_remove_isolated_nodes_sparse
+
+def remove_isolated_nodes_sparse(adj_matrix):
+    # Sum rows and columns to identify isolated nodes
+    row_sum = adj_matrix.sum(axis=1).A1  # .A1 converts the sparse matrix to a 1D NumPy array
+    col_sum = adj_matrix.sum(axis=0).A1  # .A1 converts the sparse matrix to a 1D NumPy array
+    
+    # Find indices of isolated nodes (where both row and column sums are zero)
+    isolated_nodes = np.where((row_sum == 0) & (col_sum == 0))[0]
+    
+    # Remove the isolated nodes (rows and columns)
+    mask = np.ones(adj_matrix.shape[0], dtype=bool)
+    mask[isolated_nodes] = False
+    
+    new_adj_matrix = adj_matrix[mask, :][:, mask]
+    
+    return new_adj_matrix, isolated_nodes
+
+```
+
+```{python}
+#| label: def_get_similarity_def_draw
+
+
+def get_similarity(X_train_flat, n_neighbors, true_labels, b_original=True, random_state=42):
+    
+    A = get_Gaussian_weight_matrix(X_train_flat, n_neighbors)
+    # print(A)
+    A, isolated_nodes = remove_isolated_nodes_sparse(A)
+    # print(A)
+    
+    true_labels = [true_labels[i] for i in range(len(true_labels)) if i not in isolated_nodes]
+    
+    if not b_original:
+        A = A.toarray()
+        # print(A)
+        df = add_edges(A)
+        A = get_metric_backbone_adjacency_matrix(df) # WEIGHTED ADJACENCY MATRIX
+        
+        # for i in range(A.shape[0]):
+        #     for j in range(A.shape[1]):
+        #         print(A[i, j], end=',')
+        #     print()
+            
+        # print(A.size)
+        # print(A)
+        
+    SC = SpectralClustering(n_clusters=10, affinity='precomputed', random_state=random_state)
+    pred_labels = SC.fit_predict(A)
+    
+    # Convert true_labels and pred_labels to Rcpp IntegerVectors
+    true_labels_r = ro.IntVector(true_labels)
+    pred_labels_r = ro.IntVector(pred_labels)
+    
+    # Call the Rcpp function to compute ARI
+    similarity = compute_ARI(true_labels_r, pred_labels_r)
+    
+    return similarity[0]
+  
+  
+def print_similarity(X_train_flat, n_neighbors, true_labels, b_original=True):
+
+
+    similarity = get_similarity(X_train_flat, n_neighbors, true_labels, b_original)
+  
+    print('ARI of spectral clustering on the', end=' ')
+    
+    if b_original:
+        print('original graph:', end=' ')
+    else:
+        print('metric backbone:', end=' ')
+    
+    print(round(similarity, 5))
+
+
+def print_similarities(X_train_flat, n_neighbors, true_labels):
+    print_similarity(X_train_flat, n_neighbors, true_labels, b_original=False)
+    print_similarity(X_train_flat, n_neighbors, true_labels)
+
+
+```
+
+```{python}
+#| label: N_images
+
+
+n_images = 10000
+
+# Load the MNIST dataset
+(X_train, y_train), (_, _) = mnist.load_data()  # X_train is 28x28=784 <class 'numpy.ndarray'>
+
+X_train = X_train[:n_images] / 255.0
+
+# Normalization => maximum euclidean distance between two images is:
+# sqrt(\sum_{i=1}^{784} (1 - 0)^2) = sqrt(784) = 28.
+# We now choose R1 & R2 with this in mind.
+
+y_train = y_train[:n_images]
+
+```
+
+```{python}
+#| label: flatten the images
+
+X_train_flat = X_train.reshape(X_train.shape[0], -1)
+#print(X_train_flat[0])
+```
+
+```{python}
+#| label: print_similarities
+
+start_time = time.time()
+print_similarities(X_train_flat, n_neighbors=500, true_labels=y_train)
+end_time = time.time()
+
+execution_time = end_time - start_time
+print('Execution time:', round(execution_time, 2), 'seconds')
+```
+
+```{python}
+#| label: def_get_ari_multiple_simulations
+
+def get_ari_multiple_simulations(X_train_flat, n_neighbors, true_labels, n_sim, random_states):
+    ari_metric_backbone_list = []
+    ari_original_list = []
+    
+    for _ in range(n_sim):
+        # Get ARI for metric backbone
+        ari_mb = get_similarity(X_train_flat, n_neighbors, true_labels, b_original=False, random_state=random_states[_])
+        ari_metric_backbone_list.append(ari_mb)
+
+        # Get ARI for original graph
+        ari_orig = get_similarity(X_train_flat, n_neighbors, true_labels, b_original=True, random_state=random_states[_])
+        ari_original_list.append(ari_orig)
+    
+    # Calculate average and standard deviation for both ARIs
+    ari_mb_avg = np.mean(ari_metric_backbone_list)
+    ari_mb_std = np.std(ari_metric_backbone_list)
+    
+    ari_orig_avg = np.mean(ari_original_list)
+    ari_orig_std = np.std(ari_original_list)
+    
+    return ari_mb_avg, ari_mb_std, ari_orig_avg, ari_orig_std
+```
+
+```{python}
+my_list = list(range(10, 101, 10))
+print(my_list)
+```
+
+```{python}
+#| label: save_ari_to_excel
+
+import pandas as pd
+
+# Define the range of n_neighbors and the number of simulations
+# n_neighbors_list = [50, 100, 200, 300, 400, 500]
+n_neighbors_list = list(range(10, 101, 10))
+n_sim = 10  # Number of simulations
+random_states = list(range(n_sim))
+
+# Initialize a list to store results
+results = []
+
+# Loop over each value of n_neighbors
+for n_neighbors in n_neighbors_list:
+    print(f"Running simulations for n_neighbors = {n_neighbors}")
+    ari_mb_avg, ari_mb_std, ari_orig_avg, ari_orig_std = get_ari_multiple_simulations(X_train_flat, n_neighbors, y_train, n_sim, random_states)
+
+    # Append the results to the list
+    results.append({
+        'n_neighbors': n_neighbors,
+        'ARI Metric Backbone Avg': ari_mb_avg,
+        'ARI Metric Backbone Std': ari_mb_std,
+        'ARI Original Avg': ari_orig_avg,
+        'ARI Original Std': ari_orig_std
+    })
+
+# Convert results to a DataFrame
+df = pd.DataFrame(results)
+
+# Save the results to an Excel sheet
+df.to_excel("ari_results_with_std.xlsx", index=False)
+
+print("Results saved to ari_results_with_std.xlsx")
+```
+
+```{python}
+
+#| label: load_and_plot_with_error_bars
+
+# Load the data from the Excel sheet
+df = pd.read_excel("ari_results_with_std.xlsx")
+
+# Plot ARI with error bars
+plt.figure(figsize=(10, 6))
+
+metric_backbone_color = 'blue'
+originial_color = 'red'
+
+plt.errorbar(df['n_neighbors'], df['ARI Metric Backbone Avg'], yerr=df['ARI Metric Backbone Std'], fmt='o', capsize=5, color=metric_backbone_color)
+plt.errorbar(df['n_neighbors'], df['ARI Original Avg'], yerr=df['ARI Original Std'], fmt='o', capsize=5, color=originial_color)
+
+# Add lines connecting the dots
+plt.plot(df['n_neighbors'], df['ARI Metric Backbone Avg'], label='ARI Metric Backbone', linestyle='-', marker='o', color=metric_backbone_color)
+plt.plot(df['n_neighbors'], df['ARI Original Avg'], label='ARI Original', linestyle='-', marker='o', color=originial_color)
+
+# Add labels and title
+plt.xlabel('Number of Neighbors (n_neighbors)')
+plt.ylabel('Adjusted Rand Index (ARI)')
+plt.title('ARI as a Function of n_neighbors (with error bars)')
+plt.legend()
+
+# Show plot
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Save the plot as a file if needed
+plt.savefig("ari_vs_n_neighbors_with_error_bars.png")
+
+```
+
+<!-- ```{python} -->
+
+<!-- #| label: save_ARIs_to_excel -->
+
+<!-- # List of n_neighbors values to try -->
+
+<!-- # n_neighbors_values = [50, 100, 200, 300, 400, 500] -->
+
+<!-- n_neighbors_values = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100] -->
+
+<!-- # Prepare a list to store the results -->
+
+<!-- results = [] -->
+
+<!-- # Loop through each n_neighbors value -->
+
+<!-- for n_neighbors in n_neighbors_values: -->
+
+<!--     print(f'Processing n_neighbors = {n_neighbors}') -->
+
+<!--     # Measure time for each n_neighbors value -->
+
+<!--     start_time = time.time() -->
+
+<!--     # Get ARIs for original and metric backbone graphs -->
+
+<!--     ari_mb = get_similarity(X_train_flat, n_neighbors, true_labels=y_train, b_original=False) -->
+
+<!--     ari_original = get_similarity(X_train_flat, n_neighbors, true_labels=y_train) -->
+
+<!--     end_time = time.time() -->
+
+<!--     # Store the result for this n_neighbors value -->
+
+<!--     results.append({ -->
+
+<!--         'n_neighbors': n_neighbors, -->
+
+<!--         'ARI Metric Backbone': ari_mb, -->
+
+<!--         'ARI Original': ari_original, -->
+
+<!--         'Execution Time (s)': round(end_time - start_time, 2) -->
+
+<!--     }) -->
+
+<!-- # Convert results to a DataFrame -->
+
+<!-- results_df = pd.DataFrame(results) -->
+
+<!-- # Save the results to an Excel file -->
+
+<!-- results_df.to_excel("ari_results.xlsx", index=False) -->
+
+<!-- print("Results saved to ari_results.xlsx") -->
+
+<!-- ``` -->
+
+<!-- ```{python} -->
+
+<!-- #| label: load_and_plot_from_excel -->
+
+<!-- # Load the data from the Excel sheet -->
+
+<!-- df = pd.read_excel("ari_results.xlsx") -->
+
+<!-- # Plot ARI as a function of n_neighbors -->
+
+<!-- plt.figure(figsize=(10, 6)) -->
+
+<!-- plt.plot(df['n_neighbors'], df['ARI Metric Backbone'], label='ARI Metric Backbone', marker='o') -->
+
+<!-- plt.plot(df['n_neighbors'], df['ARI Original'], label='ARI Original', marker='o') -->
+
+<!-- # Add labels and title -->
+
+<!-- plt.xlabel('Number of Neighbors (n_neighbors)') -->
+
+<!-- plt.ylabel('Adjusted Rand Index (ARI)') -->
+
+<!-- plt.title('ARI as a Function of n_neighbors (from Excel data)') -->
+
+<!-- plt.legend() -->
+
+<!-- # Show plot -->
+
+<!-- plt.grid(True) -->
+
+<!-- plt.tight_layout() -->
+
+<!-- plt.show() -->
+
+<!-- # Save the plot as a file if needed -->
+
+<!-- plt.savefig("ari_vs_n_neighbors_from_excel.png") -->
+
+<!-- ``` -->

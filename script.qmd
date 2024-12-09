@@ -1,11 +1,16 @@
 ---
 title: "INDY Notes & Simulations"
-format: dashboard
+format:
+  dashboard:
+    scrolling: true
 server: shiny
 editor:
   markdown:
     wrap: 72
 bibliography: references.bib
+code-fold: true
+fontsize: 18pt
+callout-appearance: minimal
 ---
 
 {{< include sub_quartos/_latexMacros.qmd >}}
@@ -19,37 +24,63 @@ bibliography: references.bib
 {{< include sub_quartos/_functions.qmd >}}
 
 
-# Page Navigation
 
-1.  Vincent Tassion
-2.  Metric Backbone & Spectral Clustering Simulations
-3.  Graph with Gaussian clusters & ABBE prediction
-4.  Proof of THM 2.1
-5.  Instructions to deploy website
-6.  First Passage Percolation On Inhomogeneous Random Graphs
-7.  Module dependencies
-8.  hybrid graph μ fixed n_neighbors varying
+{{< include sub_quartos/my_research/tab_research.qmd >}}
+
+
+
+{{< include sub_quartos/presentations/tab_presentations.qmd >}}
+
+
+<!-- IHRG -->
+{{< include sub_quartos/pure_markdown/IHRG/_s0_abstract.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_20241114.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_s1_intro.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_s2_branching_processes.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_s3_embedding_BP_into_IHRG.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_s4_connection_time.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_s5_proof_of_main_results.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_s_5_lemma_51.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_s_5_lemma_52.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_p607.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_questions.qmd >}}
+{{< include sub_quartos/pure_markdown/IHRG/_misc.qmd >}}
+
+
+<!-- # Page Navigation -->
+
+<!-- 1.  Vincent Tassion -->
+<!-- 2.  Metric Backbone & Spectral Clustering Simulations -->
+<!-- 3.  Graph with Gaussian clusters & ABBE prediction -->
+<!-- 4.  Proof of THM 2.1 -->
+<!-- 5.  Instructions to deploy website -->
+<!-- 6.  First Passage Percolation On Inhomogeneous Random Graphs -->
+<!-- 7.  Module dependencies -->
+    <!-- 8.  hybrid graph μ fixed n_neighbors varying -->
+<!-- 8.  Abstract -->
+<!-- 9.  Quarto Tutorial -->
+
+<!-- {{< include sub_quartos/_spoken_script.qmd >}} -->
+
+
+<!-- {{< include sub_quartos/_p2_original_demo.qmd >}} -->
+
+<!-- {{< include sub_quartos/_p3_hybrid_demo.qmd >}} -->
+
+<!-- {{< include sub_quartos/pure_markdown/_p4_change_of_variables.qmd >}} -->
+
+<!-- {{< include sub_quartos/pure_markdown/_p5_deploy.qmd >}} -->
+
+
+<!-- {{< include sub_quartos/_p7_module_dependencies.qmd >}} -->
+
+
+{{< include sub_quartos/_abstract.qmd >}}
+
+{{< include sub_quartos/_QuartoTutorial.qmd >}}
 
 {{< include sub_quartos/_p1_VincentTassion.qmd >}}
 
-{{< include sub_quartos/_p2_original_demo.qmd >}}
+<!-- {{< include sub_quartos/_pLAST_muFixed_neighboursVary.qmd >}} -->
 
-{{< include sub_quartos/_p3_hybrid_demo.qmd >}}
-
-{{< include sub_quartos/pure_markdown/_p4_change_of_variables.qmd >}}
-
-{{< include sub_quartos/pure_markdown/_p5_deploy.qmd >}}
-
-{{< include sub_quartos/pure_markdown/_p6_IHRG.qmd >}}
-
-{{< include sub_quartos/_p7_module_dependencies.qmd >}}
-
-{{< include sub_quartos/_pLAST_muFixed_neighboursVary.qmd >}}
-
-
-
-
-
-
-
-
+<!-- {{< include sub_quartos/_IHRG_presentation.qmd >}} -->

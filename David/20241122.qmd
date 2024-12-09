@@ -1,0 +1,45 @@
+---
+title: "David_20241122"
+format: html
+editor: visual
+---
+
+number of choices for volunteer composition ${5 \choose 1}{10 \choose 3}$.
+
+number of teams given the volunteer composition $4 \choose 2$.
+
+${n \choose k} = \frac{n!}{k! (n-k)!} =$ on choisit k personne parmi n candidats sans classement.
+
+$\frac{n!}{(n-k)!} =$ on choisit k personne parmi n candidats avec classement.
+
+$12 \choose 4$.
+
+${10 \choose 4} \cdot 4! \cdot {6 \choose 2} \cdot {4 \choose 2}$.
+
+$$
+\begin{align*}
+1 + r + 1 + \frac{(r + 2) \cdot (r+1)}{2}
+\end{align*}
+$$
+
+Identité de Pascal: ${n \choose k} = {n-1 \choose k-1} + {n-1 \choose k}$
+
+$$
+\sum_{i = r}^{n + 1} {i \choose r} =  {n+1 \choose r} + \sum_{i = r}^{n} {i \choose r}  \stackrel{\text{ind}}{=} {n+1 \choose r} + {n+1 \choose r+1} \stackrel{\text{Pascal}}{=} {n+2 \choose r + 1}
+$$
+
+$$
+\sum_{i=1}^n i = \frac{n (n +1)}{2}
+$$
+
+2n + (2n - 1) + (2n -2) ... + (n+1)
+
+(n+1) + (n+2) + ... + (2n - 1) + 2n
+
+$$
+\sum_{i = 0} ^ {n-1} (2n - i) \leq \frac{n (n +1)}{2} 
+$$
+
+$$
+\sum_{i = 0} ^ {n-1} (2n - i) = \sum_{i = 1} ^ {n} (n + i)
+$$

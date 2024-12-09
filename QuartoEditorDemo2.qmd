@@ -1,0 +1,114 @@
+---
+title: "QuartoEditorDemo"
+format: html
+editor: source
+---
+
+# Markdown
+
+The name of the document ends with .qmd which stands for quarto markdown document. As such, anything that can be done in markdown can also be done in quarto.
+
+**This is bold**
+
+-   first element of a list
+-   second element of a list
+
+# Latex
+
+## Inline
+
+One can also insert inline math latex code within the markdown text. For instance, the equation $y = x^2$ is a parabola. As you saw, when I was writing the equation, quarto allows me to instantly preview how my latex code will be compiled. This also works by hovering over the equation.
+
+## Display
+
+One can also use latex display mode as follows
+
+$$
+\begin{align}
+A &= \frac{\pi r^2}{2} \\
+& \frac{1}{2} \pi r^2,
+\end{align}
+$$ in which case the preview actually stays on the screen without having to hover over the equation.
+
+# Visual editor
+
+Let us now swith to the visual editor.
+
+Sometimes, a Word type editor can be helpful. For example:
+
+-   When reading a paper and trying to understand the math it is explaining $\implies$ helpful to have math already compiled.
+
+-   In other words, you get a better feel for what is actually being produced.
+
+-   When working with tables. Latex is the worst, markdown is slightly less bad. I personally think this is one of those times where letting the software handle it is ideal:
+
+| Col1             | Col2 | Col3         |
+|------------------|------|--------------|
+| a                | b    | c            |
+| d                | e    | f            |
+| you can write in | math | $f(x) = x^2$ |
+
+-   Also good when taking notes for a talk
+
+-   when there is a lot of syntax highlighting. **There are for example nice shortcuts to write in bold.** and stop doing so.
+
+# Code
+
+```{python}
+import matplotlib.pyplot as plt
+a=1
+plt.plot(range(10))
+plt.show()
+```
+
+
+```{r}
+plot(1:10)
+```
+
+Quarto remembers what was done in previous code chunks. Even when you switch back and forth between different languages.
+
+```{python}
+print(a)
+```
+One can choose among a great variety of languages, all within the same document! Without any conflict!
+
+This allows us to use specialized tools for each task, thus reducing the complexity of our code and having a very fluid division of labor between the different parts of our project.
+
+An indispendable tool for this lab for examples is the following decision flowchart coded in the mermaid coding language:
+
+```{mermaid}
+flowchart LR
+  A{Wednesday?} --> |No| B[FoodLab]
+  A --> |Yes| C[Stochastic]
+```
+
+Once you are done with your document, you can export it to a variety of formats, including html, pdf and docx by pressing the render button.
+
+Most importantly, this will create a website that is easy to navigate and read and that can easily be deployed online.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

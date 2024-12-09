@@ -1,0 +1,92 @@
+---
+title: "Sophie_20241108"
+format: html
+editor: visual
+---
+
+-   3\) Mediane - 50ème percentile - Q2 - quartile 2
+
+-   2\) 75ème percentile - Q3 - quartile 3
+
+-   bas de la boite bleue) 25ème percentile - Q1 - quartile 1
+
+-   IQR = écart inter quartile = Q3 - Q1 = la différence entre le 75 ème et le 25 ème.
+
+-   Moustache supérieure = Q3 + 1.5 \* IQR
+
+-   Moustache inférieure = Q1 - 1.5 \* IQR
+
+-   On appelle les points qui sont encore plus grands que la moustache supérieure ou encore plus petits que la moustache inférieure, des **valeurs extrêmes.**
+
+1000, 1000, 2000 = Q1, 2500, 2500, 3000 = Q2, 3000 = Q2, 100000, 100000=Q3, 100000, 100000, 100000
+
+IQR = 100000 - 2000 = 98000
+
+IQR / 2 = 49000
+
+```{r}
+v = c(1, 2, 3, 4, 9, 9.5, 10, 10, 11, 11, 12, 13, 13, 13, 15, 20, 20, 30)
+boxplot(v)
+
+x = v
+y = rep(1, 18)
+
+plot (x, y)
+
+```
+
+std = standard deviation = ecart type
+
+The question we are trying to answer is:
+
+Is there the same proportion of foreign made cars as home made cars?
+
+This is equivalent to the question:
+
+Is the proportion of foreign made cars 0.5.
+
+In this specific test, this question is summarized as
+
+Is p=prop=0.5?
+
+To answer this question, on pose l'hypothèse nulle
+
+H_0: prop=0.5
+
+on part du principe que l'hypothèse nulle est vraie. On choisit un test statistique qu'on connait très bien. En particulier, on sait que si on applique ce test à un échantillon qui satisfait réellement H_0, on devrait obtenir un résultat connu.
+
+Maintenant, on applique ce test à l'échantillon qu'on a effectivement et on obtient un résultat z = -3.4874
+
+z = test_statistique(échantillon_sur_lequel_on_travaille)
+
+Z = test_statistique(échantillon_qui_satisfait_H0)
+
+P(test_statistique(échantillon_qui_satisfait_H0) \< test_statistique(échantillon_sur_lequel_on_travaille)) = 0.0002
+
+$\iff$
+
+P(Z \< z)
+
+$\iff$
+
+pValue
+
+On dit que le résultat est significatif si pValue \< 0.05.
+
+significatif $\iff$ on rejette l'hypothèse
+
+nouveau medicament
+
+H_0: suppose que le nouveau = que celui qui existe deja
+
+tu acceptes le nouveau seulement si la probabilité qu'il ait soigné mieux que l'autre en supposant qu'il est tout aussi bien que celui qui existe est miniscule (\<0.05). En d'autres mots, on part du principe qu'il a juste eu bcp bcp de chance. Et on commence à croire à ces promesses seulement si l'on estime qu'il a eu trop de chance pour que ce soit juste de la chance.
+
+Ici, la probabilité est trop faible car elle est plus petite que **0.05 (5%)**, il y a donc un problème avec notre raisonnement. Mais le seul moment où l'on a fait un choix qui n'était une obligation logique est lorsqu'on a supposé que l'hypothès nulle est vraie.
+
+Nous sommes donc forcés de rejeter l'hypothèse nulle. En d'autres mots, on est obligé d'accepter l'hypothèse alternative H_a.
+
+Avec le premier test, on va conclure que prop \< 0.5.
+
+Avec le deuxième test, on va conclure que prop != 0.5.
+
+Avec le troisième test, puisque 0.9998 \> 0.05, on ne peut pas rejeter l'hypothèse nulle et on est alors forcé de conclure que prop = 0.5.

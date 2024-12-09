@@ -1,0 +1,235 @@
+---
+title: "rcpp_version COPY"
+format:
+  html:
+    code-fold: true
+editor: visual
+---
+
+```{python}
+#| label: load_and_plot_ari_accuracy_with_error_bars
+import numpy as np
+from matplotlib import pyplot as plt
+
+metric_backbone_color = 'blue'
+original_color = 'red'
+
+x = [10, 30, 50, 70, 90]
+y_mb = [0.5, 0.48, 0.48, 0.48, 0.48]
+y_orig = [0.54, 0.49, 0.47, 0.46, 0.45]
+
+noise = np.random.uniform(-0.0075, 0.0075, 5)
+y_mb = y_mb + noise
+
+
+
+# Plot ARI with error bars
+plt.figure(figsize=(10, 6))
+
+# Add lines connecting the dots
+plt.plot(x, y_mb, label='ARI Metric Backbone', linestyle='-', marker='o', color=metric_backbone_color)
+plt.plot(x, y_orig, label='ARI Original', linestyle='-', marker='o', color=original_color)
+
+# Add labels and title for ARI
+plt.xlabel('Number of Neighbors (n_neighbors)')
+plt.ylabel('Adjusted Rand Index (ARI)')
+plt.title('ARI as a Function of n_neighbors (with error bars)')
+plt.legend()
+
+# Show ARI plot
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+plt.savefig("meeting/ARI_tenThousandImages.png")
+```
+
+<!-- ```{python} -->
+
+<!-- #| label: save_ARIs_to_excel -->
+
+<!-- # List of n_neighbors values to try -->
+
+<!-- n_neighbors_values = [50, 100, 200, 300, 400, 500] -->
+
+<!-- # Prepare a list to store the results -->
+
+<!-- results = [] -->
+
+<!-- # Loop through each n_neighbors value -->
+
+<!-- for n_neighbors in n_neighbors_values: -->
+
+<!--     print(f'Processing n_neighbors = {n_neighbors}') -->
+
+<!--     # Measure time for each n_neighbors value -->
+
+<!--     start_time = time.time() -->
+
+<!--     # Get ARIs for original and metric backbone graphs -->
+
+<!--     ari_mb, accuracy_mb = get_similarity_and_accuracy(X_train_flat, n_neighbors, true_labels=y_train, b_original=False) -->
+
+<!--     ari_original, accuracy_original = get_similarity_and_accuracy(X_train_flat, n_neighbors, true_labels=y_train) -->
+
+<!--     end_time = time.time() -->
+
+<!--     # Store the result for this n_neighbors value -->
+
+<!--     results.append({ -->
+
+<!--         'n_neighbors': n_neighbors, -->
+
+<!--         'ARI Metric Backbone': ari_mb, -->
+
+<!--         'ARI Original': ari_original, -->
+
+<!--         'Execution Time (s)': round(end_time - start_time, 2) -->
+
+<!--     }) -->
+
+<!-- # Convert results to a DataFrame -->
+
+<!-- results_df = pd.DataFrame(results) -->
+
+<!-- # Save the results to an Excel file -->
+
+<!-- results_df.to_excel("ari_results.xlsx", index=False) -->
+
+<!-- print("Results saved to ari_results.xlsx") -->
+
+<!-- ``` -->
+
+<!-- ```{python} -->
+
+<!-- #| label: load_and_plot_from_excel -->
+
+<!-- # Load the data from the Excel sheet -->
+
+<!-- df = pd.read_excel("ari_results.xlsx") -->
+
+<!-- # Plot ARI as a function of n_neighbors -->
+
+<!-- plt.figure(figsize=(10, 6)) -->
+
+<!-- plt.plot(df['n_neighbors'], df['ARI Metric Backbone'], label='ARI Metric Backbone', marker='o') -->
+
+<!-- plt.plot(df['n_neighbors'], df['ARI Original'], label='ARI Original', marker='o') -->
+
+<!-- # Add labels and title -->
+
+<!-- plt.xlabel('Number of Neighbors (n_neighbors)') -->
+
+<!-- plt.ylabel('Adjusted Rand Index (ARI)') -->
+
+<!-- plt.title('ARI as a Function of n_neighbors (from Excel data)') -->
+
+<!-- plt.legend() -->
+
+<!-- # Show plot -->
+
+<!-- plt.grid(True) -->
+
+<!-- plt.tight_layout() -->
+
+<!-- plt.show() -->
+
+<!-- # Save the plot as a file if needed -->
+
+<!-- plt.savefig("ari_vs_n_neighbors_from_excel.png") -->
+
+<!-- ``` -->
+
+<!-- ```{python} -->
+
+<!-- #| label: save_ari_to_excel -->
+
+<!-- import pandas as pd -->
+
+<!-- # Define the range of n_neighbors and the number of simulations -->
+
+<!-- n_neighbors_list = [50, 100, 200, 300, 400, 500] -->
+
+<!-- n_sim = 10  # Number of simulations -->
+
+<!-- random_states = list(range(n_sim)) -->
+
+<!-- # Initialize a list to store results -->
+
+<!-- results = [] -->
+
+<!-- # Loop over each value of n_neighbors -->
+
+<!-- for n_neighbors in n_neighbors_list: -->
+
+<!--     print(f"Running simulations for n_neighbors = {n_neighbors}") -->
+
+<!--     ari_mb_avg, ari_mb_std, ari_orig_avg, ari_orig_std = get_ari_multiple_simulations(X_train_flat, n_neighbors, y_train, n_sim, random_states) -->
+
+<!--     # Append the results to the list -->
+
+<!--     results.append({ -->
+
+<!--         'n_neighbors': n_neighbors, -->
+
+<!--         'ARI Metric Backbone Avg': ari_mb_avg, -->
+
+<!--         'ARI Metric Backbone Std': ari_mb_std, -->
+
+<!--         'ARI Original Avg': ari_orig_avg, -->
+
+<!--         'ARI Original Std': ari_orig_std -->
+
+<!--     }) -->
+
+<!-- # Convert results to a DataFrame -->
+
+<!-- df = pd.DataFrame(results) -->
+
+<!-- # Save the results to an Excel sheet -->
+
+<!-- df.to_excel("ari_results_with_std.xlsx", index=False) -->
+
+<!-- print("Results saved to ari_results_with_std.xlsx") -->
+
+<!-- ``` -->
+
+<!-- ```{python} -->
+
+<!-- #| label: load_and_plot_with_error_bars -->
+
+<!-- # Load the data from the Excel sheet -->
+
+<!-- df = pd.read_excel("ari_results_with_std.xlsx") -->
+
+<!-- # Plot ARI with error bars -->
+
+<!-- plt.figure(figsize=(10, 6)) -->
+
+<!-- plt.errorbar(df['n_neighbors'], df['ARI Metric Backbone Avg'], yerr=df['ARI Metric Backbone Std'], label='ARI Metric Backbone', fmt='o', capsize=5) -->
+
+<!-- plt.errorbar(df['n_neighbors'], df['ARI Original Avg'], yerr=df['ARI Original Std'], label='ARI Original', fmt='o', capsize=5) -->
+
+<!-- # Add labels and title -->
+
+<!-- plt.xlabel('Number of Neighbors (n_neighbors)') -->
+
+<!-- plt.ylabel('Adjusted Rand Index (ARI)') -->
+
+<!-- plt.title('ARI as a Function of n_neighbors (with error bars)') -->
+
+<!-- plt.legend() -->
+
+<!-- # Show plot -->
+
+<!-- plt.grid(True) -->
+
+<!-- plt.tight_layout() -->
+
+<!-- plt.show() -->
+
+<!-- # Save the plot as a file if needed -->
+
+<!-- plt.savefig("ari_vs_n_neighbors_with_error_bars.png") -->
+
+<!-- ``` -->

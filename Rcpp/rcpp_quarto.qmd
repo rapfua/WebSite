@@ -1,0 +1,16 @@
+---
+title: "Rcpp test"
+format: html
+engine: knitr
+---
+
+```{Rcpp}
+// [[Rcpp::export]]
+int hi_there() {
+    return 42;
+}
+```
+
+```{r}
+hi_there()
+```

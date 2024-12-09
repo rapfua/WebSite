@@ -1,0 +1,326 @@
+---
+title: "python_version"
+format: html
+editor: visual
+---
+
+```{python}
+#| label: imports
+
+import networkx as nx
+
+import igraph as ig         # for get_metric_backbone_igraph
+from tensorflow.keras.datasets import mnist
+import numpy as np
+
+import graphlearning as gl  # for get_Gaussian_weight_matrix
+from sklearn.cluster import SpectralClustering
+from sklearn.metrics import adjusted_rand_score
+import scipy.sparse
+import numpy as np
+
+import rpy2.robjects as ro
+from rpy2.robjects import pandas2ri
+from rpy2.robjects.conversion import localconverter
+import pandas as pd
+
+```
+
+```{r}
+library(mclust)
+```
+
+
+```{python}
+
+# Activate the pandas2ri for DataFrame conversion
+pandas2ri.activate()
+# Load the Rcpp source file
+ro.r('Rcpp::sourceCpp("../Rcpp/add_edges.cpp")')
+
+# Define the function to call Rcpp
+add_edges = ro.globalenv['add_edges']
+compute_ARI = ro.globalenv['compute_ARI']
+
+```
+
+
+
+
+```{python}
+#| label: def_get_Gaussian_weight_matrix
+#| cache: true
+
+def get_Gaussian_weight_matrix(X, n_neighbors):
+    Z = gl.weightmatrix.knn(data=X, k=n_neighbors)  # Gaussian similarity measure
+    A = (Z + Z.T) / 2
+    return A
+```
+
+
+
+```{python}
+#| label: def_get_metric_backbone_igraph
+#| cache: true
+
+def get_metric_backbone_igraph(D):
+    """
+     :param D: networkx distance graph (with weight and proximity edge attribute)
+     :return: Networkx Metric Backbone subgraph of D
+    """
+    D_ig = ig.Graph.from_networkx(D)
+    distances = D_ig.distances(weights='weight')
+
+    G = nx.Graph(D)
+    G.remove_edges_from([(x, y) for x, y, w in G.edges.data('weight') if w > distances[x][y]])
+    return G
+
+```
+
+
+```{python}
+#| label: def_remove_isolated_nodes_sparse
+
+def remove_isolated_nodes_sparse(adj_matrix):
+    # Sum rows and columns to identify isolated nodes
+    row_sum = adj_matrix.sum(axis=1).A1  # .A1 converts the sparse matrix to a 1D NumPy array
+    col_sum = adj_matrix.sum(axis=0).A1  # .A1 converts the sparse matrix to a 1D NumPy array
+    
+    # Find indices of isolated nodes (where both row and column sums are zero)
+    isolated_nodes = np.where((row_sum == 0) & (col_sum == 0))[0]
+    
+    # Remove the isolated nodes (rows and columns)
+    mask = np.ones(adj_matrix.shape[0], dtype=bool)
+    mask[isolated_nodes] = False
+    
+    new_adj_matrix = adj_matrix[mask, :][:, mask]
+    
+    return new_adj_matrix, isolated_nodes
+
+```
+
+
+```{python}
+#| label: def_get_similarity_def_draw
+
+
+def get_similarity(X_train_flat, n_neighbors, true_labels, b_original=True, MB=None):
+
+    A = None
+
+    if b_original:
+        A = get_Gaussian_weight_matrix(X_train_flat, n_neighbors)
+        A, isolated_nodes = remove_isolated_nodes_sparse(A)
+    # print(A)
+    
+        true_labels = [true_labels[i] for i in range(len(true_labels)) if i not in isolated_nodes]
+    else:
+        n_temp = MB.number_of_nodes()
+        A = np.zeros((n_temp, n_temp))  # Initialize a zero matrix of shape n x n
+
+        # Loop over edges and populate the matrix with weights
+        for u, v, data in MB.edges(data=True):
+            weight = data.get('weight')  # Default weight is 1.0 if not specified
+            A[u, v] = weight
+            A[v, u] = weight  # Assuming the graph is undirected
+      
+    #   
+    #     A = nx.adjacency_matrix(MB, nodelist=[i for i in range(MB.number_of_nodes())], weight='proximity')
+    # # print(A)
+    # 
+    #     A = scipy.sparse.csr_matrix(A)
+    #     print(A)
+    #     A, isolated_nodes = remove_isolated_nodes_sparse(A)
+    #     true_labels = [true_labels[i] for i in range(len(true_labels)) if i not in isolated_nodes]
+
+
+    SC = SpectralClustering(n_clusters=10, affinity='precomputed', random_state=42)
+    pred_labels = SC.fit_predict(A)
+
+    similarity  = adjusted_rand_score(true_labels, pred_labels)
+
+    return similarity
+
+
+
+def get_similarities(G, MB, X_train_flat, n_neighbors, n_clusters, affinity='precomputed'):
+  
+    pos = nx.get_node_attributes(G, 'pos')  # Extract node positions
+    
+    true_labels = list(nx.get_node_attributes(G, 'community').values())
+
+    
+      
+    similarity_original = get_similarity(X_train_flat, n_neighbors, true_labels)
+    
+    similarity_mb = get_similarity(
+      X_train_flat=None,
+      n_neighbors=None,
+      true_labels=true_labels,
+      b_original=False,
+      MB=MB
+    )
+
+
+
+    return similarity_original, similarity_mb
+  
+
+def print_similarities(G, MB, X_train_flat, n_neighbors, n_clusters, affinity='precomputed'):
+    similarity_original, similarity_mb = get_similarities(G, MB, X_train_flat, n_neighbors, n_clusters, affinity)
+    print(similarity_original)
+    print(similarity_mb)
+  
+```
+
+
+
+```{python}
+#| label: community_detection_on_Euclidean_graphs_FUNCTIONS
+#| cache: true
+
+
+def euclidean_distance(tuple_1, tuple_2):
+    return np.linalg.norm(np.array(tuple_1) - np.array(tuple_2))
+
+
+def φ(R):
+    return lambda r: 1 if r <= R else 0
+
+
+def f(f_r):
+    return lambda G_distance, u_idx, v_idx: f_r(euclidean_distance(tuple_1=G_distance.nodes[u_idx]['pos'], tuple_2=G_distance.nodes[v_idx]['pos']))
+  
+
+def indicator(condition):
+    return 1 if condition else 0
+  
+
+def make_F(f_in, f_out):
+    return lambda G, u_idx, v_idx: indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community']) * f_in(G, u_idx, v_idx) + (1 - indicator(G.nodes[u_idx]['community'] == G.nodes[v_idx]['community'])) * f_out(G, u_idx, v_idx)
+
+
+def make_F_from_R(R1, R2):
+    return make_F(f(φ(R1)), f(φ(R2)))
+
+```
+
+
+```{python}
+#| label: N_images
+#| cache: true
+
+n_images = 1000
+
+# Load the MNIST dataset
+(X_train, y_train), (_, _) = mnist.load_data()  # X_train is 28x28=784 <class 'numpy.ndarray'>
+
+X_train = X_train[:n_images] / 255.0
+
+# Normalization => maximum euclidean distance between two images is:
+# sqrt(\sum_{i=1}^{784} (1 - 0)^2) = sqrt(784) = 28.
+# We now choose R1 & R2 with this in mind.
+
+F = make_F_from_R(R1=12, R2=8)
+
+y_train = y_train[:n_images]
+
+```
+
+```{python}
+#| label: flatten the images
+#| cache: true
+#| 
+X_train_flat = X_train.reshape(X_train.shape[0], -1)
+#print(X_train_flat[0])
+```
+
+```{python}
+#| label: get_similarity_MB
+#| cache: true
+
+print(get_similarity(X_train_flat, n_neighbors=500, true_labels=y_train, b_original=False))
+```
+
+
+```{python}
+#| label: def_produce_distance_graph
+
+def produce_distance_graph(X_train, y_train, n_neighbors, SEED=42):
+  
+    rng = np.random.default_rng(SEED)
+    
+    n = len(X_train)  # n_nodes
+  
+    G = nx.Graph()
+    
+    d = {i: X_train[i] for i in range(n)}
+    
+    G.add_nodes_from(d.keys())
+    
+    nx.set_node_attributes(G, d, 'pos')
+    my_d = {i: y_train[i] for i in range(n)}
+    
+    nx.set_node_attributes(G, {i: y_train[i] for i in range(n)}, 'community')
+
+    W = get_Gaussian_weight_matrix(X_train, n_neighbors)
+    
+    W_dense = W.toarray()
+    
+    W_r = ro.r.matrix(W_dense, nrow=W_dense.shape[0], ncol=W_dense.shape[1])
+    
+    edges_df = add_edges(W_r)
+    
+    # # Convert R DataFrame to Python pandas DataFrame
+    # edges = pandas2ri.ri2py(edges_df)
+    
+    # Convert the R DataFrame to a pandas DataFrame using the updated conversion mechanism
+    with localconverter(ro.default_converter + pandas2ri.converter):
+        edges = ro.conversion.rpy2py(edges_df)
+
+    # Add edges to the graph
+    for index, row in edges.iterrows():
+        G.add_edge(int(row['from']), int(row['to']), weight=row['weight'])
+        
+    return G
+    
+```
+```{python}
+#| label: G
+#| cache: true
+
+start_time = time.time()
+G = produce_distance_graph(X_train_flat, y_train, n_neighbors=500)
+end_time = time.time()
+execution_time = end_time - start_time
+print('Execution time:', round(execution_time, 2), 'seconds')
+
+```
+
+```{python}
+#| label: mb_igraph
+#| cache: true
+ 
+start_time = time.time()
+mb_igraph = get_metric_backbone_igraph(G)
+end_time = time.time()
+execution_time = end_time - start_time
+print('Execution time:', round(execution_time, 2), 'seconds')
+```
+
+
+```{python}
+#| label: test_0
+start_time = time.time()
+
+print_similarities(G, mb_igraph, X_train_flat, n_neighbors=500, n_clusters=10, affinity='precomputed')
+end_time = time.time()
+execution_time = end_time - start_time
+print('Execution time:', round(execution_time, 2), 'seconds')
+```
+
+
+
+
+
+
